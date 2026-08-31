@@ -3,8 +3,10 @@ import dbConnect from "@/lib/db";
 import Transaction from "@/models/Transaction";
 import PaymentCategory from "@/models/paymentCategory"; // ✨ NEW: Import the category model
 import { SettlementDashboard } from "@/components/organisms/Admin/AdminSettlementDashboard";
+import { requirePageAccess } from "@/lib/guards";
 
 export default async function SettlementsPage() {
+    await requirePageAccess("/settlements");
     await dbConnect();
 
     // 1. Get Destination Accounts

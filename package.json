@@ -3,12 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "npx tsx scripts/seed.ts"
   },
   "dependencies": {
+    "@itzsa/bs-date": "^0.1.1",
+    "@munatech/nepali-datepicker": "^1.2.3",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.9.0",
     "date-fns": "^4.1.0",

@@ -148,7 +148,7 @@ export async function adjustStock(prevState: any, formData: FormData) {
         }
 
         revalidatePath("/inventory");
-        revalidatePath("/finances"); 
+        revalidatePath("/finance"); 
         return { success: true };
     } catch (error: any) {
         return { success: false, error: error.message };

@@ -18,6 +18,7 @@ import {
     AlertCircle
 } from "lucide-react";
 import SelectChildStatus from "@/components/molecules/selects/SelectChildCurrentStatus";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 
 export const ChildForm = ({ initialData, closeModal }: { initialData?: any, closeModal?: () => void }) => {
     const actionToUse = initialData ? updateChild : createChild;
@@ -97,8 +98,8 @@ export const ChildForm = ({ initialData, closeModal }: { initialData?: any, clos
                         />
            
                         <SelectChildStatus/>
-                        <FormField label="Date of Birth" name="dateOfBirth" type="date" required defaultValue={dob} />
-                        <FormField label="Admission Date" name="admissionDate" type="date" required defaultValue={adminDate} />
+                        <NepaliDateField label="Date of Birth" name="dateOfBirth" required defaultValue={dob} />
+                        <NepaliDateField label="Admission Date" name="admissionDate" required defaultValue={adminDate} />
                     </div>
                 </div>
             </Section>
@@ -139,7 +140,7 @@ export const ChildForm = ({ initialData, closeModal }: { initialData?: any, clos
                 <KnownRelatives initialRelatives={initialData?.knownRelatives || []} />
             </Section>
 
-            <Section icon={<FolderLock size={18} />} title="06. Digital Vault">
+            <Section icon={<FolderLock size={18} />} title="06. Documents">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <DocumentVaultUpload existingDocs={initialData?.documents} />
                     <PhotoGalleryUpload existingPhotos={initialData?.gallery} />

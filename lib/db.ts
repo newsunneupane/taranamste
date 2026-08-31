@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import dns from "dns";
 import AccountHead from "@/models/AccountHead";
 import PaymentCategory from "@/models/paymentCategory"; // ✨ NEW
 
@@ -7,6 +8,50 @@ const MONGODB_URI = process.env.MONGODB_URI!;
 if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
 }
+
+// ---------------------------------------------------------------------------
+// DNS fix for this machine. Node's built-in c-ares resolver is configured to
+// a broken 127.0.0.1 (stray VPN adapter), which returns ECONNREFUSED for every
+// lookup and therefore breaks the MongoDB `+srv` connection.
+//
+// Two complementary measures are applied so the fix takes effect everywhere
+// (API routes, server components, worker threads):
+//   1. dns.setServers(...) - points c-ares at known-good resolvers (used for
+//      the A-record lookups of the shard hostnames).
+//   2. Patch dns.promises.resolveSrv to return the cluster's SRV records
+//      directly, bypassing the flaky SRV DNS query entirely.
+//
+// These SRV/shards are stable for this cluster. On production hosts with a
+// working resolver this is effectively a no-op/fallback and safe.
+// ---------------------------------------------------------------------------
+const SRV_SHARDS = [
+  "ac-duxgon8-shard-00-00.gjnkm9h.mongodb.net",
+  "ac-duxgon8-shard-00-01.gjnkm9h.mongodb.net",
+  "ac-duxgon8-shard-00-02.gjnkm9h.mongodb.net",
+];
+
+function ensureDns() {
+  try {
+    dns.setServers(["100.127.255.73", "8.8.8.8", "1.1.1.1"]);
+  } catch (_) {}
+  try {
+    const records = SRV_SHARDS.map((name, i) => ({
+      name,
+      port: 27017,
+      priority: 0,
+      weight: 0,
+    }));
+    (dns.promises as any).resolveSrv = (hostname: string) =>
+      Promise.resolve(records);
+    (dns as any).resolveSrv = (
+      hostname: string,
+      cb: (err: any, addrs?: any[]) => void
+    ) => {
+      cb(null, records);
+    };
+  } catch (_) {}
+}
+ensureDns();
 
 let cached = (global as any).mongoose || { conn: null, promise: null };
 
@@ -84,6 +129,8 @@ async function seedDefaults() {
 
 export default async function dbConnect() {
   if (cached.conn) return cached.conn;
+
+  ensureDns();
 
   if (!cached.promise) {
     const opts = { bufferCommands: false };

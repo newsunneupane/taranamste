@@ -3,10 +3,12 @@ import Guardian from "@/models/Guardian";
 import RegistryHeader from "@/components/organisms/guardian/RegisteryHeader";
 import StatCards from "@/components/organisms/guardian/StatCards";
 import InteractiveGuardianTable from "@/components/organisms/guardian/InteractiveGuardianTable";
+import { requirePageAccess } from "@/lib/guards";
 
 export const dynamic = "force-dynamic";
 
 export default async function GuardiansPage() {
+    await requirePageAccess("/guardians");
     await dbConnect();
     const rawGuardians = await Guardian.find({}).sort({ createdAt: -1 }).lean();
     const guardians = JSON.parse(JSON.stringify(rawGuardians));
@@ -20,7 +22,7 @@ export default async function GuardiansPage() {
 
             <div className="flex flex-col gap-3 mt-2">
                 <h2 className="font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-[0.3em] pl-2">
-                    Guardian Registry // Applicant Vetting
+                    Guardian Applications
                 </h2>
                 <InteractiveGuardianTable guardians={guardians} />
             </div>

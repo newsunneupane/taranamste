@@ -16,7 +16,7 @@ export const UserManagement = ({ pendingUsers, activeUsers }: { pendingUsers: an
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Initiate permanent deletion of this personnel record?")) {
+    if (confirm("Delete this user permanently?")) {
       startTransition(async () => {
         await deleteUser(id);
       });
@@ -34,10 +34,10 @@ export const UserManagement = ({ pendingUsers, activeUsers }: { pendingUsers: an
           </div>
           <div>
             <h2 className="text-xl font-black text-text uppercase tracking-widest">
-              Personnel Control
+              Team Members
             </h2>
             <p className="text-[10px] text-text-muted font-bold uppercase tracking-tighter mt-1 opacity-70">
-              Manage system access and clearance levels
+              Manage who can log in and what they can do
             </p>
           </div>
         </div>
@@ -72,18 +72,18 @@ export const UserManagement = ({ pendingUsers, activeUsers }: { pendingUsers: an
         {activeTab === "PENDING" && (
           pendingUsers.length === 0 ? (
             <div className="col-span-full p-12 text-center border-2 border-dashed border-border/50 rounded-dashboard bg-card/50">
-               <p className="text-sm font-black text-text-muted uppercase tracking-widest">No Pending Requisitions</p>
+               <p className="text-sm font-black text-text-muted uppercase tracking-widest">No One Waiting</p>
             </div>
           ) : (
             pendingUsers.map(user => (
               <div key={user._id} className="bg-card p-6 rounded-2xl border border-warning/30 shadow-sm flex flex-col gap-4 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 px-3 py-1 bg-warning/10 text-warning text-[8px] font-black uppercase rounded-bl-xl border-b border-l border-warning/20">
-                  Awaiting Clearance
+                  Waiting for Approval
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-text">{user.name}</h3>
                   <p className="text-xs text-text-muted font-mono mt-1">{user.email}</p>
-                  <p className="text-[10px] font-bold text-primary uppercase tracking-widest mt-2">Requested Role: {user.role}</p>
+                  <p className="text-[10px] font-bold text-primary uppercase tracking-widest mt-2">Requested Job: {user.role}</p>
                 </div>
                 <div className="flex items-center gap-2 mt-2 pt-4 border-t border-border/50">
                   <Button variant="ghost" onClick={() => handleDelete(user._id)} disabled={isPending} className="!text-danger hover:bg-danger/10 px-4">

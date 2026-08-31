@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { formatNepaliDate } from "@/lib/nepaliDate";
 
 type Staff = any;
 
@@ -44,7 +45,7 @@ export const BasicInfoCard = ({ staff }: { staff: Staff }) => (
         label="Join Date"
         value={
           staff?.joinDate
-            ? new Date(staff.joinDate).toLocaleDateString()
+            ? formatNepaliDate(staff.joinDate)
             : "N/A"
         }
       />

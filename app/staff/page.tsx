@@ -4,10 +4,12 @@ import User from "@/models/User"; // ✨ Import the User model
 import StaffHomeTop from "@/components/organisms/staffs/StaffHomeTop";
 import InteractiveStaffTable from "@/components/organisms/staffs/staffpage/InteractiveStaffTable";
 import StaffStatCards from "@/components/organisms/staffs/staffpage/StaffStatCards";
+import { requirePageAccess } from "@/lib/guards";
 
 export const dynamic = 'force-dynamic';
 
 export default async function StaffPage() {
+    await requirePageAccess("/staff");
     await dbConnect();
 
     // 1. Fetch raw staff data
@@ -43,7 +45,7 @@ export default async function StaffPage() {
             <StaffStatCards staffMembers={staffMembers} />
             <div className="flex flex-col gap-3 mt-2">
                 <h2 className="font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-[0.3em] pl-2">
-                    Personnel Directory // Active Roster
+                    Staff List
                 </h2>
                 <InteractiveStaffTable staffMembers={staffMembers} />
             </div>

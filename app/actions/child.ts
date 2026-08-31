@@ -158,6 +158,7 @@ export async function quickUploadMedia(prevState: any, formData: FormData) {
     }
 
     revalidatePath(`/children/${childId}`);
+    revalidatePath(`/children`);
     return { success: true, error: null };
 
   } catch (error: any) {

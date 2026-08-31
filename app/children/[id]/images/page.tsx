@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import {GalleryImageUpload} from '@/components/molecules/GalleryImageUpload';
+import { formatNepaliDateShort } from '@/lib/nepaliDate';
 
 interface ChildImage {
     id: string;
@@ -71,7 +72,7 @@ export default function ChildImagesPage() {
                                 </h3>
                                 <div className="flex justify-between items-center mt-1">
                                     <p className="text-xs text-gray-500 uppercase tracking-wider">{img.type}</p>
-                                    <p className="text-xs text-gray-500">{new Date(img.uploadedDate).toLocaleDateString()}</p>
+                                    <p className="text-xs text-gray-500">{formatNepaliDateShort(img.uploadedDate)}</p>
                                 </div>
                                 <a
                                     href={img.url}

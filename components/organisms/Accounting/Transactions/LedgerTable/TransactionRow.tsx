@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { deleteTransaction } from "@/app/actions/transactions";
+import { formatNepaliDateShort } from "@/lib/nepaliDate";
 
 export default function TransactionRow({
     txn,
@@ -21,9 +22,9 @@ export default function TransactionRow({
         // Row: hover:bg-zinc-50/60 -> hover:bg-shaded/40
         <tr className="group text-xs hover:bg-shaded/40 transition-colors duration-300">
 
-            {/* DATE: text-zinc-500 -> text-text-muted */}
-            <td className="p-4 pl-6 text-text-muted font-medium">
-                {new Date(txn.date).toLocaleDateString("en-GB")}
+            {/* DATE: BS primary + AD alongside */}
+            <td className="p-4 pl-6 text-text-muted font-medium whitespace-nowrap">
+                {formatNepaliDateShort(txn.date)}
             </td>
 
             {/* ACCOUNT */}

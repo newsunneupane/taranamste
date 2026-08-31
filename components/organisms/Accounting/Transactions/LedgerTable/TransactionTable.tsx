@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from "react";
 import { Search, Filter, Trash2, Edit2 } from "lucide-react";
 import { deleteTransaction } from "@/app/actions/transactions";
+import { formatNepaliDateShort } from "@/lib/nepaliDate";
 
 export default function TransactionTable({
     transactions,
@@ -43,7 +44,7 @@ export default function TransactionTable({
                     </div>
                     <input
                         type="text"
-                        placeholder="Search account head or description..."
+                        placeholder="Search category or description..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full bg-background border border-border/50 text-text placeholder:text-text-muted text-sm rounded-xl pl-10 pr-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-inner"
@@ -89,7 +90,7 @@ export default function TransactionTable({
                             <thead className="bg-shaded/50 border-b border-border text-text-muted font-black uppercase text-[9px] tracking-[0.15em]">
                                 <tr>
                                     <th className="p-4 pl-6">Date</th>
-                                    <th className="p-4">Account Head</th>
+                                    <th className="p-4">Category</th>
                                     <th className="p-4">Description</th>
                                     <th className="p-4 text-right">Amount (NPR)</th>
                                     <th className="p-4 text-right pr-6">Actions</th>
@@ -101,7 +102,7 @@ export default function TransactionTable({
                                     return (
                                         <tr key={txn._id} className="group text-xs hover:bg-shaded/40 transition-colors duration-300">
                                             <td className="p-4 pl-6 text-text-muted font-medium">
-                                                {new Date(txn.date).toLocaleDateString("en-GB")}
+                                                {formatNepaliDateShort(txn.date)}
                                             </td>
                                             <td className="p-4">
                                                 <div className="flex items-center gap-3">
@@ -160,7 +161,7 @@ export default function TransactionTable({
                                         </h3>
                                     </div>
                                     <span className="text-[10px] font-black text-text-muted uppercase tracking-widest shrink-0">
-                                        {new Date(txn.date).toLocaleDateString("en-GB")}
+                                        {formatNepaliDateShort(txn.date)}
                                     </span>
                                 </div>
 

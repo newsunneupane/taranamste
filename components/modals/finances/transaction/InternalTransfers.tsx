@@ -6,6 +6,7 @@ import { FormField } from "@/components/molecules/FormField";
 import { Button } from "@/components/atoms/Button";
 import { executeTransfer } from "@/app/actions/transfers";
 import { ArrowRightLeft, ShieldCheck } from "lucide-react";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 
 interface InternalTransferProps {
   closeModal: () => void;
@@ -69,7 +70,7 @@ export const InternalTransferForm: React.FC<InternalTransferProps> = ({ closeMod
            <ArrowRightLeft size={18} />
         </div>
         <div>
-           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text">Contra Ledger Entry</p>
+           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text">Moving Money</p>
            <p className="text-[9px] text-text-muted font-bold uppercase mt-0.5">Moving liquidity between system-defined payment categories.</p>
         </div>
       </div>
@@ -136,13 +137,11 @@ export const InternalTransferForm: React.FC<InternalTransferProps> = ({ closeMod
           placeholder="0.00"
           className="text-text font-mono text-xl font-black"
         />
-        <FormField
-          id="date"
+        <NepaliDateField
           label="Recording Date *"
           name="date"
-          type="date"
           required
-          className="text-text color-scheme-adaptive font-mono"
+          className="text-text font-mono"
           defaultValue={new Date().toISOString().split('T')[0]}
         />
       </div>

@@ -2,8 +2,10 @@ import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import { UserManagement } from "@/components/organisms/Admin/UserManagement";
 import { getServerSession } from "next-auth/next";
+import { requirePageAccess } from "@/lib/guards";
 
 export default async function SystemUsersPage() {
+    await requirePageAccess("/usersmanagement");
     await dbConnect();
 
     // Fetch users and split them. We exclude ADMINs so the Admin doesn't accidentally delete themselves.

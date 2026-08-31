@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { FileText, Trash2, DownloadCloud } from 'lucide-react';
+import { formatNepaliDateShort } from '@/lib/nepaliDate';
 
 interface ChildDocument {
     id: string;
@@ -65,8 +66,8 @@ export default function ChildDocumentsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-black text-text tracking-tighter">Legal & Medical Vault</h1>
-                <p className="text-sm text-text-muted mt-1 font-medium">Secure document repository</p>
+                <h1 className="text-2xl font-black text-text tracking-tighter">Legal & Medical Files</h1>
+                <p className="text-sm text-text-muted mt-1 font-medium">This child's documents</p>
             </div>
             
             {documents.length === 0 ? (
@@ -95,7 +96,7 @@ export default function ChildDocumentsPage() {
                                             {doc.type}
                                         </span>
                                         <span className="text-[10px] text-text-muted/70 font-mono">
-                                            {new Date(doc.uploadedDate).toLocaleDateString()}
+                                            {formatNepaliDateShort(doc.uploadedDate)}
                                         </span>
                                     </div>
                                 </div>

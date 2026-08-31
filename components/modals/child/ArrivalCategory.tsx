@@ -133,7 +133,7 @@ const ArrivalCategory = ({ defaultValue = 'OTHER', onChange }: Props) => {
                         <p className="text-[10px] font-black text-amber-900 uppercase tracking-widest">Mandatory Legal Action</p>
                         <p className="text-xs text-amber-700 leading-normal">
                             Selecting <strong>Family Surrender</strong> requires the attachment of a signed 
-                            relinquishment letter and verified guardian identification in the Digital Vault.
+                            relinquishment letter and verified guardian identification in the Documents section.
                         </p>
                     </div>
                 </div>

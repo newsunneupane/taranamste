@@ -8,10 +8,12 @@ import "@/models/InventoryItem";
 
 import PageHeader from "@/components/organisms/Accounting/Transactions/PageHeader";
 import FinanceLedger from "@/components/organisms/Accounting/Transactions/LedgerTable/FinanceLedger";
+import { requirePageAccess } from "@/lib/guards";
 
 export const dynamic = 'force-dynamic';
 
 export default async function FinancePage() {
+    await requirePageAccess("/finance");
     await dbConnect();
 
     const rawAccounts = await AccountHead.find({}).lean();

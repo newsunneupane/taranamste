@@ -19,10 +19,10 @@ const PageHeader = () => {
                 
                 <div className="flex flex-col flex-1 min-w-0">
                     <h1 className="font-ubuntu text-xl md:text-2xl font-black text-text tracking-tight truncate">
-                        Finance & Ledger
+                        Finances
                     </h1>
                     <p className="font-ubuntu text-xs md:text-sm text-text-muted font-medium truncate">
-                        Professional cashflow management & reporting system
+                        Track all money coming in and going out
                     </p>
                 </div>
             </div>

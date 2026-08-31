@@ -129,7 +129,7 @@ const PaymentCategoryForm: React.FC<PaymentCategoryFormProps> = ({
               className="w-5 h-5 rounded-md border-border text-primary focus:ring-primary/20"
             />
             <span className="text-xs font-bold text-text-muted group-hover:text-text">
-              Available for Ledger Posting
+              Available for Transactions
             </span>
           </label>
         </div>

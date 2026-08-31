@@ -6,6 +6,7 @@ import ReportCenterModal from "./ReportCenterModal";
 import ReportCommandBar from "./ReportCommandBar";
 import { Button } from "@/components/atoms/Button";
 import { ChevronDown, XCircle } from "lucide-react";
+import { formatNepaliDateShort } from "@/lib/nepaliDate";
 
 export default function ReportCenter({ transactions, accounts }: any) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,11 +67,11 @@ export default function ReportCenter({ transactions, accounts }: any) {
 
         if (filter.format === "PDF") {
             generateStandardPDF({
-                title: `${filter.timeframe} Financial Audit`,
+                title: `${filter.timeframe} Money Report`,
                 filename: `Report_${Date.now()}`,
-                headers: [["Date", "Payment Source", "Account Head", "Description", "Amount"]],
+                headers: [["Date", "Money Account", "Category", "Description", "Amount"]],
                 data: filtered.map((t: any) => [
-                    new Date(t.date).toLocaleDateString('en-GB'),
+                    formatNepaliDateShort(t.date),
                     t.paymentCategory?.name || "N/A",
                     t.accountHead?.name || "Uncategorized",
                     t.description,
@@ -83,15 +84,15 @@ export default function ReportCenter({ transactions, accounts }: any) {
         } else {
             generateExcelReport(
                 filtered.map((t: any) => ({
-                    Date: new Date(t.date).toLocaleDateString('en-GB'),
+                    Date: formatNepaliDateShort(t.date),
                     Source: t.paymentCategory?.name,
                     AccountHead: t.accountHead?.name,
                     Description: t.description,
                     Amount: t.amount,
                     Type: t.type
                 })),
-                ["Date", "Source", "AccountHead", "Description", "Amount", "Type"],
-                "Finance_Audit_Export"
+                ["Date", "Source", "Category", "Description", "Amount", "Type"],
+                "Finance_Report_Export"
             );
         }
     };
@@ -103,12 +104,12 @@ export default function ReportCenter({ transactions, accounts }: any) {
                 <div className="flex justify-between items-start w-full md:w-auto">
                     <div>
                         <h2 className="text-xl md:text-2xl font-black text-text tracking-tighter uppercase font-mono">
-                            Report Command Center
+                            Reports
                         </h2>
                         <p className="text-[10px] text-text-muted font-black tracking-widest uppercase mt-1">
                             {filter.timeframe === "CUSTOM" && filter.startDate
-                                ? `Protocol: ${filter.startDate} → ${filter.endDate}`
-                                : "Financial Year 2082/83 | Audit Provisioning"}
+                                ? `Selected: ${filter.startDate} → ${filter.endDate}`
+                                : "Make a report of your transactions"}
                         </p>
                     </div>
                     <button 
@@ -120,7 +121,7 @@ export default function ReportCenter({ transactions, accounts }: any) {
                 </div>
 
                 <Button onClick={handleGenerate} className="w-full md:w-auto px-12 h-12 font-black font-mono tracking-widest">
-                    GENERATE_REPORT
+                    MAKE REPORT
                 </Button>
             </div>
 

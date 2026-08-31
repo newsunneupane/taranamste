@@ -57,7 +57,7 @@ const SelectAccountHead: React.FC<SelectAccountHeadProps> = ({
         <div className="flex flex-col gap-6 w-full">
             <SelectField
                 name={name}
-                label={`Account Head (${transactionType})`}
+                label={`Category`}
                 required={required}
                 value={selectedAccountId}
                 onChange={(e) => setSelectedAccountId(e.target.value)}
@@ -73,7 +73,7 @@ const SelectAccountHead: React.FC<SelectAccountHeadProps> = ({
                 <div className="animate-in slide-in-from-top-2 duration-300">
                     <SelectField
                         name="subType"
-                        label={`${transactionType} Sub-Type`}
+                        label="More Detail"
                         defaultValue={initialData?.subType || ""}
                         options={availableSubTypes.map((t: string) => ({ label: t, value: t }))}
                     />

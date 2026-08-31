@@ -28,10 +28,10 @@ export default function ChartOfAccounts({ initialAccounts }: { initialAccounts: 
 
           <div className="flex flex-col flex-1 min-w-0">
             <h1 className="font-ubuntu text-xl md:text-2xl font-black text-text tracking-tight truncate">
-              Structural Hierarchy
+              Spending Categories
             </h1>
             <p className="font-ubuntu text-xs md:text-sm text-text-muted font-medium truncate">
-              Organizational Chart of Account Heads
+              Your list of income and expense categories
             </p>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default function ChartOfAccounts({ initialAccounts }: { initialAccounts: 
             className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-text-invert font-black py-3 sm:py-2.5 px-6 rounded-xl transition-all shadow-glow flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest"
           >
             <ArrowRightLeft size={16} />
-            <span>Contra Transfer</span>
+            <span>Move Money</span>
           </Button>
 
           {/* 2. EXPORT ACTION */}
@@ -53,7 +53,7 @@ export default function ChartOfAccounts({ initialAccounts }: { initialAccounts: 
             className="w-full sm:w-auto border border-border text-text hover:text-text hover:bg-shaded font-bold py-3 sm:py-2.5 px-6 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest"
           >
             <DownloadCloud size={16} />
-            <span>Export Audit PDF</span>
+            <span>Download Report</span>
           </Button>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { Button } from "@/components/atoms/Button";
 import { createActionItem } from "@/app/actions/actionPlans";
 import { Target, ClipboardList } from "lucide-react";
 import { SubmitButton } from "@/components/atoms/SubmitButton";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 
 export const ChildAction = ({
     childId,
@@ -95,10 +96,9 @@ export const ChildAction = ({
 
                 {/* 03. LOGISTICS INSET: Clean, grouped administrative fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-shaded/30 p-8 rounded-dashboard border border-border/50 shadow-inner">
-                    <FormField 
+                    <NepaliDateField 
                         label="Target Deadline" 
                         name="dueDate" 
-                        type="date" 
                         className="bg-bg" 
                     />
                     <FormField 

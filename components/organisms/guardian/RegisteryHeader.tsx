@@ -24,10 +24,10 @@ export default function RegistryHeader() {
                     <div>
                         {/* TYPOGRAPHY: Updated zinc-900 -> text-text, zinc-500 -> text-text-muted */}
                         <h1 className="text-2xl font-black text-text tracking-tight">
-                            Guardian Registry
+                            Guardians
                         </h1>
                         <p className="text-sm text-text-muted font-medium mt-0.5">
-                            Manage vetting, background checks, and placements.
+                            Manage family applications and placements.
                         </p>
                     </div>
                 </div>

@@ -2,8 +2,10 @@ import dbConnect from "@/lib/db";
 import InventoryItem from "@/models/InventoryItem";
 import InventoryDashboard from "@/components/organisms/Accounting/Inventory/InventoryDashboard";
 import AccountHead from "@/models/AccountHead";
+import { requirePageAccess } from "@/lib/guards";
 
 export default async function InventoryPage() {
+    await requirePageAccess("/inventory");
     await dbConnect();
 
     const rawItems = await InventoryItem.find({}).sort({ category: 1, name: 1 }).lean();
@@ -33,7 +35,7 @@ export default async function InventoryPage() {
                     </div>
                     <div className="flex flex-col flex-1 min-w-0">
                         <h1 className="font-ubuntu text-xl md:text-2xl font-black text-text tracking-tight truncate">
-                            Inventory Protocol
+                            Inventory
                         </h1>
                         <p className="font-ubuntu text-xs md:text-sm text-text-muted font-medium truncate">
                             Track stock levels for food, medical supplies, and more.

@@ -20,9 +20,9 @@ export const Register = () => {
           <div className="mx-auto w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-6 border border-success/20">
             <CheckCircle className="text-success" size={32} />
           </div>
-          <h2 className="text-xl font-black text-text uppercase tracking-widest mb-2">Requisition Received</h2>
+          <h2 className="text-xl font-black text-text uppercase tracking-widest mb-2">Request Received</h2>
           <p className="text-sm text-text-muted font-bold mb-8">
-            Your access request has been logged. An administrator must verify and approve your clearance level before you can authenticate.
+            Your access request has been saved. An administrator must approve it before you can log in.
           </p>
           <Link href="/">
             <Button variant="ghost" className="w-full h-12">Return to Gateway</Button>
@@ -45,10 +45,10 @@ export const Register = () => {
             <UserPlus className="text-primary" size={28} />
           </div>
           <h2 className="text-2xl font-black text-text uppercase tracking-widest">
-            Personnel Registry
+            Register a New User
           </h2>
           <p className="text-xs text-text-muted font-bold uppercase tracking-widest mt-2 opacity-70">
-            Submit Clearance Requisition
+            Request access to the system
           </p>
         </div>
 

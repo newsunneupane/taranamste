@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { formatNepaliDate } from "@/lib/nepaliDate";
 import { DataRow } from "@/components/organisms/child/child-profile/DetailCard";
 import { ProfileHeader } from "@/components/organisms/child/child-profile/ProfileHeader";
 import { ActionPlanSection } from "@/components/organisms/child/child-profile/ActionPlanSection";
@@ -76,7 +77,7 @@ export const ChildDossierModal = ({
           </h4>
           <div className="space-y-3 flex-1">
             <DataRow label="Current Age" value={`${age} Years`} />
-            <DataRow label="D.O.B." value={new Date(child.dateOfBirth).toLocaleDateString()} />
+            <DataRow label="D.O.B." value={formatNepaliDate(child.dateOfBirth)} />
             <DataRow label="Gender" value={child.gender} />
           </div>
           <div className="mt-4 pt-4 border-t border-border space-y-3">
@@ -126,7 +127,7 @@ export const ChildDossierModal = ({
             </div>
             <div>
               <h4 className="font-ubuntu text-sm font-black text-text-main tracking-tight group-hover:text-primary transition-colors">
-                Legal & Medical Vault
+                Legal & Medical Files
               </h4>
               <p className="font-ubuntu text-[10px] text-text-muted uppercase tracking-widest mt-0.5">
                 {child.documents?.length || 0} Files Archived

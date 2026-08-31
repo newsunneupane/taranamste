@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/atoms/Button";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 
 const ReportCenterModal: React.FC<{
     filter: any;
@@ -35,14 +36,11 @@ const ReportCenterModal: React.FC<{
                         <label className="text-[10px] uppercase font-black text-text-muted tracking-[0.15em]">
                             Start Date
                         </label>
-                        <input
-                            type="date"
+                        <NepaliDateField
+                            label=""
                             value={filter.startDate}
-                            onChange={(e) =>
-                                setFilter({ ...filter, startDate: e.target.value })
-                            }
-                            // Input: bg-bg, border-border, focus:ring-primary
-                            className="w-full p-3.5 text-sm border border-border rounded-xl bg-bg text-text focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all cursor-pointer color-scheme-adaptive"
+                            onChange={(adIso) => setFilter({ ...filter, startDate: adIso })}
+                            placeholder="Select Nepali Date"
                         />
                     </div>
 
@@ -51,13 +49,11 @@ const ReportCenterModal: React.FC<{
                         <label className="text-[10px] uppercase font-black text-text-muted tracking-[0.15em]">
                             End Date
                         </label>
-                        <input
-                            type="date"
+                        <NepaliDateField
+                            label=""
                             value={filter.endDate}
-                            onChange={(e) =>
-                                setFilter({ ...filter, endDate: e.target.value })
-                            }
-                            className="w-full p-3.5 text-sm border border-border rounded-xl bg-bg text-text focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all cursor-pointer color-scheme-adaptive"
+                            onChange={(adIso) => setFilter({ ...filter, endDate: adIso })}
+                            placeholder="Select Nepali Date"
                         />
                     </div>
 

@@ -9,11 +9,17 @@ import User from "@/models/User";
 import { Sparkles, Activity, ShieldAlert, Clock, Wallet } from "lucide-react";
 import QuickActionSidebar from "@/components/organisms/ActionButtonsDashboard";
 import AlertStatCard from "@/components/organisms/dashboard/AlertStatCard";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { isAdmin as isAdminRole } from "@/lib/permission";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   await dbConnect();
+
+  const session = await getServerSession(authOptions);
+  const isAdmin = isAdminRole(session?.user?.role);
 
   const [
     kidsCount, 
@@ -80,9 +86,6 @@ export default async function Home() {
   const currentBalance = income - expense;
   const totalUnsettledCash = unsettledCashResult[0]?.total || 0;
 
-  // Logic for Admin View (Update with actual session check later)
-  const isAdmin = true; 
-
   return (
     <div className="flex flex-col gap-6 max-w-7xl mx-auto md:p-6 lg:p-8 animate-in fade-in duration-500">
 
@@ -103,12 +106,12 @@ export default async function Home() {
       {isAdmin && (pendingUsersCount > 0 || pendingTransactionsCount > 0 || totalUnsettledCash > 0) && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {pendingUsersCount > 0 && (
-                <Link href="/admin/users" className="p-4 rounded-2xl border bg-warning/5 border-warning/20 flex justify-between items-center group hover:bg-warning/10 transition-all">
+                <Link href="/usersmanagement" className="p-4 rounded-2xl border bg-warning/5 border-warning/20 flex justify-between items-center group hover:bg-warning/10 transition-all">
                     <div className="flex items-center gap-3">
                         <ShieldAlert className="text-warning" size={20} />
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-warning">Pending Clearances</span>
-                            <span className="text-xs font-bold text-text-muted">Review {pendingUsersCount} personnel requests</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-warning">New Member Requests</span>
+                            <span className="text-xs font-bold text-text-muted">Review {pendingUsersCount} new people</span>
                         </div>
                     </div>
                     <span className="text-xl font-black text-warning">{pendingUsersCount}</span>
@@ -120,8 +123,8 @@ export default async function Home() {
                     <div className="flex items-center gap-3">
                         <Clock className="text-danger" size={20} />
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-danger">Unverified Entries</span>
-                            <span className="text-xs font-bold text-text-muted">Awaiting audit approval</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-danger">Pending Approvals</span>
+                            <span className="text-xs font-bold text-text-muted">Awaiting your approval</span>
                         </div>
                     </div>
                     <span className="text-xl font-black text-danger">{pendingTransactionsCount}</span>
@@ -129,12 +132,12 @@ export default async function Home() {
             )}
 
             {totalUnsettledCash > 0 && (
-                <Link href="/finance/settlements" className="p-4 rounded-2xl border bg-primary/5 border-primary/20 flex justify-between items-center group hover:bg-primary/10 transition-all">
+                <Link href="/settlements" className="p-4 rounded-2xl border bg-primary/5 border-primary/20 flex justify-between items-center group hover:bg-primary/10 transition-all">
                     <div className="flex items-center gap-3">
                         <Wallet className="text-primary" size={20} />
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Physical Cash</span>
-                            <span className="text-xs font-bold text-text-muted">Unreconciled collections</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Cash Not Yet Paid In</span>
+                            <span className="text-xs font-bold text-text-muted">Money collected but not deposited</span>
                         </div>
                     </div>
                     <span className="text-lg font-black font-mono text-primary">Rs. {totalUnsettledCash.toLocaleString()}</span>
@@ -145,20 +148,20 @@ export default async function Home() {
 
       {/* --- KPI GRID --- */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-        <StatCard icon="👧" label="Children" value={kidsCount} sub="Active Intake" variant="primary" />
-        <StatCard icon="👩‍🏫" label="Staff" value={staffCount} sub="On-Duty" variant="secondary" />
+        <StatCard icon="👧" label="Children" value={kidsCount} sub="Living Here" variant="primary" />
+        <StatCard icon="👩‍🏫" label="Staff" value={staffCount} sub="Working Now" variant="secondary" />
 
         <div className="bg-card p-4 md:p-6 rounded-2xl border border-border shadow-sm flex flex-col transition-all">
           <div className="flex justify-between items-center mb-2 md:mb-4">
             <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-[9px] md:text-[10px] font-black border ${currentBalance < 0 ? 'bg-danger/10 text-danger border-danger/20' : 'bg-success/10 text-success border-success/20'}`}>
               NPR
             </div>
-            <span className="text-[9px] md:text-[10px] font-black text-text-muted uppercase tracking-widest">Verified Funds</span>
+            <span className="text-[9px] md:text-[10px] font-black text-text-muted uppercase tracking-widest">Available Balance</span>
           </div>
           <span className={`text-xl md:text-2xl font-black truncate tracking-tighter ${currentBalance < 0 ? 'text-danger' : 'text-success'}`}>
             Rs. {currentBalance.toLocaleString()}
           </span>
-          <p className="hidden md:block text-[10px] font-black text-text-muted mt-2 uppercase tracking-widest opacity-60">Ledger Balance</p>
+          <p className="hidden md:block text-[10px] font-black text-text-muted mt-2 uppercase tracking-widest opacity-60">Money Available</p>
         </div>
         <AlertStatCard count={urgentActions.length} />
       </div>
@@ -173,9 +176,9 @@ export default async function Home() {
             <div className="p-5 md:p-6 border-b border-border bg-shaded flex justify-between items-center">
               <h2 className="font-ubuntu font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-3">
                 <Activity className={`w-4 h-4 ${urgentActions.length > 0 ? 'text-danger animate-pulse' : 'text-success'}`} />
-                Critical Care Feed
+                Critical Alerts
               </h2>
-              <Link href="/children/actions" className="text-[9px] font-black text-primary uppercase">View All →</Link>
+              <Link href="/children" className="text-[9px] font-black text-primary uppercase">View All →</Link>
             </div>
 
             <div className="flex flex-col">
@@ -183,7 +186,7 @@ export default async function Home() {
                 <div className="p-16 text-center opacity-30 italic text-[10px] uppercase tracking-widest">No Alerts</div>
               ) : (
                 urgentActions.map((plan: any, idx: number) => (
-                  <Link key={plan._id} href={`/children/${plan.childId?._id}`} className={`p-5 flex justify-between items-center border-l-4 border-l-transparent hover:border-l-primary transition-all ${idx % 2 === 0 ? 'bg-card' : 'bg-alt'}`}>
+                  <Link key={plan._id} href={`/children/${plan.childId?._id}/documents`} className={`p-5 flex justify-between items-center border-l-4 border-l-transparent hover:border-l-primary transition-all ${idx % 2 === 0 ? 'bg-card' : 'bg-alt'}`}>
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center text-lg">{plan.category === 'MEDICAL' ? '⚕️' : '⚖️'}</div>
                       <div>

@@ -56,7 +56,7 @@ const ArrivalProtocol = ({initialData, arrivalType, setArrivalType}: any) => {
                             </p>
                         </div>
                         <p className="text-xs text-text-muted leading-relaxed mb-0">
-                            Please ensure the <strong className="text-text">Official {arrivalType === 'POLICE_RESCUE' ? 'Police Report' : 'Medical Referral'}</strong> is scanned and uploaded to the <strong className="text-text">Digital Vault</strong> below for legal compliance.
+                            Please ensure the <strong className="text-text">Official {arrivalType === 'POLICE_RESCUE' ? 'Police Report' : 'Medical Referral'}</strong> is scanned and uploaded to the <strong className="text-text">Documents</strong> section below for legal compliance.
                         </p>
                     </div>
                 )}

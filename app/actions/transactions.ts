@@ -33,7 +33,7 @@ export async function addTransaction(prevState: any, formData: FormData) {
       await Transaction.create(payload);
     }
 
-    revalidatePath("/finances"); 
+    revalidatePath("/finance"); 
     return { success: true, error: null };
   } catch (error: any) {
     return { success: false, error: error.message };
@@ -50,7 +50,7 @@ export async function deleteTransaction(id: string) {
     
     await Transaction.findByIdAndDelete(id);
 
-    revalidatePath("/finances");
+    revalidatePath("/finance");
     revalidatePath("/my-finances");
     return { success: true };
   } catch (e: any) {

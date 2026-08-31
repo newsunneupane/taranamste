@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { formatNepaliDate } from "@/lib/nepaliDate";
 
 const priorityColors = {
   LOW: "bg-text-muted/10 text-text-muted border-border",
@@ -65,7 +66,7 @@ export const ActionPlanList = ({ tasks }: { tasks: any[] }) => {
             <div className="text-[10px] text-text-muted font-medium">
               Due:{" "}
               {task.dueDate
-                ? new Date(task.dueDate).toLocaleDateString()
+                ? formatNepaliDate(task.dueDate)
                 : "No deadline"}
             </div>
 

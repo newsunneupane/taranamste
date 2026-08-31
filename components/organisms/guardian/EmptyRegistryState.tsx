@@ -10,12 +10,12 @@ export function EmptyRegistryState() {
             <div className="space-y-3">
                 {/* PRIMARY TEXT: text-zinc-900 -> text-text */}
                 <p className="text-text font-black text-xl tracking-tight">
-                    Family Registry Empty
+                    No Guardians Yet
                 </p>
 
                 {/* SECONDARY TEXT: OrphanAdmin Micro-caps style */}
                 <p className="text-[10px] text-text-muted uppercase font-black tracking-[0.2em] opacity-60 max-w-[280px] mx-auto leading-relaxed">
-                    Click "Register Family" to begin building your applicant database.
+                    Click "Register Family" to add your first guardian.
                 </p>
             </div>
 

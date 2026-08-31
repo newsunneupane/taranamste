@@ -4,7 +4,7 @@ import React from "react";
 export default function StatCards({ guardians }: { guardians: any[] }) {
     const stats = [
         { label: "Total Applicants", val: guardians.length, color: "text-text-muted", bg: "bg-shaded", icon: "👥" },
-        { label: "Under Vetting", val: guardians.filter(g => g.vettingStatus === "VETTING").length, color: "text-warning", bg: "bg-warning/10", icon: "🔍" },
+        { label: "Under Review", val: guardians.filter(g => g.vettingStatus === "VETTING").length, color: "text-warning", bg: "bg-warning/10", icon: "🔍" },
         { label: "Approved", val: guardians.filter(g => g.vettingStatus === "APPROVED").length, color: "text-success", bg: "bg-success/10", icon: "✅" },
         { label: "Blacklisted", val: guardians.filter(g => g.vettingStatus === "BLACKLISTED").length, color: "text-danger", bg: "bg-danger/10", icon: "🚫" },
     ];

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@munatech/nepali-datepicker/styles.css";
 
 /* ============================================================
    THEME TOKENS → Tailwind mapping
@@ -29,42 +30,13 @@
 }
 
 /* ============================================================
-   DARK MODE (DEFAULT)
+   LIGHT THEME (parked — dark mode removed)
    ============================================================ */
 :root {
-  --bg-primary: #1f1f23;      /* Base canvas */
-  --bg-shaded: #111113;       /* Deepest shade (headers/navs) */
-  --card: #18181b;            /* Standard Card */
-  
-  /* ✨ NEW: Solid colors for layering (no opacity needed) */
-  --bg-alt: #232328;          /* Slightly lighter than card for alternating rows */
-  --bg-surface: #27272a;      /* Elevated surface for nested data wells */
-
-  --bg-invert: #ffffff;
-  --text-primary: #f4f4f5;   
-  --text-muted: #a1a1aa;
-  --text-invert: #000000;
-
-  --primary: #3b82f6;
-  --border-color: #2f2f35;   
-
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --accent: #a855f7;
-
-  --glow-shadow: 0 0 18px rgba(59, 130, 246, 0.12);
-}
-
-/* ============================================================
-   LIGHT MODE
-   ============================================================ */
-.light {
-  --bg-primary: #f4f4f5;      /* Swapped to light gray so white cards POP */
+  --bg-primary: #f4f4f5;      /* Light gray so white cards POP */
   --bg-shaded: #e4e4e7;       /* Deepest light shade */
   --card: #ffffff;            /* Pure white card */
-  
-  /* ✨ NEW */
+
   --bg-alt: #fafafa;          /* Off-white for alternating cards */
   --bg-surface: #f8f8f8;      /* Slight gray for inner data wells */
 
@@ -94,4 +66,21 @@
 
 .animate-shimmer {
   animation: shimmer 1.5s infinite;
+}
+
+/* ============================================================
+   NEPALI DATE PICKER (Bikram Sambat) — theme alignment
+   Matches the site palette via the -ndp design tokens.
+   ============================================================ */
+:root {
+  --background-ndp: var(--card);
+  --foreground-ndp: var(--text-primary);
+  --primary-ndp: var(--primary);
+  --primary-foreground-ndp: var(--text-invert);
+  --accent-ndp: var(--bg-shaded);
+  --accent-foreground-ndp: var(--text-primary);
+  --border-ndp: var(--border-color);
+  --muted-ndp: var(--text-muted);
+  --muted-foreground-ndp: var(--text-muted);
+  --radius-ndp: 0.9rem;
 }

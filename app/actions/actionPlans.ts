@@ -16,6 +16,7 @@ export async function createActionItem(prevState: any, formData: FormData) {
         });
 
         revalidatePath(`/children/${data.childId}`);
+        revalidatePath(`/children`);
         return { success: true, error: null };
     } catch (error: any) {
         return { success: false, error: "Failed to create action item: " + error.message };

@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/atoms/Button";
 import { generateStandardPDF } from "@/lib/generatePDF";
+import { formatNepaliDateShort } from "@/lib/nepaliDate";
 
 export default function ReportCenter({
     transactions,
@@ -55,7 +56,7 @@ export default function ReportCenter({
             summaryValue: `NPR ${total.toLocaleString()}`,
             headers: [["Date", "Account Head", "Category", "Amount"]],
             data: monthData.map((t) => [
-                new Date(t.date).toLocaleDateString("en-GB"),
+                formatNepaliDateShort(t.date),
                 t.accountHead?.name || "Misc",
                 // ✨ UPDATED: category name for monthly audit trail
                 t.paymentCategory?.name || "General",

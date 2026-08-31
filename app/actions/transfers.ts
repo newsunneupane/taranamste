@@ -4,17 +4,26 @@ import dbConnect from "@/lib/db";
 import Transaction from "@/models/Transaction";
 import PaymentCategory from "@/models/paymentCategory"; // ✨ NEW: Using the Category model
 import { revalidatePath } from "next/cache";
+import { getCurrentSession } from "@/lib/guards";
+import { isWorkRole } from "@/lib/permission";
 
 export async function executeTransfer(prevState: any, formData: FormData) {
     await dbConnect();
 
     try {
+        // Moving money is a Finance-tier operation: WORK roles + ADMIN.
+        const session = await getCurrentSession();
+        if (!session?.user?.id || !isWorkRole(session.user.role)) {
+            throw new Error("Security Violation: You are not allowed to move money between accounts.");
+        }
+
         const amount = Number(formData.get("amount"));
         const fromCategoryId = formData.get("fromAccount") as string; // From UI dropdown
         const toCategoryId = formData.get("toAccount") as string;     // From UI dropdown
         const date = formData.get("date") ? new Date(formData.get("date") as string) : new Date();
         const description = formData.get("description") as string;
-        const createdBy = formData.get("createdBy") as string;
+        // The actor id comes from the session, not the (spoofable) form field.
+        const createdBy = session.user.id;
 
         // 1. Validation
         if (!createdBy) throw new Error("Security Violation: User session not found.");
@@ -60,7 +69,7 @@ export async function executeTransfer(prevState: any, formData: FormData) {
             isSettled: true
         });
 
-        revalidatePath("/finances");
+        revalidatePath("/finance");
         revalidatePath("/settlements");
         
         return { success: true, error: null };

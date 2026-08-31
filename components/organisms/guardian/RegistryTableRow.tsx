@@ -77,7 +77,7 @@ export function RegistryTableRow({ guardian }: { guardian: any }) {
                     size="sm"
                     className="border border-border bg-bg group-hover:border-primary/40 group-hover:text-primary shadow-sm rounded-xl transition-all"
                 >
-                    View Dossier →
+                    View Profile →
                 </Button>
                 {/* </Link> */}
 

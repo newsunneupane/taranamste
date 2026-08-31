@@ -38,7 +38,7 @@ export const ProfileDocumentVault = ({ childId, existingDocs = [] }: { childId: 
         <div className="bg-card p-6 md:p-8 rounded-dashboard border border-border shadow-glow flex flex-col h-full transition-colors duration-500">
             {/* Header: Micro-caps sync */}
             <h2 className="text-[10px] uppercase font-black tracking-[0.2em] text-text-muted mb-6 flex items-center gap-2 border-b border-border pb-3 opacity-80">
-                📄 Document Vault
+                📄 Documents
             </h2>
 
             {/* Existing Documents */}

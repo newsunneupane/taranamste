@@ -18,7 +18,7 @@ export default function FinanceLedger({ transactions, accounts, inventory }: any
             <div className="flex justify-between items-center px-2">
                 {/* Typography: text-zinc-900 -> text-text */}
                 <h2 className="text-xl md:text-2xl font-black text-text tracking-tighter">
-                    Live Ledger
+                    All Transactions
                 </h2>
 
             </div>

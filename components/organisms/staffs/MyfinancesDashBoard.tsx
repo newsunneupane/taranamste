@@ -4,6 +4,7 @@ import React from "react";
 import { Wallet, Clock, CheckCircle, XCircle, Plus, Receipt } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { useUIModals } from "@/hooks/useUIModal";
+import { formatNepaliDateShort } from "@/lib/nepaliDate";
 
 export const MyFinancesDashboard = ({ 
     transactions, 
@@ -38,10 +39,10 @@ export const MyFinancesDashboard = ({
                     </div>
                     <div>
                         <h2 className="text-xl font-black text-text uppercase tracking-widest">
-                            My Ledger
+                            My Money
                         </h2>
                         <p className="text-[10px] text-text-muted font-bold uppercase tracking-tighter mt-1 opacity-70">
-                            {userName} // {profile?.designation || "Authorized Personnel"}
+                            {userName} // {profile?.designation || "Staff Member"}
                         </p>
                     </div>
                 </div>
@@ -66,7 +67,7 @@ export const MyFinancesDashboard = ({
                         <p className={`text-[10px] font-black uppercase tracking-widest ${
                             netBalance === 0 ? 'text-text-muted' : isOwedToStaff ? 'text-success' : 'text-warning'
                         }`}>
-                            {netBalance === 0 ? "Account Balanced" : isOwedToStaff ? "Reimbursement Due to You" : "Orphanage Cash in Hand"}
+                            {netBalance === 0 ? "All Balanced" : isOwedToStaff ? "Money Owed to You" : "Orphanage Cash You Hold"}
                         </p>
                         
                         {pendingAmount > 0 && (
@@ -103,7 +104,7 @@ export const MyFinancesDashboard = ({
                 <div className="p-6 border-b border-border bg-shaded flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         <Receipt size={18} className="text-text-muted" />
-                        <h3 className="font-black text-[11px] uppercase tracking-[0.2em] text-text">Submission History</h3>
+                        <h3 className="font-black text-[11px] uppercase tracking-[0.2em] text-text">My Transactions</h3>
                     </div>
                 </div>
 
@@ -132,7 +133,7 @@ export const MyFinancesDashboard = ({
                                     </div>
                                     <p className="text-xs font-bold text-text truncate max-w-[300px]">{tx.description}</p>
                                     <p className="text-[9px] font-black text-text-muted uppercase tracking-widest">
-                                        {new Date(tx.date).toLocaleDateString()} • {tx.accountHead?.name || "Uncategorized"}
+                                        {formatNepaliDateShort(tx.date)} • {tx.accountHead?.name || "Uncategorized"}
                                     </p>
                                 </div>
 

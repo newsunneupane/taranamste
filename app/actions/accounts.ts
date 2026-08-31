@@ -3,11 +3,18 @@
 import dbConnect from "@/lib/db";
 import AccountHead from "@/models/AccountHead";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/guards";
+import { ROLES } from "@/lib/permission";
 
 export async function addAccountHead(prevState: any, formData: FormData) {
     await dbConnect();
 
     try {
+        // Account heads can be added from the Finance page (WORK) or the
+        // Categories page (ADMIN). Limited roles (CAREGIVER etc.) are blocked.
+        const role = await requireRole(ROLES.ADMIN, ROLES.SAMITY, ROLES.STAFF);
+        if (!role) return { success: false, error: "Security Violation: You are not allowed to manage categories." };
+
         const id = formData.get("id") as string;
         const subTypesArray = formData.getAll("subType").filter(Boolean) as string[];
 

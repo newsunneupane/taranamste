@@ -36,10 +36,10 @@ export const SettlementDashboard = ({
           </div>
           <div>
             <h2 className="text-xl font-black text-text uppercase tracking-widest">
-              Reconciliation Engine
+              Payments & Balances
             </h2>
             <p className="text-[10px] text-text-muted font-bold uppercase tracking-tighter mt-1 opacity-70">
-              Clear staff cash holdings & reimbursements
+              Pay staff and deposit collected cash
             </p>
           </div>
         </div>
@@ -50,8 +50,8 @@ export const SettlementDashboard = ({
         {activeBalances.length === 0 ? (
           <div className="col-span-full p-12 text-center border-2 border-dashed border-border/50 rounded-dashboard bg-card/50">
              <Wallet className="mx-auto text-success/50 mb-4" size={32} />
-             <p className="text-sm font-black text-text-muted uppercase tracking-widest">Books Balanced</p>
-             <p className="text-[10px] text-text-muted font-bold opacity-60">No staff members require settlement or reimbursement.</p>
+             <p className="text-sm font-black text-text-muted uppercase tracking-widest">All Balanced</p>
+             <p className="text-[10px] text-text-muted font-bold opacity-60">No payments are needed right now.</p>
           </div>
         ) : (
           activeBalances.map((staff) => (
@@ -100,7 +100,7 @@ const SettlementCard = ({ staff, bankAccounts }: { staff: StaffBalance, bankAcco
       {/* Financial Display ✨ Dynamic Colors & Labels */}
       <div className={`p-4 rounded-xl border ${isOwedToStaff ? 'bg-warning/5 border-warning/20' : 'bg-shaded/50 border-border/50'}`}>
         <p className={`text-[9px] font-bold uppercase tracking-widest mb-1 ${isOwedToStaff ? 'text-warning' : 'text-text-muted'}`}>
-          {isOwedToStaff ? "Amount Owed to Staff" : "Unsettled Cash Held"}
+          {isOwedToStaff ? "Money Owed to Staff" : "Cash Not Yet Paid In"}
         </p>
         <p className={`text-2xl font-mono font-black ${isOwedToStaff ? 'text-warning' : 'text-text'}`}>
           NPR {displayAmount.toLocaleString()}
@@ -125,7 +125,7 @@ const SettlementCard = ({ staff, bankAccounts }: { staff: StaffBalance, bankAcco
             isOwedToStaff ? 'bg-warning hover:bg-warning/90' : 'btn-primary'
           }`}
         >
-          {isPending ? "SYNCING..." : (isOwedToStaff ? "Reimburse Staff" : "Settle to Bank")}
+          {isPending ? "PROCESSING..." : (isOwedToStaff ? "Pay Staff" : "Deposit to Bank")}
         </Button>
       </div>
     </form>

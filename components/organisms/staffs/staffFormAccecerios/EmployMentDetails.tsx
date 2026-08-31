@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { FormField } from "../../../molecules/FormField";
 import { SelectField } from "../../../molecules/selects/SelectField";
-import { DatePickerField } from "@/components/molecules/DatePickerField";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 import { StaffFormInputs } from "@/types/StaffFormInputs";
 
 const departmentOptions = [
@@ -71,13 +71,12 @@ export const EmploymentDetails = ({ initialData }: Props) => {
                 className="text-text"
             />
 
-            <DatePickerField
+            <NepaliDateField
                 label="Date of Joining (कार्यग्रहण मिति)"
                 name="joinDate"
-                id="joinDate"
                 required
                 defaultValue={formattedDate}
-                // Ensure DatePicker handles border-border internally
+                language="en"
             />
 
         </div>

@@ -4,6 +4,7 @@ import React, { useState, useTransition } from "react";
 import { CheckCircle, XCircle, Clock, FileText } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { verifyTransaction, rejectTransaction } from "@/app/actions/transactionVerification";
+import { formatNepaliDateShort } from "@/lib/nepaliDate";
 
 export const VerificationDashboard = ({ pendingTransactions }: { pendingTransactions: any[] }) => {
   const [isPending, startTransition] = useTransition();
@@ -39,10 +40,10 @@ export const VerificationDashboard = ({ pendingTransactions }: { pendingTransact
           </div>
           <div>
             <h2 className="text-xl font-black text-text uppercase tracking-widest">
-              Verification Queue
+              Pending Approvals
             </h2>
             <p className="text-[10px] text-text-muted font-bold uppercase tracking-tighter mt-1 opacity-70">
-              Pending field transactions requiring Admin Clearance
+              Money records waiting for your approval
             </p>
           </div>
         </div>
@@ -58,7 +59,7 @@ export const VerificationDashboard = ({ pendingTransactions }: { pendingTransact
         <div className="p-12 text-center border-2 border-dashed border-border/50 rounded-dashboard bg-card/50">
           <CheckCircle className="mx-auto text-success/50 mb-4" size={32} />
           <p className="text-sm font-black text-text-muted uppercase tracking-widest">All Clear</p>
-          <p className="text-[10px] text-text-muted font-bold opacity-60">No pending transactions in the queue.</p>
+          <p className="text-[10px] text-text-muted font-bold opacity-60">No records waiting for approval.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
@@ -93,12 +94,12 @@ export const VerificationDashboard = ({ pendingTransactions }: { pendingTransact
                   <p className="text-sm font-bold text-text-muted mt-1">{tx.description}</p>
 
                   <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1">
-                    Ledger: {tx.accountHead?.name} ({tx.accountHead?.code})
+                    Category: {tx.accountHead?.name} ({tx.accountHead?.code})
                   </p>
 
                   <div className="flex items-center gap-4 mt-2 text-[10px] font-bold text-text-muted/60 uppercase tracking-widest">
                     <span>Submitted By: <span className="text-text">{tx.createdBy?.name || "Unknown"}</span></span>
-                    <span>Date: {new Date(tx.date).toLocaleDateString()}</span>
+                    <span>Date: {formatNepaliDateShort(tx.date)}</span>
                   </div>
                 </div>
               </div>
@@ -118,7 +119,7 @@ export const VerificationDashboard = ({ pendingTransactions }: { pendingTransact
                   disabled={isPending}
                   className="bg-warning hover:bg-warning/90 text-text-invert shadow-glow px-6 h-10 font-black tracking-widest"
                 >
-                  {processingId === tx._id ? "SYNCING..." : "VERIFY"}
+                  {processingId === tx._id ? "APPROVING..." : "APPROVE"}
                 </Button>
               </div>
 

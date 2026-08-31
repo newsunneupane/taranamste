@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { FormField } from "@/components/molecules/FormField";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 import SelectPaymentCategory from "@/components/molecules/selects/SelectPaymentCategory";
 import SelectAccountHead from "@/components/molecules/selects/SelectAccontHead" // Fixed import typo
 
@@ -28,10 +29,10 @@ export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
             <div className="border-b border-success/20 pb-3 flex justify-between items-end">
                 <div>
                     <p className="text-[10px] uppercase font-black text-success tracking-[0.2em]">
-                        Financial Ledger Link
+                        Linked Transaction
                     </p>
                     <p className="text-[9px] text-text-muted uppercase font-bold mt-1 opacity-70">
-                        {isPurchase ? "Inventory Purchase Audit" : "Stock Valuation Audit"}
+                        {isPurchase ? "Inventory Purchase" : "Stock Value"}
                     </p>
                 </div>
                 {Number(costEntered) > 0 && (
@@ -74,12 +75,10 @@ export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
                 </div>
 
                 {/* 4. DATE */}
-                <FormField
-                    id="transactionDate"
+                <NepaliDateField
                     label="Transaction Date"
                     name="date"
-                    type="date"
-                    className="text-text color-scheme-adaptive font-mono"
+                    className="text-text font-mono"
                     defaultValue={
                         transaction?.date
                             ? new Date(transaction.date).toISOString().split("T")[0]

@@ -28,10 +28,10 @@ export default function GuardianVettingVault({
                     <div>
                         {/* TYPOGRAPHY: Updated zinc-900 -> text-text, zinc-500 -> text-text-muted */}
                         <h2 className="text-lg font-black text-text tracking-tight">
-                            Verification Vault
+                            Application Files
                         </h2>
                         <p className="text-xs text-text-muted font-medium mt-0.5">
-                            Secure storage for background checks
+                            This guardian's background check documents
                         </p>
                     </div>
                 </div>

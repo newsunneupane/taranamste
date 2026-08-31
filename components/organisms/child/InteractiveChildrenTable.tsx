@@ -3,6 +3,7 @@ import React, { useState, useMemo } from "react";
 import { Button } from "@/components/atoms/Button";
 import { useUIModals } from "@/hooks/useUIModal";
 import { Search, Filter } from "lucide-react"; // ✨ Added Icons
+import { formatNepaliDateShort } from "@/lib/nepaliDate";
 
 export default function InteractiveChildrenTable({ children }: { children: any[] }) {
     const { openChildModal, openChildProfile } = useUIModals();
@@ -28,9 +29,7 @@ export default function InteractiveChildrenTable({ children }: { children: any[]
     // Format helper
     const formatDate = (dateString: string) => {
         if (!dateString) return "N/A";
-        return new Date(dateString).toLocaleDateString(undefined, {
-            year: 'numeric', month: 'short', day: 'numeric'
-        });
+        return formatNepaliDateShort(dateString);
     };
 
     // If zero children exist in the database at all

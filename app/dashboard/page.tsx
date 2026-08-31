@@ -90,7 +90,7 @@ export default async function Home() {
                 <Activity className={`w-4 h-4 ${urgentActions.length > 0 ? 'text-danger animate-pulse' : 'text-success'}`} />
                 Critical Care Feed
               </h2>
-              <Link href="/children/actions" className="text-[9px] font-black text-primary hover:tracking-widest transition-all uppercase">View All →</Link>
+              <Link href="/children" className="text-[9px] font-black text-primary hover:tracking-widest transition-all uppercase">View All →</Link>
             </div>
 
             <div className="flex flex-col">
@@ -102,7 +102,7 @@ export default async function Home() {
                 urgentActions.map((plan: any, idx: number) => (
                   <Link
                     key={plan._id}
-                    href={`/children/${plan.childId?._id}?tab=actions&planId=${plan._id}`}
+                    href={`/children/${plan.childId?._id}/documents?planId=${plan._id}`}
                     className={`p-5 md:p-6 flex justify-between items-center group cursor-pointer border-l-4 border-l-transparent hover:border-l-primary transition-all ${idx % 2 === 0 ? 'bg-card' : 'bg-alt'}`}
                   >
                     <div className="flex items-center gap-4">

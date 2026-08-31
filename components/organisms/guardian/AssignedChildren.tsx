@@ -19,10 +19,10 @@ export const AssignedChildren = ({ guardian }: AssignedChildrenProps) => {
             <div className="p-6 border-b border-border bg-shaded/30 flex justify-between items-center">
                 <div className="flex flex-col gap-1">
                     <h3 className="text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">
-                        Placement Registry
+                        Assigned Children
                     </h3>
                     <p className="text-[9px] font-bold text-primary uppercase tracking-widest opacity-60">
-                        Active Assignments: {assignedIds.size}
+                        Current: {assignedIds.size}
                     </p>
                 </div>
                 <Baby className="text-primary w-5 h-5 opacity-40" />

@@ -4,6 +4,7 @@ import { Button } from "@/components/atoms/Button";
 import Image from "next/image";
 import { X, Edit3 } from "lucide-react";
 import { useUIModals } from "@/hooks/useUIModal";
+import { formatNepaliDate } from "@/lib/nepaliDate";
 
 interface ChildProfile {
   firstName: string;
@@ -54,11 +55,7 @@ export const ProfileHeader = ({ child, id }: { child: ChildProfile; id: string }
             REGISTRATION_DT //
           </span>
           <p className="text-[10px] font-mono text-zinc-500 tracking-widest">
-            {new Date(child.admissionDate).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'short',
-              day: '2-digit'
-            }).toUpperCase()}
+            {formatNepaliDate(child.admissionDate)}
           </p>
         </div>
 

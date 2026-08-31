@@ -2,15 +2,24 @@
 import dbConnect from "@/lib/db";
 import Transaction from "@/models/Transaction";
 import { revalidatePath } from "next/cache";
+import { getCurrentSession } from "@/lib/guards";
+import { isAdmin } from "@/lib/permission";
 
 export async function settleStaffCash(prevState: any, formData: FormData) {
   try {
     await dbConnect();
     
+    // Only an ADMIN may reconcile cash.
+    const session = await getCurrentSession();
+    if (!session?.user?.id || !isAdmin(session.user.role)) {
+      return { error: "Security Violation: Only Administrators can settle cash." };
+    }
+
     const staffId = formData.get("staffId") as string;
     const paymentCategoryId = formData.get("paymentCategoryId") as string; // The destination (Bank/Safe)
     const totalAmount = Number(formData.get("totalAmount"));
-    const adminId = formData.get("adminId") as string; // Who is performing the reconciliation
+    // The actor id comes from the session, not the (spoofable) form field.
+    const adminId = session.user.id;
 
     if (!staffId || !paymentCategoryId || totalAmount <= 0) {
       return { error: "Missing required settlement parameters." };
@@ -43,7 +52,7 @@ export async function settleStaffCash(prevState: any, formData: FormData) {
     });
 
     revalidatePath("/finance");
-    revalidatePath("/finance/settlements");
+    revalidatePath("/settlements");
     return { success: true };
   } catch (error: any) {
     console.error("Settlement Error:", error);

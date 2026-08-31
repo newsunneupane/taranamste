@@ -39,7 +39,7 @@ export default function InteractiveGuardianTable({ guardians }: { guardians: any
                     onChange={(e) => setStatusFilter(e.target.value)}
                 >
                     <option value="ALL">All Statuses</option>
-                    <option value="VETTING">In Vetting</option>
+                    <option value="VETTING">Under Review</option>
                     <option value="APPROVED">Approved</option>
                     <option value="BLACKLISTED">Blacklisted</option>
                 </select>
@@ -54,7 +54,7 @@ export default function InteractiveGuardianTable({ guardians }: { guardians: any
                         <tr className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">
                             <th className="p-6">Family / Applicant</th>
                             <th className="p-6">Type</th>
-                            <th className="p-6">Vetting Status</th>
+                            <th className="p-6">Application Status</th>
                             <th className="p-6">Assigned</th>
                             <th className="p-6 text-right pr-10">Actions</th>
                         </tr>
@@ -112,7 +112,7 @@ export default function InteractiveGuardianTable({ guardians }: { guardians: any
                                 Edit
                             </Button>
                             <Button onClick={()=>openGuardianDossier({guardianId:g._id})} className="w-full bg-primary text-text-invert py-3 rounded-xl text-xs font-bold shadow-glow transition-all active:scale-95">
-                                View Dossier
+                                View Profile
                             </Button>
                         </div>
                     </div>

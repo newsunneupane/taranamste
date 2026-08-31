@@ -3,16 +3,25 @@ import dbConnect from "@/lib/db";
 import Staff from "@/models/Staff";
 import Transaction from "@/models/Transaction";
 import { revalidatePath } from "next/cache";
+import { getCurrentSession } from "@/lib/guards";
+import { isAdmin } from "@/lib/permission";
 
 export async function processMonthlyPayroll(prevState: any, formData: FormData) {
   try {
     await dbConnect();
 
+    // Only an ADMIN may run payroll.
+    const session = await getCurrentSession();
+    if (!session?.user?.id || !isAdmin(session.user.role)) {
+      return { error: "Security Violation: Only Administrators can run payroll." };
+    }
+
     // ✨ UPDATED: paymentCategoryId replaces bankAccountId string
     const paymentCategoryId = formData.get("paymentCategoryId") as string;
     const salaryAccountHeadId = formData.get("salaryAccountHeadId") as string;
     const monthYear = formData.get("monthYear") as string; // Format: "YYYY-MM"
-    const adminId = formData.get("adminId") as string; // The ID of the admin running the process
+    // The actor id comes from the session, not the (spoofable) form field.
+    const adminId = session.user.id;
 
     if (!paymentCategoryId || !salaryAccountHeadId || !monthYear || !adminId) {
       return { error: "Missing required financial routing parameters or Admin ID." };

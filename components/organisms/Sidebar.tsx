@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react"; // Added useSession
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ThemeToggle } from "../molecules/ThemeToggle";
 import {
   CreditCard,
   LayoutDashboard,
@@ -24,6 +23,7 @@ import {
   ArrowRightLeft,
   Banknote
 } from "lucide-react";
+import { canAccess } from "@/lib/permission";
 
 export const Sidebar = () => {
   const pathname = usePathname();
@@ -46,18 +46,23 @@ export const Sidebar = () => {
     { label: "Finances", path: "/finance", icon: Wallet },
     { label: "Inventory", path: "/inventory", icon: Package },
     { label: "Guardians", path: "/guardians", icon: Shield },
-    { label: "My Ledger", path: "/my-finances", icon: Wallet },
+    { label: "My Transactions", path: "/my-finances", icon: Wallet },
   ];
 
-  // ADMIN ONLY ITEMS: Only visible if userRole === 'ADMIN'
+  // ADMIN ONLY ITEMS: Only visible to roles allowed by the permission policy
   const adminItems = [
     { label: "Approvals", path: "/approvals", icon: ClipboardCheck },
-    { label: "Cash Settlements", path: "/settlements", icon: ArrowRightLeft },
-    { label: "Staff Registry", path: "/staff", icon: UserCog },
-    { label: "Account Setup", path: "/accounts_headers", icon: BookOpen },
-    // { label: "System Users", path: "/usersmanagement", icon: Users2 },
-    { label: "Run Payroll", path: "/payroll", icon: Banknote },
-    { label: "Payment Categories", path: "/payment-categories", icon: CreditCard },];
+    { label: "Payments", path: "/settlements", icon: ArrowRightLeft },
+    { label: "Staff", path: "/staff", icon: UserCog },
+    { label: "Categories", path: "/accounts_headers", icon: BookOpen },
+    { label: "Team Members", path: "/usersmanagement", icon: Users2 },
+    { label: "Payroll", path: "/payroll", icon: Banknote },
+    { label: "Money Accounts", path: "/payment-categories", icon: CreditCard },];
+
+  // Filter every item through the central permission policy so the menu
+  // always matches what the server actually allows for this role.
+  const baseNav = navItems.filter((item) => canAccess(item.path, userRole));
+  const adminNav = adminItems.filter((item) => canAccess(item.path, userRole));
 
   const renderLink = (item: any) => {
     const isActive = pathname === item.path;
@@ -103,27 +108,20 @@ export const Sidebar = () => {
 
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
           {/* STANDARD LINKS */}
-          {navItems.map(renderLink)}
+          {baseNav.map(renderLink)}
 
           {/* SENSITIVE ADMIN LINKS */}
-          {userRole === "ADMIN" && (
+          {adminNav.length > 0 && (
             <div className="pt-4 mt-4 border-t border-border/50">
               <p className={`text-[9px] font-black text-text-muted uppercase tracking-[0.2em] mb-4 px-4 ${isCollapsed ? "md:hidden" : ""}`}>
                 Management
               </p>
-              {adminItems.map(renderLink)}
+              {adminNav.map(renderLink)}
             </div>
           )}
         </nav>
 
         <div className="p-4 border-t border-border space-y-3 bg-shaded/10">
-          <div className={`flex items-center ${isCollapsed ? "md:justify-center justify-between px-2" : "justify-between px-2"}`}>
-            <span className={`font-ubuntu text-[10px] font-black uppercase tracking-widest text-text-muted ${isCollapsed ? "md:hidden" : ""}`}>
-              Theme
-            </span>
-            <ThemeToggle />
-          </div>
-
           <button onClick={() => signOut()} className={`w-full flex items-center text-danger hover:bg-danger/10 rounded-xl transition-all group ${isCollapsed ? "md:justify-center px-4 py-3 md:p-3" : "px-4 py-3 gap-3"}`}>
             <LogOut className="flex-shrink-0 group-hover:scale-110 w-5 h-5" />
             <span className={`font-ubuntu text-sm font-bold ${isCollapsed ? "md:hidden" : ""}`}>Logout</span>

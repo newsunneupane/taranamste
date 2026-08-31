@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { FormField } from "@/components/molecules/FormField";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 import InventoryLog, { IInventoryLog } from "@/models/InventoryLog";
 
 interface StockFieldsProps {
@@ -30,10 +31,9 @@ export const StockFormFields: React.FC<StockFieldsProps> = ({ unit, actionType, 
                 placeholder={actionType === 'IN' ? "e.g., Purchased from market" : "e.g., Used for daily meals"}
             />
 
-            <FormField
+            <NepaliDateField
                 label="Date of Purchase"
                 name="date"
-                type="date"
                 defaultValue={defaultValue?.date ? new Date(defaultValue.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
             />
         </div>

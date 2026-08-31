@@ -6,8 +6,10 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { PaymentCategoryTable } from "@/components/organisms/Accounting/payementCategory/PaymentCategoryTable";
 import PaymentCategoryHead from "@/components/organisms/Accounting/payementCategory/PaymentCategoryHead";
+import { requirePageAccess } from "@/lib/guards";
 
 export default async function PaymentCategoriesPage() {
+    await requirePageAccess("/payment-categories");
     await dbConnect();
     const categories = await PaymentCategory.find().sort({ isSystem: -1, name: 1 });
 

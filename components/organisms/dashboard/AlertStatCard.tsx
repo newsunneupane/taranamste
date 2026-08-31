@@ -36,11 +36,11 @@ export default function AlertStatCard({ count }: { count: number }) {
         {count}
       </span>
       
-      <p className="hidden md:block text-[10px] font-black text-text-muted mt-1 uppercase tracking-widest opacity-60">Critical Needs</p>
+      <p className="hidden md:block text-[10px] font-black text-text-muted mt-1 uppercase tracking-widest opacity-60">Need Attention</p>
       
       {count > 0 && (
         <span className="text-[8px] font-black text-danger uppercase mt-2 flex items-center gap-1">
-          <span className="animate-bounce">↓</span> View Feed
+          <span className="animate-bounce">↓</span> View Details
         </span>
       )}
     </div>

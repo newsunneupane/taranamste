@@ -1,27 +1,26 @@
 "use server";
 import dbConnect from "@/lib/db";
 import Transaction from "@/models/Transaction";
-import { getServerSession } from "next-auth/next";
-// Note: Import your authOptions from wherever you defined them
-// import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/guards";
+import { ROLES } from "@/lib/permission";
+
+async function assertAdmin() {
+  const role = await requireRole(ROLES.ADMIN);
+  if (!role) throw new Error("Security Violation: Only Administrators can verify transactions.");
+}
 
 export async function verifyTransaction(transactionId: string) {
   try {
     await dbConnect();
     
-    // 1. Security Check (Uncomment when you have authOptions imported)
-    // const session = await getServerSession(authOptions);
-    // if (session?.user?.role !== "ADMIN") {
-    //   throw new Error("Security Violation: Only Administrators can verify transactions.");
-    // }
+    await assertAdmin();
 
     // 2. Perform the Verification
     const updatedTx = await Transaction.findByIdAndUpdate(
       transactionId,
       { 
         status: "VERIFIED",
-        // verifiedBy: session?.user?.id // Log who approved it
       },
       { new: true }
     );
@@ -41,7 +40,7 @@ export async function verifyTransaction(transactionId: string) {
 export async function rejectTransaction(transactionId: string, reason: string) {
     try {
       await dbConnect();
-      // Add Admin check here too
+      await assertAdmin();
       
       await Transaction.findByIdAndUpdate(transactionId, { 
           status: "REJECTED",

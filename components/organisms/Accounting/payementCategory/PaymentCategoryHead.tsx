@@ -13,10 +13,10 @@ const PaymentCategoryHead = () => {
         < div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border pb-8" >
             <div>
                 <h1 className="text-3xl font-black uppercase tracking-tighter text-text">
-                    Payment Categories
+                    Money Accounts
                 </h1>
                 <p className="text-[10px] font-bold text-text-muted uppercase tracking-widest mt-2">
-                    Manage financial sources, bank accounts, and staff ledgers
+                    Manage your money accounts, banks, and staff balances
                 </p>
             </div>
             {/* For simplicity, we'll use a link to a sub-route or a modal */}

@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { FormField } from "@/components/molecules/FormField";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 import { IInventoryLog } from "@/models/InventoryLog";
 
 interface StockFieldsProps {
@@ -36,17 +37,15 @@ export const StockFormFields: React.FC<StockFieldsProps> = ({ unit, actionType, 
             />
 
             {/* Date Field */}
-            <FormField
+            <NepaliDateField
                 label="Transaction Date"
                 name="date"
-                type="date"
                 required
                 defaultValue={defaultValue?.date 
                     ? new Date(defaultValue.date).toISOString().split('T')[0] 
                     : new Date().toISOString().split('T')[0]
                 }
-                // color-scheme-adaptive ensures the native calendar popup respects Dark Mode
-                className="text-text color-scheme-adaptive"
+                className="text-text"
             />
         </div>
     );

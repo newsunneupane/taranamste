@@ -35,7 +35,7 @@ export async function createStaff(prevState: any, formData: FormData) {
         name: payload.fullName,
         email: payload.email,
         username: username,
-        password: hashedPassword,
+        passwordHash: hashedPassword,
         role: "STAFF", 
         image: payload.profileImage || null
       });

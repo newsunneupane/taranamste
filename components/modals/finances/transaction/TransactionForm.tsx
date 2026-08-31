@@ -8,6 +8,7 @@ import { Button } from "@/components/atoms/Button";
 import { addTransaction } from "@/app/actions/transactions";
 import SelectPaymentCategory from "@/components/molecules/selects/SelectPaymentCategory";
 import SelectAccountHead from "@/components/molecules/selects/SelectAccontHead";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 
 interface AddTransactionModalProps {
   closeModal: () => void;
@@ -95,7 +96,7 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
           disabled={!!initialData}
           className={`flex-1 py-2 text-xs font-black rounded-lg transition-all duration-300 ${transactionType === "EXPENSE" ? "bg-card text-danger shadow-sm border border-border/50" : "text-text-muted"}`}
         >
-          EXPENSE (OUT)
+          EXPENSE (Money Out)
         </button>
         <button
           type="button"
@@ -103,7 +104,7 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
           disabled={!!initialData}
           className={`flex-1 py-2 text-xs font-black rounded-lg transition-all duration-300 ${transactionType === "INCOME" ? "bg-card text-success shadow-sm border border-border/50" : "text-text-muted"}`}
         >
-          INCOME (IN)
+          INCOME (Money In)
         </button>
       </div>
 
@@ -131,7 +132,7 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
           <SelectField
             id="subType"
             name="subType"
-            label="Head Sub-Type"
+            label="More Detail"
             defaultValue={initialData?.subType || ""}
             options={availableSubTypes.map((t: string) => ({ label: t, value: t }))}
           />
@@ -146,11 +147,9 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
           defaultValue={initialData?.paymentCategory?._id || initialData?.paymentCategory || ""}
         />
 
-        <FormField
-          id="date"
+        <NepaliDateField
           label="Transaction Date"
           name="date"
-          type="date"
           required
           defaultValue={defaultDate}
           className="text-text font-mono"

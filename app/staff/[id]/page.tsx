@@ -7,9 +7,11 @@ import { notFound } from "next/navigation";
 import { StaffProfileHeader } from "@/components/organisms/staffs/staffpage/StaffProfileHeader";
 import { BasicInfoCard, ComplianceCard, BankCard } from "@/components/organisms/staffs/staffpage/StaffProfileCards";
 import { SalaryCard } from "@/components/organisms/staffs/staffpage/StaffSalaryCard";
+import { requirePageAccess } from "@/lib/guards";
 
 export default async function StaffProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  await requirePageAccess("/staff");
   await dbConnect();
 
   const cleanId = id.trim();

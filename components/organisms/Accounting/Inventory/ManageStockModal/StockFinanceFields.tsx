@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { FormField } from "@/components/molecules/FormField";
+import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 import { TAccountHead } from "@/types/Transaction";
 import SelectPaymentCategory from "@/components/molecules/selects/SelectPaymentCategory"; // ✨ NEW
 
@@ -66,11 +67,10 @@ export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
           defaultValue={transaction?.paymentCategory?._id || transaction?.paymentCategory || ""}
         />
 
-        <FormField
+        <NepaliDateField
           label="Date of Purchase"
           name="date"
-          type="date"
-          className="text-text color-scheme-adaptive"
+          className="text-text"
           defaultValue={
             transaction?.date
               ? new Date(transaction.date).toISOString().split("T")[0]

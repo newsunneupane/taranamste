@@ -42,10 +42,10 @@ const QuickActionSidebar = () => {
     const { openChildModal } = useUIModals()
     return (
         <div className="lg:col-span-1 flex flex-col gap-5">
-            <h2 className="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] ml-2">Control Center</h2>
-            <ActionBtn open={openChildModal} title="Admit Child" sub="New profile entry" icon={<UserPlus size={18} />} variant="primary" />
-            <ActionBtn href="/finance" title="Open Ledger" sub="Transactions & Gifts" icon={<BookOpen size={18} />} variant="success" />
-            <ActionBtn href="/inventory" title="Manage Stock" sub="Warehouse levels" icon={<Package size={18} />} variant="warning" />
+            <h2 className="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] ml-2">Quick Actions</h2>
+            <ActionBtn open={openChildModal} title="Admit Child" sub="Add a new child" icon={<UserPlus size={18} />} variant="primary" />
+            <ActionBtn href="/finance" title="View Finances" sub="Money in & out" icon={<BookOpen size={18} />} variant="success" />
+            <ActionBtn href="/inventory" title="Manage Inventory" sub="Supplies in stock" icon={<Package size={18} />} variant="warning" />
         </div>
     )
 }

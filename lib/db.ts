@@ -32,7 +32,7 @@ const SRV_SHARDS = [
 
 function ensureDns() {
   try {
-    dns.setServers(["100.127.255.73", "8.8.8.8", "1.1.1.1"]);
+    dns.setServers(["8.8.8.8", "1.1.1.1"]);
   } catch (_) {}
   try {
     const records = SRV_SHARDS.map((name, i) => ({

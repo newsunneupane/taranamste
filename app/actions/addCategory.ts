@@ -3,14 +3,13 @@
 import dbConnect from "@/lib/db";
 import PaymentCategory from "@/models/paymentCategory";
 import { revalidatePath } from "next/cache";
-import { requireRole } from "@/lib/guards";
-import { ROLES } from "@/lib/permission";
+import { requireWrite } from "@/lib/guards";
 
 export async function savePaymentCategory(prevState: any, formData: FormData) {
     await dbConnect();
     try {
-        const role = await requireRole(ROLES.ADMIN);
-        if (!role) return { success: false, error: "Security Violation: Only Administrators can manage money accounts." };
+        const w = await requireWrite("/payment-categories");
+        if (!(w as any).ok) return { success: false, error: (w as any).error };
 
         const id = formData.get("id") as string;
         const name = formData.get("name") as string;
@@ -21,9 +20,15 @@ export async function savePaymentCategory(prevState: any, formData: FormData) {
         const isActive = formData.get("isActive") === "true";
         const isSystem = formData.get("isSystem") === "true"; // Only editable by devs/seeding usually
 
+        const CATEGORY_TYPES = ["CASH", "BANK", "WALLET", "KIND", "PERSONAL"] as const;
+        const categoryType = type as (typeof CATEGORY_TYPES)[number];
+        if (!CATEGORY_TYPES.includes(categoryType)) {
+            throw new Error("Invalid payment category type.");
+        }
+
         const payload = { 
             name, 
-            type, 
+            type: categoryType, 
             identifier, 
             accountIdentifier, 
             providerDetail, 
@@ -52,8 +57,8 @@ export async function savePaymentCategory(prevState: any, formData: FormData) {
 export async function deletePaymentCategory(id: string) {
     await dbConnect();
     try {
-        const role = await requireRole(ROLES.ADMIN);
-        if (!role) return { success: false, error: "Security Violation: Only Administrators can delete money accounts." };
+        const w = await requireWrite("/payment-categories");
+        if (!(w as any).ok) return { success: false, error: (w as any).error };
 
         const category = await PaymentCategory.findById(id);
         if (category?.isSystem) throw new Error("System categories cannot be deleted.");

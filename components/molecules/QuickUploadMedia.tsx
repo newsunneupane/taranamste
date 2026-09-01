@@ -92,7 +92,7 @@ export const QuickMediaUpload = ({
             ${isPending ? "opacity-50 grayscale cursor-not-allowed" : "active:scale-95"}
           `}
         >
-          {isPending ? "Syncing..." : "Upload"}
+          {isPending ? "Loading..." : "Upload"}
         </button>
       </div>
     </form>

@@ -4,9 +4,12 @@ import Child from "@/models/Child";
 import { uploadImage } from "@/lib/cloudinary";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireWrite } from "@/lib/guards";
 
 
 export async function createChild(prevState: any, formData: FormData) {
+  const w = await requireWrite("/children");
+  if (!(w as any).ok) return { success: false, error: (w as any).error };
   await dbConnect();
 
   // Extract all standard text inputs
@@ -67,6 +70,8 @@ export async function createChild(prevState: any, formData: FormData) {
 
 
 export async function updateChild(prevState: any, formData: FormData) {
+  const w2 = await requireWrite("/children");
+  if (!(w2 as any).ok) return { success: false, error: (w2 as any).error };
   await dbConnect();
   const data = Object.fromEntries(formData.entries()) as any;
   const id = data._id;
@@ -124,6 +129,8 @@ export async function updateChild(prevState: any, formData: FormData) {
 }
 
 export async function quickUploadMedia(prevState: any, formData: FormData) {
+  const w3 = await requireWrite("/children");
+  if (!(w3 as any).ok) return { success: false, error: (w3 as any).error };
   await dbConnect();
   const childId = formData.get("childId") as string;
   const uploadType = formData.get("uploadType") as string;

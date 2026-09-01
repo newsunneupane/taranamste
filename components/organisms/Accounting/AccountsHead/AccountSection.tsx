@@ -33,32 +33,28 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
   const { openAccountHeadForm } = useUIModals();
 
   return (
-    <div className={`bg-card rounded-[1.5rem] border transition-all duration-500 overflow-hidden ${
-      isOpen ? 'border-border shadow-glow' : 'border-border/40 shadow-none hover:border-border'
+    <div className={`bg-card rounded-xl border transition-all duration-300 overflow-hidden ${
+      isOpen ? 'border-border shadow-sm' : 'border-border/40 shadow-none hover:border-border'
     }`}>
       
-      {/* ACCORDION HEADER */}
       <div 
         onClick={onToggle}
         role="button"
         tabIndex={0}
-        className={`cursor-pointer w-full px-5 py-5 flex justify-between items-center transition-colors select-none ${styles.bg} ${
+        className={`cursor-pointer w-full px-4 py-3.5 flex justify-between items-center transition-colors select-none ${styles.bg} ${
           isOpen ? 'border-b ' + styles.border : ''
         }`}
       >
-        <div className="flex items-center gap-4">
-          <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${styles.text} ${isOpen ? 'rotate-180' : ''}`} />
-          
-          <div className="flex items-center gap-3">
-            <h3 className={`font-ubuntu font-black uppercase tracking-[0.2em] text-xs ${styles.text}`}>
-              {title} <span className="opacity-50 ml-2">[{heads.length}]</span>
-            </h3>
-          </div>
+        <div className="flex items-center gap-3">
+          <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${styles.text} ${isOpen ? 'rotate-180' : ''}`} />
+          <h3 className={`font-ubuntu font-black uppercase tracking-[0.15em] text-[11px] ${styles.text}`}>
+            {title} <span className="opacity-50 ml-1.5">[{heads.length}]</span>
+          </h3>
         </div>
 
         <button
           onClick={(e) => { e.stopPropagation(); onAdd(); }}
-          className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl border transition-all active:scale-95 bg-card ${styles.button}`}
+          className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg border transition-all active:scale-95 bg-card ${styles.button}`}
         >
           + Add Head
         </button>
@@ -71,31 +67,28 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="p-4 flex flex-col gap-2.5 max-h-[600px] overflow-y-auto custom-scrollbar">
+          <div className="p-3 flex flex-col gap-2 max-h-[500px] overflow-y-auto custom-scrollbar">
             
             {heads.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 opacity-30">
-                <FolderOpen size={32} className="mb-2" />
-                <p className="text-[10px] font-black uppercase tracking-[0.3em]">No Active Records</p>
+              <div className="flex flex-col items-center justify-center py-8 opacity-30">
+                <FolderOpen size={24} className="mb-1.5" />
+                <p className="text-[9px] font-black uppercase tracking-[0.3em]">No Active Records</p>
               </div>
             ) : (
               heads.map((head) => (
                 <div 
                   key={head._id} 
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-shaded/30 border border-border/40 rounded-2xl hover:border-primary/30 hover:bg-shaded/60 transition-all group gap-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-shaded/30 border border-border/40 rounded-xl hover:border-primary/30 hover:bg-shaded/60 transition-all group gap-2"
                 >
-                  {/* LEFT: Identity & Code */}
-                  <div className="flex items-center gap-4">
-                    {/* Visual Code Badge - Essential for Scanning */}
-                    <div className={`w-10 h-10 rounded-lg ${styles.bg} flex items-center justify-center text-[10px] font-black border ${styles.border} ${styles.text}`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-lg ${styles.bg} flex items-center justify-center text-[9px] font-black border ${styles.border} ${styles.text}`}>
                        {head.code?.slice(0, 3) || '??'}
                     </div>
-                    
                     <div className="flex flex-col min-w-0">
-                      <span className="text-sm font-bold text-text group-hover:text-primary transition-colors truncate">
+                      <span className="text-xs font-bold text-text group-hover:text-primary transition-colors truncate">
                         {head.name}
                       </span>
-                      <span className="text-[10px] font-mono text-text-muted mt-0.5 uppercase tracking-wider">
+                      <span className="text-[9px] font-mono text-text-muted uppercase tracking-wider">
                         REF: {head.code || "UNCATEGORIZED"}
                       </span>
                     </div>

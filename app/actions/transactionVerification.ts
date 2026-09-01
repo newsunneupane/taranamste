@@ -2,12 +2,11 @@
 import dbConnect from "@/lib/db";
 import Transaction from "@/models/Transaction";
 import { revalidatePath } from "next/cache";
-import { requireRole } from "@/lib/guards";
-import { ROLES } from "@/lib/permission";
+import { requireWrite } from "@/lib/guards";
 
 async function assertAdmin() {
-  const role = await requireRole(ROLES.ADMIN);
-  if (!role) throw new Error("Security Violation: Only Administrators can verify transactions.");
+  const w = await requireWrite("/approvals");
+  if (!(w as any).ok) throw new Error((w as any).error);
 }
 
 export async function verifyTransaction(transactionId: string) {

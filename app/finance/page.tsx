@@ -47,10 +47,9 @@ export default async function FinancePage() {
     const netBalance = totalIncome - totalExpense;
 
     return (
-        // ✨ FIX: Added p-4 pt-20 md:p-6 md:pt-6 lg:p-8 to clear the mobile sidebar menu
-        <div className="max-w-7xl mx-auto space-y-8  w-full md:p-6 md:pt-6 lg:p-8 transition-colors duration-500">
+        <div className="max-w-7xl mx-auto space-y-5 w-full p-3 md:p-5 lg:p-6 transition-colors duration-500">
             <PageHeader />
-            <div className="grid grid-cols-2 md:pt-6 md:grid-cols-3 gap-3 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-4">
                 <SummaryCard
                     label="Available Balance"
                     value={netBalance}
@@ -114,17 +113,14 @@ function SummaryCard({
 
     return (
         <div
-            // ✨ Tightened padding (p-4 md:p-6), rounded corners, and gaps for mobile
-            className={`p-4 md:p-6 rounded-2xl md:rounded-[2rem] border shadow-sm flex flex-col justify-center gap-1 md:gap-2 transition-colors duration-500 ${containerStyles[variant]} ${className}`}
+            className={`p-3 md:p-4 rounded-xl border shadow-sm flex flex-col justify-center gap-1 transition-colors duration-500 ${containerStyles[variant]} ${className}`}
         >
-            {/* ✨ Standardized font-ubuntu and scaled down text size for mobile */}
-            <p className="font-ubuntu text-[9px] md:text-[10px] font-black uppercase tracking-widest text-text-muted">
+            <p className="font-ubuntu text-[8px] md:text-[9px] font-black uppercase tracking-widest text-primary">
                 {label}
             </p>
 
-            {/* ✨ Scaled value text down to text-2xl on mobile so large numbers don't break */}
-            <p className={`text-2xl md:text-3xl font-black tracking-tight leading-none ${valueStyles[variant]}`}>
-                <span className="opacity-80 pr-1 text-lg md:text-xl">{prefix}</span>
+            <p className={`text-lg md:text-xl font-black tracking-tight leading-none ${valueStyles[variant]}`}>
+                <span className="opacity-80 pr-1 text-[11px]">{prefix}</span>
                 NPR {Number(value).toLocaleString("en-IN")}
             </p>
         </div>

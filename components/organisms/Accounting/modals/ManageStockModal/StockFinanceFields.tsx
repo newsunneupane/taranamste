@@ -55,11 +55,11 @@ export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
                     className="text-text font-mono"
                 />
 
-                {/* 2. THE ACCOUNT HEAD (Expense/Income) */}
                 <SelectAccountHead 
                     transactionType={transactionType}
                     selectedAccountId={selectedAccountId}
                     setSelectedAccountId={setSelectedAccountId}
+                    initialData={transaction}
                     required={Number(costEntered) > 0}
                 />
             </div>

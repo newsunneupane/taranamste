@@ -1,20 +1,32 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Prerequisites
+
+This project runs the dev server over **HTTPS** using mkcert-generated local certificates
+(required so the site loads in browsers with HTTPS-only/private modes enabled).
+
+Generate the local trusted certificates once (requires [mkcert](https://github.com/FiloSottile/mkcert)):
+
+```bash
+mkcert -install
+mkcert -cert-file ./certificates/localhost.pem -key-file ./certificates/localhost-key.pem localhost 127.0.0.1 ::1
+```
+
 ## Getting Started
 
 First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [https://localhost:3000](https://localhost:3000) with your browser to see the result.
+
+To run over plain HTTP instead (if you don't need HTTPS), use:
+
+```bash
+npm run dev:http
+```
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

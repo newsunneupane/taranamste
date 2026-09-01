@@ -3,6 +3,7 @@
 import dbConnect from "@/lib/db";
 import InventoryCategory from "@/models/InventoryCategory";
 import { revalidatePath } from "next/cache";
+import { requireWrite } from "@/lib/guards";
 
 // ✨ Interface strictly matching the useActionState initialState in your modals
 export type CategoryActionState = {
@@ -12,9 +13,11 @@ export type CategoryActionState = {
 };
 
 export async function saveInventoryCategory(
-  prevState: CategoryActionState, // Match component state
+  prevState: CategoryActionState,
   formData: FormData
 ): Promise<CategoryActionState> {
+  const w = await requireWrite("/inventory");
+  if (!(w as any).ok) return { success: false, error: (w as any).error, data: null };
   await dbConnect();
 
   const name = formData.get("name") as string;

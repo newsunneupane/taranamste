@@ -138,7 +138,7 @@ export const ChildAction = ({
                         disabled={isPending} 
                         className="btn-primary min-w-[220px] h-14 shadow-glow"
                     >
-                        {isPending ? "Syncing Directive..." : "SAVE"}
+                        {isPending ? "Loading..." : "SAVE"}
                     </Button>
                 </div>
             </form>

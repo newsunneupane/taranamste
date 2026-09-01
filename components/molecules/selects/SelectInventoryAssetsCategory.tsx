@@ -39,7 +39,7 @@ export const SelectAssetCategory = ({ defaultValue = "", ...props }: any) => {
     return (
         <SelectField
             {...props}
-            label={isLoading ? 'SYNCING_ASSETS...' : 'Asset Class'}
+            label={isLoading ? 'Loading...' : 'Asset Class'}
             options={options}
             disabled={isLoading}
             defaultValue={defaultValue}

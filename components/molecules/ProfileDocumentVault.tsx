@@ -97,7 +97,7 @@ export const ProfileDocumentVault = ({ childId, existingDocs = [] }: { childId: 
                         disabled={isPending}
                         className="flex-1 btn-primary text-[10px] uppercase tracking-widest flex justify-center items-center h-11"
                     >
-                        {isPending ? "Uploading..." : `Upload Now`}
+                        {isPending ? "Loading..." : `Upload Now`}
                     </button>
                 )}
             </div>
@@ -200,7 +200,7 @@ export const ProfilePhotoGallery = ({ childId, existingPhotos = [] }: { childId:
                         disabled={isPending}
                         className="flex-1 btn-primary text-[10px] uppercase tracking-widest flex justify-center items-center h-11"
                     >
-                        {isPending ? "Syncing..." : `Upload Gallery`}
+                        {isPending ? "Loading..." : `Upload Gallery`}
                     </button>
                 )}
             </div>

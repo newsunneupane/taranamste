@@ -9,8 +9,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const { status } = useSession();
   const pathname = usePathname(); // ✨ GET CURRENT URL
 
-  // ✨ DEFINE PUBLIC ROUTES THAT BYPASS THE LOGIN TRAP
-  const isPublicRoute = pathname?.startsWith('/register');
+  const isPublicRoute = false;
 
   // 1. Loading State (Theme-Aware)
   if (status === "loading") {
@@ -20,7 +19,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
           {/* Spinner using primary color and glow effect */}
           <div className="w-10 h-10 border-4 border-primary/10 border-t-primary rounded-full animate-spin shadow-glow" />
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted animate-pulse">
-            Initializing
+            Loading
           </p>
         </div>
       </div>
@@ -49,7 +48,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
       <Sidebar />
 
       <main className="flex-1 overflow-y-auto bg-shaded/50 transition-colors duration-500">
-        <div className="max-w-[1600px] mx-auto p-4 md:p-8">
+        <div className="max-w-[1600px] mx-auto p-3 md:p-5">
           {children}
         </div>
       </main>

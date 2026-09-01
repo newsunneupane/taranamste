@@ -26,6 +26,7 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
 
     const [subTypes, setSubTypes] = useState<string[]>(initialData?.subType || []);
 
+    useEffect(() => { setSubTypes(initialData?.subType || []); }, [initialData?._id, initialData?.subType]);
 
     useEffect(() => {
         if (state?.success) {
@@ -38,11 +39,11 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
         <form action={formAction} className="flex flex-col flex-1 min-h-0 w-full">
             {initialData?._id && <input type="hidden" name="id" value={initialData._id} />}
 
-            <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar flex flex-col gap-6">
+            <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar flex flex-col gap-4">
 
                 {state?.error && (
-                    <div className="flex items-center gap-3 text-sm text-danger bg-danger/10 p-4 rounded-xl border border-danger/20 font-bold animate-in slide-in-from-top-2 shrink-0">
-                        <span className="text-lg">⚠️</span>
+                    <div className="flex items-center gap-2 text-xs text-danger bg-danger/10 p-3 rounded-xl border border-danger/20 font-bold animate-in slide-in-from-top-2 shrink-0">
+                        <span>⚠️</span>
                         <span>{state.error}</span>
                     </div>
                 )}
@@ -52,8 +53,7 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
                     <input key={`st-${index}`} type="hidden" name="subType" value={st} />
                 ))}
 
-                {/* 01. IDENTITY */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 shrink-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0">
                     <FormField
                         id="name"
                         label="Account Name *"
@@ -73,8 +73,7 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
                     />
                 </div>
 
-                {/* 02. GOVERNANCE & TYPE */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-shaded p-6 rounded-2xl border border-border shrink-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-shaded p-4 rounded-xl border border-border shrink-0">
                     <SelectField
                         id="type"
                         label="Root Type *"
@@ -117,20 +116,19 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
                 />
             </div>
 
-            {/* ACTION BAR */}
-            <div className="shrink-0 flex justify-end gap-3.5 pt-6 border-t border-border bg-card mt-2">
+            <div className="shrink-0 flex justify-end gap-2 pt-4 border-t border-border bg-card mt-2">
                 <Button
                     type="button"
                     variant="ghost"
                     onClick={closeModal}
-                    className="text-text-muted hover:text-text hover:bg-shaded font-bold text-xs uppercase tracking-wider"
+                    className="text-text-muted hover:text-text hover:bg-shaded font-bold text-[11px] uppercase tracking-wider h-9"
                 >
                     CANCEL
                 </Button>
                 <Button
                     type="submit"
                     disabled={isPending}
-                    className="px-8 font-black text-xs uppercase tracking-widest text-text-invert bg-primary hover:bg-primary/90 shadow-glow active:scale-95 transition-all h-11"
+                    className="px-6 font-black text-[11px] uppercase tracking-widest text-text-invert bg-primary hover:bg-primary/90 shadow-glow active:scale-95 transition-all h-9"
                 >
                     {isPending ? "PROCESSING..." : (initialData ? "UPDATE HEAD" : "SAVE HEAD")}
                 </Button>

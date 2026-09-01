@@ -5,9 +5,12 @@ import InventoryLog from "@/models/InventoryLog";
 import { revalidatePath } from "next/cache";
 import Transaction from "@/models/Transaction";
 import AccountHead from "@/models/AccountHead";
+import { requireWrite } from "@/lib/guards";
 
 // --- CREATE ITEM ---
 export async function addInventoryItem(prevState: any, formData: FormData) {
+    const w = await requireWrite("/inventory");
+    if (!(w as any).ok) return { success: false, error: (w as any).error };
     await dbConnect();
 
     try {
@@ -36,6 +39,8 @@ export async function addInventoryItem(prevState: any, formData: FormData) {
 
 // --- UPDATE ITEM ---
 export async function updateInventoryItem(prevState: any, formData: FormData) {
+    const w2 = await requireWrite("/inventory");
+    if (!(w2 as any).ok) return { success: false, error: (w2 as any).error };
     await dbConnect();
     try {
         const id = formData.get("id") as string;
@@ -67,6 +72,8 @@ export async function updateInventoryItem(prevState: any, formData: FormData) {
 }
 
 export async function adjustStock(prevState: any, formData: FormData) {
+    const w3 = await requireWrite("/inventory");
+    if (!(w3 as any).ok) return { success: false, error: (w3 as any).error };
     await dbConnect();
     
     try {
@@ -135,6 +142,7 @@ export async function adjustStock(prevState: any, formData: FormData) {
                 type: 'EXPENSE',
                 logId: log._id,
                 accountHead: accountHead,
+                subType: formData.get("subType") || undefined,
                 
                 // ✨ NEW: Link the dynamic Payment Category (Bank/Wallet/Cash)
                 paymentCategory: paymentCategoryId, 

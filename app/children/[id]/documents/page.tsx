@@ -60,7 +60,7 @@ export default function ChildDocumentsPage() {
         }
     };
 
-    if (loading) return <div className="p-6 text-text-muted animate-pulse font-mono tracking-widest text-sm">FETCHING_VAULT_DATA...</div>;
+    if (loading) return <div className="p-6 text-text-muted animate-pulse font-mono tracking-widest text-sm">Loading...</div>;
     if (error) return <div className="p-6 text-danger font-bold bg-danger/10 border border-danger/20 rounded-xl m-6">⚠️ Error: {error}</div>;
 
     return (

@@ -2,18 +2,14 @@
 import dbConnect from "@/lib/db";
 import Transaction from "@/models/Transaction";
 import { revalidatePath } from "next/cache";
-import { getCurrentSession } from "@/lib/guards";
-import { isAdmin } from "@/lib/permission";
+import { requireWrite } from "@/lib/guards";
 
 export async function settleStaffCash(prevState: any, formData: FormData) {
   try {
     await dbConnect();
-    
-    // Only an ADMIN may reconcile cash.
-    const session = await getCurrentSession();
-    if (!session?.user?.id || !isAdmin(session.user.role)) {
-      return { error: "Security Violation: Only Administrators can settle cash." };
-    }
+    const w = await requireWrite("/settlements");
+    if (!(w as any).ok) return { error: (w as any).error };
+    const session = (w as any).session;
 
     const staffId = formData.get("staffId") as string;
     const paymentCategoryId = formData.get("paymentCategoryId") as string; // The destination (Bank/Safe)

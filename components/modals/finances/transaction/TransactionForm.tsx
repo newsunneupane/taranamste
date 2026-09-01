@@ -3,7 +3,6 @@
 import React, { useActionState, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { FormField } from "@/components/molecules/FormField";
-import { SelectField } from "@/components/molecules/selects/SelectField";
 import { Button } from "@/components/atoms/Button";
 import { addTransaction } from "@/app/actions/transactions";
 import SelectPaymentCategory from "@/components/molecules/selects/SelectPaymentCategory";
@@ -26,8 +25,6 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
     { error: null, success: false }
   );
 
-  const [accounts, setAccounts] = useState<any[]>([]);
-
   // 1. INITIALIZE TRANSACTION TYPE
   const [transactionType, setTransactionType] = useState<"INCOME" | "EXPENSE">(
     initialData?.type === "INCOME" || initialData?.type === "IN" ? "INCOME" : "EXPENSE"
@@ -38,37 +35,18 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
     initialData?.accountHead?._id || initialData?.accountHead || ""
   );
 
-  // FETCH ACCOUNT HEADS
-  useEffect(() => {
-    const fetchAccounts = async () => {
-      try {
-        const response = await fetch('/api/finances/accountHead');
-        if (!response.ok) throw new Error("Failed to fetch accounts");
-        const data = await response.json();
-        setAccounts(data);
-      } catch (error) {
-        console.error("Error fetching account heads:", error);
-      }
-    };
-    fetchAccounts();
-  }, []);
-
   // AUTO-CLOSE ON SUCCESS
   useEffect(() => {
     if (state?.success) closeModal();
   }, [state?.success, closeModal]);
 
   // COMPUTED VALUES
-  const filteredAccounts = accounts?.filter((acc) => acc.type === transactionType) || [];
-  const selectedAccount = accounts?.find((acc) => acc._id === selectedAccountId);
-  const availableSubTypes = selectedAccount?.subType || [];
-
   const defaultDate = initialData?.date
     ? new Date(initialData.date).toISOString().split('T')[0]
     : new Date().toISOString().split('T')[0];
 
   return (
-    <form action={formAction} className="w-full flex flex-col gap-6">
+    <form action={formAction} className="w-full flex flex-col gap-4">
 
       {/* HIDDEN FIELDS */}
       {initialData?._id && <input type="hidden" name="id" value={initialData._id} />}
@@ -108,8 +86,7 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
         </button>
       </div>
 
-      {/* FINANCIAL DETAILS */}
-      <div className="grid bg-shaded rounded-2xl p-6 grid-cols-1 md:grid-cols-2 gap-6 border border-border">
+      <div className="grid bg-shaded rounded-xl p-4 grid-cols-1 md:grid-cols-2 gap-4 border border-border">
         <FormField
           id="amount"
           label="Amount (NPR) *"
@@ -127,20 +104,9 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
             setSelectedAccountId={setSelectedAccountId}
             initialData={initialData} />
         </div>
-
-        {availableSubTypes.length > 0 && (
-          <SelectField
-            id="subType"
-            name="subType"
-            label="More Detail"
-            defaultValue={initialData?.subType || ""}
-            options={availableSubTypes.map((t: string) => ({ label: t, value: t }))}
-          />
-        )}
       </div>
 
-      {/* PAYMENT CONTEXT */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-shaded p-6 rounded-2xl border border-border">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-shaded p-4 rounded-xl border border-border">
         {/* ✨ UPDATED: Unified Category Selector */}
         <SelectPaymentCategory
           name="paymentCategoryId" // Ensure your component uses this name prop
@@ -156,8 +122,7 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
         />
       </div>
 
-      {/* ENTITY & REFERENCE */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
           id="donorOrVendorName"
           label={transactionType === "INCOME" ? "Donor / Source" : "Vendor Name"}
@@ -183,16 +148,15 @@ export const TransactionForm: React.FC<AddTransactionModalProps> = ({
         defaultValue={initialData?.description || ""}
       />
 
-      {/* ACTIONS */}
-      <div className="shrink-0 flex justify-end gap-3.5 pt-6 border-t border-border mt-2">
-        <Button variant="ghost" onClick={closeModal} className="text-text-muted hover:text-text font-bold text-xs uppercase">
+      <div className="shrink-0 flex justify-end gap-2 pt-4 border-t border-border mt-2">
+        <Button variant="ghost" onClick={closeModal} className="text-text-muted hover:text-text font-bold text-[11px] uppercase h-9">
           Cancel
         </Button>
 
         <Button
           type="submit"
           disabled={isPending || !selectedAccountId}
-          className={`px-8 font-black text-xs uppercase tracking-widest text-text-invert h-11 ${transactionType === "INCOME" ? "bg-success" : "bg-danger"
+          className={`px-6 font-black text-[11px] uppercase tracking-widest text-text-invert h-9 ${transactionType === "INCOME" ? "bg-success" : "bg-danger"
             }`}
         >
           {isPending ? "PROCESSING..." : (initialData ? "Update Record" : "Save Transaction")}

@@ -40,7 +40,7 @@ export default function ChildImagesPage() {
         }
     }, [childId]);
 
-    if (loading) return <div className="p-6 text-gray-600 animate-pulse">Loading images...</div>;
+    if (loading) return <div className="p-6 text-gray-600 animate-pulse">Loading...</div>;
     if (error) return <div className="p-6 text-red-600 font-medium">Error: {error}</div>;
 
     return (

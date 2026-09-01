@@ -8,8 +8,7 @@ export default async function SystemUsersPage() {
     await requirePageAccess("/usersmanagement");
     await dbConnect();
 
-    // Fetch users and split them. We exclude ADMINs so the Admin doesn't accidentally delete themselves.
-    const rawUsers = await User.find({ role: { $ne: "ADMIN" } }).sort({ createdAt: -1 }).lean();
+    const rawUsers = await User.find({}).sort({ createdAt: -1 }).lean();
 
     const sanitizedUsers = rawUsers.map((u: any) => ({
         ...u,

@@ -79,7 +79,7 @@ export const PayrollDashboard = ({
                     disabled={isPending || totalPayroll === 0} 
                     className="w-full h-16 bg-primary text-text-invert shadow-glow-primary mt-2 font-black uppercase tracking-[0.2em] rounded-2xl active:scale-95 transition-transform"
                 >
-                    {isPending ? "AUTHORIZING..." : "EXECUTE PAYROLL"}
+                    {isPending ? "Loading..." : "EXECUTE PAYROLL"}
                 </Button>
             </form>
 

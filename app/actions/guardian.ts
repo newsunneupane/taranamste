@@ -4,8 +4,11 @@ import Guardian from "@/models/Guardian";
 import { uploadFile, uploadImage } from "@/lib/cloudinary";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireWrite } from "@/lib/guards";
 
 export async function createGuardian(prevState: any, formData: FormData) {
+    const w = await requireWrite("/guardians");
+    if (!(w as any).ok) return { success: false, error: (w as any).error };
     await dbConnect();
     const rawData = Object.fromEntries(formData.entries()) as any;
     
@@ -57,6 +60,8 @@ export async function createGuardian(prevState: any, formData: FormData) {
 }
 
 export async function uploadGuardianDoc(guardianId: string, formData: FormData) {
+    const w2 = await requireWrite("/guardians");
+    if (!(w2 as any).ok) return { success: false, error: (w2 as any).error };
     await dbConnect();
 
     try {
@@ -90,6 +95,8 @@ export async function uploadGuardianDoc(guardianId: string, formData: FormData) 
 
 
 export async function deleteGuardianDoc(guardianId: string, docUrl: string) {
+    const w3 = await requireWrite("/guardians");
+    if (!(w3 as any).ok) return { success: false, error: (w3 as any).error };
     await dbConnect();
     try {
         // Remove the specific URL from the array
@@ -108,6 +115,8 @@ export async function deleteGuardianDoc(guardianId: string, docUrl: string) {
 
 
 export async function updateGuardian(id: string, prevState: any, formData: FormData) {
+    const w4 = await requireWrite("/guardians");
+    if (!(w4 as any).ok) return { success: false, error: (w4 as any).error };
     await dbConnect();
     let success = false;
 

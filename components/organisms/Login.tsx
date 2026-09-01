@@ -49,11 +49,9 @@ export const Login = () => {
             <ShieldCheck className="text-primary" size={24} />
           </div>
           <h2 className="text-xl font-black text-text uppercase tracking-widest">
-            Identity Protocol
+            Login 
           </h2>
-          <p className="text-[10px] text-text-muted font-bold uppercase tracking-tighter mt-1 opacity-60">
-            Secure Admin Gateway
-          </p>
+          
         </div>
 
         <div className="p-8 flex flex-col gap-6">
@@ -65,7 +63,7 @@ export const Login = () => {
 
           <div className="space-y-4">
             <FormField
-              label="Admin Email"
+              label="Email"
               type="email"
               placeholder="name@kree-corp.com"
               required
@@ -75,7 +73,7 @@ export const Login = () => {
             {/* PASSWORD FIELD WITH VIEW TOGGLE */}
             <div className="relative group/pass">
               <FormField
-                label="Access Key"
+                label="Password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 required
@@ -103,10 +101,10 @@ export const Login = () => {
             {isLoading ? (
               <div className="flex items-center justify-center gap-3">
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span className="text-[11px] font-black uppercase tracking-[0.2em]">Verifying...</span>
+                <span className="text-[11px] font-black uppercase tracking-[0.2em]">Loading...</span>
               </div>
             ) : (
-              <span className="text-[11px] font-black uppercase tracking-[0.2em]">Authorize Access</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.2em]">Login</span>
             )}
           </Button>
         </div>
@@ -116,14 +114,8 @@ export const Login = () => {
             Authorized Personnel Only
           </p>
 
-          {/* ✨ ADD THIS NEW LINK BLOCK */}
           <div className="pt-3 border-t border-border/30">
-            <p className="text-[10px] text-text-muted font-bold">
-              No access credentials?
-            </p>
-            <Link href="/register" className="text-xs font-black text-primary uppercase tracking-widest hover:underline mt-1 inline-block">
-              Submit Clearance Requisition
-            </Link>
+            <p className="text-[10px] text-text-muted font-bold">Contact SuperAdmin for account creation</p>
           </div>
         </div>
 

@@ -39,7 +39,7 @@ export default function AddDocumentButton({ guardianId }: { guardianId: string }
             `}
         >
             <span>
-                {isPending ? "⏳ Uploading..." : "➕ Add Document"}
+                {isPending ? "Loading..." : "➕ Add Document"}
             </span>
 
             <input

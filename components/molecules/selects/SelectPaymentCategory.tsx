@@ -47,7 +47,7 @@ const SelectPaymentCategory = ({ defaultValue = "", forceType = "", ...props }) 
     return (
         <SelectField
             {...props}
-            label={isLoading ? 'Updating List...' : props.label || 'Money Account'}
+            label={isLoading ? 'Loading...' : props.label || 'Money Account'}
             options={options}
             disabled={isLoading}
             defaultValue={defaultValue}

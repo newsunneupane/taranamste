@@ -84,3 +84,9 @@
   --muted-foreground-ndp: var(--text-muted);
   --radius-ndp: 0.9rem;
 }
+
+/* The library portals its calendar to <body> with z-50, which hides it
+   behind stacked modals (ModalsManager z-10000+). Lift it above them. */
+[data-popover-content] {
+  z-index: 11000 !important;
+}

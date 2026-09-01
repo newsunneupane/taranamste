@@ -83,36 +83,31 @@ export function ModalProvider({ children }: { children: ReactNode }) {
                 return (
                     <div 
                         key={modal.id}
-                        // Use inline styles for dynamic z-index so they stack properly!
                         style={{ zIndex: 10000 + index }}
-                        className={`fixed inset-0 flex items-center justify-center p-4 md:p-10 transition-all duration-300 ease-in-out ${
+                        className={`fixed inset-0 flex items-center justify-center p-3 md:p-6 transition-all duration-300 ease-in-out ${
                             !modal.isClosing ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                         }`}
                     >
-                        {/* BACKDROP */}
                         <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={closeModal} />
 
-                        {/* MODAL CONTAINER */}
-                        <div className={`relative bg-card border  max-w-[95dvw] w-fit border-border rounded-dashboard shadow-glow overflow-hidden transition-all duration-300 ${
+                        <div className={`relative bg-card border max-w-[95dvw] w-fit border-border rounded-2xl shadow-glow overflow-hidden transition-all duration-300 ${
                             !modal.isClosing ? "scale-100 translate-y-0" : "scale-95 translate-y-8"
                         }`}>
-                            <div className="flex items-center justify-between p-6 border-b border-border/50 bg-shaded/40">
-                                <div className="flex flex-col gap-1">
-                                    <span className="!text-[15px] font-black text-text-muted uppercase">
+                            <div className="flex items-center justify-between p-4 border-b border-border/50 bg-shaded/40">
+                                <div className="flex flex-col gap-0.5">
+                                    <span className="text-[13px] font-black text-text uppercase tracking-tight">
                                         {modal.title}
                                     </span>
-                                    <span className="text-[9px] font-bold text-primary uppercase tracking-widest opacity-60">
-                                        {/* If it's not the top modal, show it on Standby */}
+                                    <span className="text-[9px] font-bold text-primary/60 uppercase tracking-widest">
                                         {index === modals.length - 1 ? "Active Session" : "Background Task"}
                                     </span>
                                 </div>
-                                <button onClick={closeModal} className="w-10 h-10 rounded-2xl bg-bg border border-border flex items-center justify-center text-text-muted hover:text-primary transition-all active:scale-90 shadow-sm">
-                                    <X size={20} />
+                                <button onClick={closeModal} className="w-8 h-8 rounded-xl bg-bg border border-border flex items-center justify-center text-text-muted hover:text-primary transition-all active:scale-90 shadow-sm">
+                                    <X size={16} />
                                 </button>
                             </div>
 
-                            {/* DATA TRAY */}
-                            <div className="max-h-[80dvh] p-8 md:p-10 w-full overflow-scroll  custom-scrollbar bg-card">
+                            <div className="max-h-[80dvh] p-5 md:p-6 w-full overflow-auto custom-scrollbar bg-card">
                                 <ActiveComponent {...modal.props} closeModal={closeModal} />
                             </div>
                         </div>

@@ -50,7 +50,7 @@ const SelectChildStatus = ({ defaultValue = "", ...props }) => {
         <div className="relative group">
             <SelectField
                 {...props}
-                label={isLoading ? 'PROTOCOL_SYNCING...' : 'Current Status'}
+                label={isLoading ? 'Loading...' : 'Current Status'}
                 options={options}
                 disabled={isLoading}
                 defaultValue={defaultValue}

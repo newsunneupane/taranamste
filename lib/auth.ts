@@ -25,7 +25,14 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Account is pending Administrator clearance.");
         }
 
-        return { id: user._id.toString(), name: user.name, email: user.email, role: user.role };
+        return {
+          id: user._id.toString(),
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          isSuperAdmin: !!user.isSuperAdmin || user.role === "ADMIN",
+          permissions: user.permissions || {},
+        };
       }
     })
   ],
@@ -34,6 +41,8 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.role = user.role;
         token.id = user.id;
+        token.isSuperAdmin = !!user.isSuperAdmin;
+        token.permissions = user.permissions || {};
       }
       return token;
     },
@@ -41,6 +50,8 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.role = token.role;
         session.user.id = token.id;
+        (session.user as any).isSuperAdmin = !!token.isSuperAdmin;
+        (session.user as any).permissions = token.permissions || {};
       }
       return session;
     },

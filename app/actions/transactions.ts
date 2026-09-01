@@ -2,9 +2,12 @@
 import dbConnect from "@/lib/db";
 import Transaction from "@/models/Transaction";
 import { revalidatePath } from "next/cache";
+import { requireWrite } from "@/lib/guards";
 
 export async function addTransaction(prevState: any, formData: FormData) {
   try {
+    const w = await requireWrite("/finance");
+    if (!(w as any).ok) return { success: false, error: (w as any).error };
     await dbConnect();
 
     const id = formData.get("id") as string; 
@@ -44,6 +47,8 @@ export async function addTransaction(prevState: any, formData: FormData) {
 // 2. DELETE PROTOCOL
 // ============================================================================
 export async function deleteTransaction(id: string) {
+  const w = await requireWrite("/finance");
+  if (!(w as any).ok) return { success: false, error: (w as any).error };
   await dbConnect();
   try {
     if (!id) throw new Error("Transaction ID is required.");

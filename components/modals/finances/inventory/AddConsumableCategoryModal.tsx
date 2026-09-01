@@ -63,7 +63,7 @@ export const ConsumableForm = ({ closeModal, onSaved }: any) => {
                     disabled={isPending} 
                     className="bg-primary px-10 h-10 font-black text-[10px] tracking-widest text-text-invert rounded-xl"
                 >
-                    {isPending ? "SYNCING..." : "ADD_CATEGORY"}
+                    {isPending ? "Loading..." : "ADD_CATEGORY"}
                 </Button>
             </div>
         </form>

@@ -3,18 +3,14 @@ import dbConnect from "@/lib/db";
 import Staff from "@/models/Staff";
 import Transaction from "@/models/Transaction";
 import { revalidatePath } from "next/cache";
-import { getCurrentSession } from "@/lib/guards";
-import { isAdmin } from "@/lib/permission";
+import { requireWrite } from "@/lib/guards";
 
 export async function processMonthlyPayroll(prevState: any, formData: FormData) {
   try {
     await dbConnect();
-
-    // Only an ADMIN may run payroll.
-    const session = await getCurrentSession();
-    if (!session?.user?.id || !isAdmin(session.user.role)) {
-      return { error: "Security Violation: Only Administrators can run payroll." };
-    }
+    const w = await requireWrite("/payroll");
+    if (!(w as any).ok) return { error: (w as any).error };
+    const session = (w as any).session;
 
     // ✨ UPDATED: paymentCategoryId replaces bankAccountId string
     const paymentCategoryId = formData.get("paymentCategoryId") as string;

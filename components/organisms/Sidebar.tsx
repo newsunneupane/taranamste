@@ -23,12 +23,16 @@ import {
   ArrowRightLeft,
   Banknote
 } from "lucide-react";
-import { canAccess } from "@/lib/permission";
+import { canRead } from "@/lib/permission";
 
 export const Sidebar = () => {
   const pathname = usePathname();
-  const { data: session } = useSession(); // Get user role from session
-  const userRole = session?.user?.role || "SAMITY"; // Default to restricted if unsure
+  const { data: session } = useSession();
+  const actor = {
+    isSuperAdmin: !!(session?.user as any)?.isSuperAdmin,
+    permissions: ((session?.user as any)?.permissions as any) || {},
+  };
+  const userRoleLabel = (session?.user as any)?.isSuperAdmin ? "SUPERADMIN" : (session?.user?.role || "STAFF");
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -59,10 +63,8 @@ export const Sidebar = () => {
     { label: "Payroll", path: "/payroll", icon: Banknote },
     { label: "Money Accounts", path: "/payment-categories", icon: CreditCard },];
 
-  // Filter every item through the central permission policy so the menu
-  // always matches what the server actually allows for this role.
-  const baseNav = navItems.filter((item) => canAccess(item.path, userRole));
-  const adminNav = adminItems.filter((item) => canAccess(item.path, userRole));
+  const baseNav = navItems.filter((item) => canRead(item.path, actor));
+  const adminNav = adminItems.filter((item) => canRead(item.path, actor));
 
   const renderLink = (item: any) => {
     const isActive = pathname === item.path;
@@ -88,7 +90,7 @@ export const Sidebar = () => {
       <button onClick={() => setIsMobileOpen(true)} className="md:hidden fixed top-4 left-4 z-40 p-2 bg-card border border-border rounded-xl text-text shadow-glow"><Menu size={24} /></button>
       {isMobileOpen && <div className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50" onClick={() => setIsMobileOpen(false)} />}
 
-      <aside className={`fixed inset-y-0 left-0 z-[60] h-full flex flex-col bg-bg border-r border-border transition-all duration-300 md:relative md:translate-x-0 md:z-40 ${isCollapsed ? "md:w-20" : "md:w-64"} ${isMobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"} w-64`}>
+      <aside className={`flex flex-col w-64 shrink-0 bg-bg border-r border-border transition-all duration-300 md:relative max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-[60] max-md:h-full max-md:shadow-2xl max-md:transition-transform ${isCollapsed ? "md:w-20" : "md:w-64"} ${isMobileOpen ? "max-md:translate-x-0" : "max-md:-translate-x-full"}`}>
 
         <button onClick={() => setIsCollapsed(!isCollapsed)} className="hidden md:block absolute -right-3 top-8 bg-card border border-border text-text-muted rounded-full p-1 z-50 shadow-sm">
           {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -101,7 +103,7 @@ export const Sidebar = () => {
               <span className="md:hidden">Tara Namaste Baal Gram</span>
             </h1>
             <p className={`font-ubuntu text-[9px] text-primary font-black mt-1 ${isCollapsed ? "md:hidden" : ""}`}>
-              {userRole} PROTOCOL
+              {userRoleLabel} PROTOCOL
             </p>
           </div>
         </div>

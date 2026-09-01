@@ -37,7 +37,7 @@ export const SelectConsumableCategory = ({ defaultValue = "", ...props }: any) =
     return (
         <SelectField
             {...props}
-            label={isLoading ? 'SYNCING_LOGISTICS...' : 'Consumable Class'}
+            label={isLoading ? 'Loading...' : 'Consumable Class'}
             options={options}
             disabled={isLoading}
             defaultValue={defaultValue}

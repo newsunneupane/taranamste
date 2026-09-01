@@ -36,7 +36,7 @@ export default function TransactionTable({
             {/* =========================================
                 THE FILTER TOOLBAR
                 ========================================= */}
-            <div className="flex flex-col sm:flex-row gap-3 bg-card p-3 rounded-[1.5rem] border border-border shadow-sm">
+            <div className="flex flex-col sm:flex-row gap-2 bg-card p-2.5 rounded-xl border border-border shadow-sm">
                 {/* Search Bar */}
                 <div className="relative flex-1">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-muted">
@@ -47,7 +47,7 @@ export default function TransactionTable({
                         placeholder="Search category or description..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-background border border-border/50 text-text placeholder:text-text-muted text-sm rounded-xl pl-10 pr-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-inner"
+                        className="w-full bg-background border border-border/50 text-text placeholder:text-text-muted text-[13px] rounded-lg pl-9 pr-3 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-inner"
                     />
                 </div>
 
@@ -59,7 +59,7 @@ export default function TransactionTable({
                     <select
                         value={typeFilter}
                         onChange={(e) => setTypeFilter(e.target.value)}
-                        className="w-full sm:w-48 bg-background border border-border/50 text-text text-sm rounded-xl pl-10 pr-10 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer shadow-inner font-bold"
+                        className="w-full sm:w-44 bg-background border border-border/50 text-text text-[13px] rounded-lg pl-9 pr-8 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer shadow-inner font-bold"
                     >
                         <option value="ALL">All Transactions</option>
                         <option value="INCOME">Income Only</option>
@@ -71,12 +71,11 @@ export default function TransactionTable({
                 </div>
             </div>
 
-            {/* Empty State */}
             {filteredTxns.length === 0 && (
-                <div className="bg-card p-16 rounded-[2rem] border border-border text-center flex flex-col items-center gap-2 shadow-sm">
-                    <span className="text-4xl grayscale opacity-50 mb-2">💸</span>
-                    <p className="text-lg font-black text-text uppercase tracking-tighter">No Transactions Found</p>
-                    <p className="text-sm text-text-muted">Adjust your search filters or record a new entry.</p>
+                <div className="bg-card p-10 rounded-2xl border border-border text-center flex flex-col items-center gap-1.5 shadow-sm">
+                    <span className="text-3xl grayscale opacity-50 mb-1">💸</span>
+                    <p className="text-sm font-black text-text uppercase tracking-tighter">No Transactions Found</p>
+                    <p className="text-xs text-text-muted">Adjust your search filters or record a new entry.</p>
                 </div>
             )}
 
@@ -84,48 +83,51 @@ export default function TransactionTable({
                 DESKTOP VIEW (Hidden on Mobile) 
                 ========================================= */}
             {filteredTxns.length > 0 && (
-                <div className="hidden md:block bg-card rounded-[2rem] shadow-sm border border-border overflow-hidden transition-colors duration-500">
+                <div className="hidden md:block bg-card rounded-xl shadow-sm border border-border overflow-hidden transition-colors duration-500">
                     <div className="overflow-x-auto custom-scrollbar">
                         <table className="w-full text-left whitespace-nowrap">
-                            <thead className="bg-shaded/50 border-b border-border text-text-muted font-black uppercase text-[9px] tracking-[0.15em]">
+                            <thead className="bg-shaded/50 border-b border-border text-text-muted font-black uppercase text-[8px] tracking-[0.12em]">
                                 <tr>
-                                    <th className="p-4 pl-6">Date</th>
-                                    <th className="p-4">Category</th>
-                                    <th className="p-4">Description</th>
-                                    <th className="p-4 text-right">Amount (NPR)</th>
-                                    <th className="p-4 text-right pr-6">Actions</th>
+                                    <th className="p-3 pl-5 text-primary">Date</th>
+                                    <th className="p-3 text-primary">Category</th>
+                                    <th className="p-3 text-primary">Description</th>
+                                    <th className="p-3 text-right text-primary">Amount (NPR)</th>
+                                    <th className="p-3 text-right pr-5 text-primary">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-border/50">
                                 {filteredTxns.map((txn) => {
                                     const isIncome = txn.type === "INCOME";
                                     return (
-                                        <tr key={txn._id} className="group text-xs hover:bg-shaded/40 transition-colors duration-300">
-                                            <td className="p-4 pl-6 text-text-muted font-medium">
+                                        <tr key={txn._id} className="group text-[11px] hover:bg-shaded/40 transition-colors duration-300">
+                                            <td className="p-3 pl-5 text-text-muted font-medium text-[11px]">
                                                 {formatNepaliDateShort(txn.date)}
                                             </td>
-                                            <td className="p-4">
-                                                <div className="flex items-center gap-3">
-                                                    <span className={`w-2 h-2 rounded-full shadow-sm ${isIncome ? "bg-success" : "bg-danger"}`} />
-                                                    <span className="font-bold text-text group-hover:text-primary transition-colors">
+                                            <td className="p-3">
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`w-1.5 h-1.5 rounded-full shadow-sm ${isIncome ? "bg-success" : "bg-danger"}`} />
+                                                    <span className="font-bold text-text group-hover:text-primary transition-colors text-xs">
                                                         {txn.accountHead?.name || "Unknown"}
+                                                        {txn.subType && (
+                                                            <span className="text-[10px] font-semibold text-text-muted/70"> · {txn.subType}</span>
+                                                        )}
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="p-4 text-text-muted truncate max-w-[220px]">
+                                            <td className="p-3 text-text-muted truncate max-w-[200px] text-[11px]">
                                                 {txn.description}
                                             </td>
-                                            <td className={`p-4 text-right font-black font-mono tracking-tight ${isIncome ? "text-success" : "text-danger"}`}>
-                                                <span className="text-[10px] mr-1 opacity-70">{isIncome ? "+" : "-"}</span>
+                                            <td className={`p-3 text-right font-black font-mono tracking-tight text-xs ${isIncome ? "text-success" : "text-danger"}`}>
+                                                <span className="text-[9px] mr-1 opacity-70">{isIncome ? "+" : "-"}</span>
                                                 {Number(txn.amount).toLocaleString()}
                                             </td>
-                                            <td className="p-4 pr-6 text-right">
-                                                <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button onClick={() => onEdit(txn)} className="w-8 h-8 flex items-center justify-center rounded-lg text-text-muted hover:text-success hover:bg-success/10 transition-all active:scale-90" title="Edit">
-                                                        <Edit2 size={14} />
+                                            <td className="p-3 pr-5 text-right">
+                                                <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button onClick={() => onEdit(txn)} className="w-7 h-7 flex items-center justify-center rounded-lg text-text-muted hover:text-success hover:bg-success/10 transition-all active:scale-90" title="Edit">
+                                                        <Edit2 size={12} />
                                                     </button>
-                                                    <button onClick={() => handleDelete(txn._id)} className="w-8 h-8 flex items-center justify-center rounded-lg text-text-muted hover:text-danger hover:bg-danger/10 transition-all active:scale-90" title="Delete">
-                                                        <Trash2 size={14} />
+                                                    <button onClick={() => handleDelete(txn._id)} className="w-7 h-7 flex items-center justify-center rounded-lg text-text-muted hover:text-danger hover:bg-danger/10 transition-all active:scale-90" title="Delete">
+                                                        <Trash2 size={12} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -152,22 +154,23 @@ export default function TransactionTable({
                                     index % 2 === 0 ? "bg-card" : "bg-alt"
                                 }`}
                             >
-                                {/* HEADER: Account Name & Date */}
-                                <div className="p-4 flex items-center justify-between border-b border-border ">
-                                    <div className="flex items-center gap-3">
-                                        <span className={`w-2.5 h-2.5 rounded-full shadow-sm shrink-0 ${isIncome ? "bg-success" : "bg-danger"}`} />
-                                        <h3 className="font-black text-text text-base tracking-tight truncate">
+                                <div className="p-3 flex items-center justify-between border-b border-border ">
+                                    <div className="flex items-center gap-2">
+                                        <span className={`w-2 h-2 rounded-full shadow-sm shrink-0 ${isIncome ? "bg-success" : "bg-danger"}`} />
+                                        <h3 className="font-black text-text text-sm tracking-tight truncate">
                                             {txn.accountHead?.name || "Unknown"}
+                                            {txn.subType && (
+                                                <span className="text-[9px] font-semibold text-text-muted/70"> · {txn.subType}</span>
+                                            )}
                                         </h3>
                                     </div>
-                                    <span className="text-[10px] font-black text-text-muted uppercase tracking-widest shrink-0">
+                                    <span className="text-[9px] font-black text-primary uppercase tracking-widest shrink-0">
                                         {formatNepaliDateShort(txn.date)}
                                     </span>
                                 </div>
 
-                                {/* BODY: Description & Amount */}
-                                <div className="p-4 flex flex-col gap-4">
-                                    <div className="grid grid-cols-1 gap-4 bg-surface p-4 rounded-xl border border-border shadow-inner">
+                                <div className="p-3 flex flex-col gap-3">
+                                    <div className="grid grid-cols-1 gap-3 bg-surface p-3 rounded-xl border border-border shadow-inner">
                                         {txn.description && (
                                             <div className="flex flex-col gap-1 border-b border-border pb-3">
                                                 <span className="font-ubuntu text-[9px] font-black text-text-muted uppercase tracking-widest">Description</span>
@@ -175,27 +178,26 @@ export default function TransactionTable({
                                             </div>
                                         )}
                                         <div className="flex flex-col gap-1">
-                                            <span className="font-ubuntu text-[9px] font-black text-text-muted uppercase tracking-widest">Amount</span>
-                                            <span className={`text-xl font-black font-mono tracking-tight ${isIncome ? "text-success" : "text-danger"}`}>
-                                                <span className="text-xs mr-1 opacity-70">{isIncome ? "+" : "-"}</span>
+                                            <span className="font-ubuntu text-[8px] font-black text-primary uppercase tracking-widest">Amount</span>
+                                            <span className={`text-lg font-black font-mono tracking-tight ${isIncome ? "text-success" : "text-danger"}`}>
+                                                <span className="text-[10px] mr-1 opacity-70">{isIncome ? "+" : "-"}</span>
                                                 NPR {Number(txn.amount).toLocaleString()}
                                             </span>
                                         </div>
                                     </div>
 
-                                    {/* ACTIONS */}
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => onEdit(txn)}
-                                            className="flex-1 py-2.5 rounded-xl text-xs font-bold text-text-muted bg-surface hover:bg-success/10 hover:text-success border border-border shadow-sm transition-all flex justify-center items-center gap-2"
+                                            className="flex-1 py-2 rounded-xl text-[11px] font-bold text-text-muted bg-surface hover:bg-success/10 hover:text-success border border-border shadow-sm transition-all flex justify-center items-center gap-1.5"
                                         >
-                                            <Edit2 size={14} /> Edit
+                                            <Edit2 size={12} /> Edit
                                         </button>
                                         <button
                                             onClick={() => handleDelete(txn._id)}
-                                            className="flex-1 py-2.5 rounded-xl text-xs font-bold text-text-muted bg-surface hover:bg-danger/10 hover:text-danger border border-border shadow-sm transition-all flex justify-center items-center gap-2"
+                                            className="flex-1 py-2 rounded-xl text-[11px] font-bold text-text-muted bg-surface hover:bg-danger/10 hover:text-danger border border-border shadow-sm transition-all flex justify-center items-center gap-1.5"
                                         >
-                                            <Trash2 size={14} /> Delete
+                                            <Trash2 size={12} /> Delete
                                         </button>
                                     </div>
                                 </div>

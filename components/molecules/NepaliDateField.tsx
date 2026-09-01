@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Picker, type NepaliDate } from "@munatech/nepali-datepicker";
 import { bsToAdIso, toBs } from "@/lib/nepaliDate";
 
@@ -40,6 +40,10 @@ export const NepaliDateField: React.FC<NepaliDateFieldProps> = ({
   const current = controlledValue !== undefined ? controlledValue : defaultValue;
   const [value, setValue] = useState<NepaliDate | null>(() => toBs(current) || null);
 
+  useEffect(() => {
+    setValue(toBs(current) || null);
+  }, [current]);
+
   const handleChange = (d: NepaliDate | undefined) => {
     const next = d ?? null;
     setValue(next);
@@ -47,16 +51,15 @@ export const NepaliDateField: React.FC<NepaliDateFieldProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 w-full transition-colors duration-500">
+    <div className="flex flex-col gap-1.5 w-full transition-colors duration-500">
       <label
         htmlFor={id}
-        className="text-[10px] font-black uppercase tracking-[0.15em] text-text-muted opacity-90 px-1"
+        className="text-[9px] font-black uppercase tracking-[0.12em] text-text-muted opacity-90 px-1"
       >
         {label}
         {required && <span className="text-danger ml-0.5">*</span>}
       </label>
 
-      {/* Hidden AD value the server actually receives (only when a name is set) */}
       {name && <input type="hidden" name={name} value={bsToAdIso(value)} />}
 
       <Picker
@@ -67,8 +70,8 @@ export const NepaliDateField: React.FC<NepaliDateFieldProps> = ({
         dateFormat="YYYY-MM-DD"
         captionLayout="dropdown"
         placeholder={placeholder}
-        className={`w-full px-4 py-3 text-sm rounded-xl bg-bg text-text border border-border placeholder:text-text-muted/40 outline-none transition-all duration-300 hover:border-border/80 focus:ring-4 focus:ring-primary/10 focus:border-primary focus:shadow-glow ${className}`}
-        calendarClassName="rounded-2xl shadow-lg border border-border bg-card"
+        className={`w-full px-3 py-2.5 text-[13px] rounded-lg bg-bg text-text border border-border placeholder:text-text-muted/40 outline-none transition-all duration-300 hover:border-border focus:ring-2 focus:ring-primary/10 focus:border-primary ${className}`}
+        calendarClassName="rounded-xl shadow-lg border border-border bg-card"
         closeOnSelect
       />
     </div>

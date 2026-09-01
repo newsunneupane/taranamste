@@ -1,0 +1,23 @@
+
+> orpahanage_admin@0.1.0 dev
+> next dev --experimental-https --experimental-https-key ./certificates/localhost-key.pem --experimental-https-cert ./certificates/localhost.pem
+
+⚠ Self-signed certificates are currently an experimental feature, use with caution.
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         https://localhost:3000
+- Network:       https://192.168.1.74:3000
+- Environments: .env.local, .env
+✓ Ready in 13.4s
+✓ Running next.config.ts took 583ms
+○ Compiling proxy ...
+
+○ Compiling / ...
+(node:10552) [MONGOOSE] Warning: mongoose: Duplicate schema index on {"identifier":1} for model "PaymentCategory". This is often due to declaring an index using both "index: true" and "schema.index()". MongoDB will not create the duplicate index and options on the duplicate definition (such as expireAfterSeconds or unique) will not be applied. Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+🌱 [System] Database hydration complete (Accounts & Categories)
+ GET / 200 in 55s (next.js: 36.4s, proxy.ts: 665ms, application-code: 17.7s)
+ GET / 200 in 539ms (next.js: 24ms, proxy.ts: 8ms, application-code: 507ms)
+ GET / 200 in 937ms (next.js: 26ms, proxy.ts: 77ms, application-code: 834ms)
+ GET /api/auth/session 200 in 7.8s (next.js: 7.7s, application-code: 74ms)
+ GET /api/auth/session 200 in 56ms (next.js: 23ms, application-code: 33ms)
+[?25h

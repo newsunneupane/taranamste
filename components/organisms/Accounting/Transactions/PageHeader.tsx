@@ -7,31 +7,30 @@ const PageHeader = () => {
     const { openTransactionForm } = useUIModals();
     
     return (
-        // ✨ Upgraded to the standardized Card Wrapper layout
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-5 md:p-6 rounded-[2rem] shadow-sm border border-border transition-colors duration-500 mb-8 md:mb-0">
+        // ✨ Compact header - distinct hierarchy
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-card p-4 md:p-5 rounded-2xl shadow-sm border border-border transition-colors duration-500 mb-6 md:mb-0">
             
             {/* BRANDING & TITLE */}
-            <div className="flex items-center gap-4 w-full">
-                {/* ✨ Added the standard Module Icon block */}
-                <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center text-2xl border border-primary/20 shrink-0">
+            <div className="flex items-center gap-3 w-full">
+                {/* ✨ Compact icon */}
+                <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-lg border border-primary/20 shrink-0">
                     📊
                 </div>
                 
                 <div className="flex flex-col flex-1 min-w-0">
-                    <h1 className="font-ubuntu text-xl md:text-2xl font-black text-text tracking-tight truncate">
+                    <h1 className="font-ubuntu text-[15px] md:text-lg font-black text-text tracking-tight truncate">
                         Finances
                     </h1>
-                    <p className="font-ubuntu text-xs md:text-sm text-text-muted font-medium truncate">
+                    <p className="font-ubuntu text-[11px] font-semibold text-primary/70 tracking-wide truncate">
                         Track all money coming in and going out
                     </p>
                 </div>
             </div>
 
             {/* ACTION */}
-            {/* ✨ Made button full-width on mobile (w-full sm:w-auto) and slightly taller for thumb-tapping */}
             <Button
                 onClick={() => openTransactionForm()}
-                className="w-full sm:w-auto bg-primary text-text-invert hover:opacity-90 shadow-glow font-bold py-3 sm:py-2.5 px-6 rounded-xl transition-all"
+                className="w-full sm:w-auto bg-primary text-text-invert hover:opacity-90 shadow-glow font-bold py-2 sm:py-2 px-5 rounded-xl text-xs transition-all"
             >
                 + New Transaction
             </Button>

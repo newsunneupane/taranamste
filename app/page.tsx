@@ -11,15 +11,13 @@ import QuickActionSidebar from "@/components/organisms/ActionButtonsDashboard";
 import AlertStatCard from "@/components/organisms/dashboard/AlertStatCard";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { isAdmin as isAdminRole } from "@/lib/permission";
-
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   await dbConnect();
 
   const session = await getServerSession(authOptions);
-  const isAdmin = isAdminRole(session?.user?.role);
+  const isAdmin = !!(session?.user as any)?.isSuperAdmin;
 
   const [
     kidsCount, 
@@ -54,7 +52,7 @@ export default async function Home() {
       .populate('assignedStaff', 'fullName')
       .sort({ dueDate: 1 }).limit(4).lean(),
 
-    User.countDocuments({ isActive: false, role: { $ne: "ADMIN" } }),
+    User.countDocuments({ isActive: false }),
     Transaction.countDocuments({ status: "PENDING" }),
 
     // ✨ UPDATED: Unsettled Cash Logic
@@ -87,17 +85,16 @@ export default async function Home() {
   const totalUnsettledCash = unsettledCashResult[0]?.total || 0;
 
   return (
-    <div className="flex flex-col gap-6 max-w-7xl mx-auto md:p-6 lg:p-8 animate-in fade-in duration-500">
+    <div className="flex flex-col gap-5 max-w-7xl mx-auto p-3 md:p-5 lg:p-6 animate-in fade-in duration-500">
 
-      {/* --- HEADER --- */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-5 md:p-6 rounded-[2rem] shadow-sm border border-border">
-        <div className="flex items-center gap-4 w-full">
-          <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center text-2xl border border-primary/20 shrink-0">
-            <Sparkles className="animate-pulse" size={24} />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-card p-4 md:p-5 rounded-2xl shadow-sm border border-border">
+        <div className="flex items-center gap-3 w-full">
+          <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-lg border border-primary/20 shrink-0">
+            <Sparkles className="animate-pulse" size={20} />
           </div>
           <div className="flex flex-col flex-1 min-w-0">
-            <h1 className="font-ubuntu text-xl md:text-2xl font-black text-text tracking-tight truncate">System Overview</h1>
-            <p className="font-ubuntu text-[10px] text-text-muted uppercase tracking-[0.3em] font-black opacity-60">Tara Namaste Baalgram // Management Portal</p>
+            <h1 className="font-ubuntu text-[15px] md:text-lg font-black text-text tracking-tight truncate">System Overview</h1>
+            <p className="font-ubuntu text-[11px] font-semibold text-primary/70 tracking-wide truncate">Tara Namaste Baalgram // Management Portal</p>
           </div>
         </div>
       </div>
@@ -146,8 +143,7 @@ export default async function Home() {
         </div>
       )}
 
-      {/* --- KPI GRID --- */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
         <StatCard icon="👧" label="Children" value={kidsCount} sub="Living Here" variant="primary" />
         <StatCard icon="👩‍🏫" label="Staff" value={staffCount} sub="Working Now" variant="secondary" />
 

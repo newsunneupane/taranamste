@@ -10,7 +10,7 @@ export function useUIModals() {
             openModal(
                 "GUARDIAN_FORM",
                 !!data ? "Update Guardian" : "New Guardian Form",
-                { initialData: data }
+                { initialData: data, mode: !!data ? "EDIT" : "ADD" }
             ),
 
         openGuardianDossier: ({ guardianId }: { guardianId: string }) =>

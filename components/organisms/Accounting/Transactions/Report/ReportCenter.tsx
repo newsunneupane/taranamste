@@ -22,6 +22,11 @@ export default function ReportCenter({ transactions, accounts }: any) {
         format: "PDF"
     });
 
+    const categoryLabel = (t: any) => {
+        const head = t.accountHead?.name || "Uncategorized";
+        return t.subType ? `${head} / ${t.subType}` : head;
+    };
+
     const handleGenerate = () => {
         setError(null);
         const now = new Date();
@@ -73,7 +78,7 @@ export default function ReportCenter({ transactions, accounts }: any) {
                 data: filtered.map((t: any) => [
                     formatNepaliDateShort(t.date),
                     t.paymentCategory?.name || "N/A",
-                    t.accountHead?.name || "Uncategorized",
+                    categoryLabel(t),
                     t.description,
                     { 
                         content: t.type === "INCOME" ? `+${t.amount}` : `-${t.amount}`,
@@ -86,7 +91,7 @@ export default function ReportCenter({ transactions, accounts }: any) {
                 filtered.map((t: any) => ({
                     Date: formatNepaliDateShort(t.date),
                     Source: t.paymentCategory?.name,
-                    AccountHead: t.accountHead?.name,
+                    AccountHead: categoryLabel(t),
                     Description: t.description,
                     Amount: t.amount,
                     Type: t.type
@@ -98,15 +103,14 @@ export default function ReportCenter({ transactions, accounts }: any) {
     };
 
     return (
-        <div className="bg-card border border-border rounded-2xl shadow-glow mb-8 overflow-hidden transition-all duration-500">
-            {/* HEADER */}
-            <div className="p-5 md:p-8 border-b border-border/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="bg-card border border-border rounded-xl shadow-sm mb-6 overflow-hidden transition-all duration-500">
+            <div className="p-4 md:p-5 border-b border-border/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div className="flex justify-between items-start w-full md:w-auto">
                     <div>
-                        <h2 className="text-xl md:text-2xl font-black text-text tracking-tighter uppercase font-mono">
+                        <h2 className="font-ubuntu text-[13px] font-black text-text tracking-tight">
                             Reports
                         </h2>
-                        <p className="text-[10px] text-text-muted font-black tracking-widest uppercase mt-1">
+                        <p className="text-[10px] font-semibold text-primary/70 tracking-wide">
                             {filter.timeframe === "CUSTOM" && filter.startDate
                                 ? `Selected: ${filter.startDate} → ${filter.endDate}`
                                 : "Make a report of your transactions"}
@@ -114,13 +118,13 @@ export default function ReportCenter({ transactions, accounts }: any) {
                     </div>
                     <button 
                         onClick={() => setIsExpanded(!isExpanded)} 
-                        className="md:hidden p-2 bg-bg border border-border rounded-xl text-primary shadow-sm"
+                        className="md:hidden p-1.5 bg-bg border border-border rounded-lg text-primary shadow-sm"
                     >
-                        <ChevronDown className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} size={20} />
+                        <ChevronDown className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} size={16} />
                     </button>
                 </div>
 
-                <Button onClick={handleGenerate} className="w-full md:w-auto px-12 h-12 font-black font-mono tracking-widest">
+                <Button onClick={handleGenerate} className="w-full md:w-auto px-6 h-9 font-black font-mono text-xs tracking-widest">
                     MAKE REPORT
                 </Button>
             </div>

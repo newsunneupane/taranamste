@@ -24,7 +24,7 @@ export const ConsumableItemForm = ({ item, closeModal }: { item?: any; closeModa
                     <div className="lg:col-span-7 bg-card p-8 rounded-[2rem] border border-border space-y-6 shadow-sm">
                         <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-2"><Zap size={14}/> Basic Specs</h3>
                         <FormField label="Item Name *" name="name" required placeholder="e.g. Rice" defaultValue={item?.name} />
-                        <SelectConsumableCategory name="category" defaultValue={item?.category} required />
+                        <SelectConsumableCategory name="category" defaultValue={item?.category?._id || item?.category || ""} required />
                     </div>
 
                     {/* Inventory Logic */}
@@ -43,7 +43,7 @@ export const ConsumableItemForm = ({ item, closeModal }: { item?: any; closeModa
             <div className="shrink-0 flex justify-end gap-5 p-6 border-t border-border bg-card/80 backdrop-blur-md rounded-t-[2.5rem]">
                 <button type="button" onClick={closeModal} className="text-[10px] font-black uppercase text-text-muted hover:text-text tracking-widest transition-colors">Discard</button>
                 <Button type="submit" disabled={isPending} className="px-14 h-14 font-black text-xs uppercase tracking-[0.2em] text-text-invert bg-primary shadow-glow transition-all active:scale-95">
-                    {isPending ? "SYNCING..." : "COMMIT_GOODS"}
+                    {isPending ? "Loading..." : "COMMIT_GOODS"}
                 </Button>
             </div>
         </form>

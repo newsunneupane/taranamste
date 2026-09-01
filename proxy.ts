@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import {
   isPublicPath,
-  canAccess,
+  canRead,
 } from "@/lib/permission";
 
 // Coarse request-level guard (defence in depth).
@@ -28,18 +28,28 @@ export async function proxy(request: NextRequest) {
   }
 
   const token = await getToken({ req: request });
-  const role = (token?.role as string) ?? null;
+  const actor = token
+    ? {
+        isSuperAdmin: !!(token as any).isSuperAdmin,
+        permissions: ((token as any).permissions as any) || {},
+      }
+    : null;
 
-  // Not signed in (or token invalid/expired) -> send to the login screen.
+  // Not signed in (or token invalid/expired) -> send to the login screen at "/".
+  // "/" itself is the login screen (rendered by AppShell when unauthenticated),
+  // so routing to it must not bounce back here (which would loop forever).
   if (!token) {
+    if (pathname === "/") {
+      return NextResponse.next();
+    }
     const url = request.nextUrl.clone();
     url.pathname = "/";
     url.search = "";
     return NextResponse.redirect(url);
   }
 
-  // Signed in but this page is restricted to certain roles -> back to dashboard.
-  if (!canAccess(pathname, role)) {
+  // Signed in but this page is not readable for this user -> back to dashboard.
+  if (!canRead(pathname, actor)) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     url.search = "";

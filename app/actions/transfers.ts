@@ -4,18 +4,15 @@ import dbConnect from "@/lib/db";
 import Transaction from "@/models/Transaction";
 import PaymentCategory from "@/models/paymentCategory"; // ✨ NEW: Using the Category model
 import { revalidatePath } from "next/cache";
-import { getCurrentSession } from "@/lib/guards";
-import { isWorkRole } from "@/lib/permission";
+import { requireWrite } from "@/lib/guards";
 
 export async function executeTransfer(prevState: any, formData: FormData) {
     await dbConnect();
 
     try {
-        // Moving money is a Finance-tier operation: WORK roles + ADMIN.
-        const session = await getCurrentSession();
-        if (!session?.user?.id || !isWorkRole(session.user.role)) {
-            throw new Error("Security Violation: You are not allowed to move money between accounts.");
-        }
+        const w = await requireWrite("/finance");
+        if (!(w as any).ok) throw new Error((w as any).error);
+        const session = (w as any).session;
 
         const amount = Number(formData.get("amount"));
         const fromCategoryId = formData.get("fromAccount") as string; // From UI dropdown

@@ -4,12 +4,15 @@ import dbConnect from "@/lib/db";
 import Guardian from "@/models/Guardian";
 import Child from "@/models/Child";
 import { revalidatePath } from "next/cache";
+import { requireWrite } from "@/lib/guards";
 
 /**
  * ACTION: UPDATE PLACEMENT TYPE
  */
 export async function updatePlacement(prevState: any, formData: FormData) {
     try {
+        const w = await requireWrite("/guardians");
+        if (!(w as any).ok) return { error: (w as any).error };
         await dbConnect();
 
         const guardianId = formData.get("guardianId");
@@ -37,6 +40,8 @@ export async function updatePlacement(prevState: any, formData: FormData) {
  */
 export async function removePlacement(prevState: any, formData: FormData) {
     try {
+        const w = await requireWrite("/guardians");
+        if (!(w as any).ok) return { error: (w as any).error };
         await dbConnect();
 
         const guardianId = formData.get("guardianId");
@@ -67,6 +72,8 @@ export async function removePlacement(prevState: any, formData: FormData) {
  */
 export async function assignChildToGuardian(prevState: any, formData: FormData) {
     try {
+        const w = await requireWrite("/guardians");
+        if (!(w as any).ok) return { error: (w as any).error };
         await dbConnect();
 
         const guardianId = formData.get("guardianId");

@@ -9,15 +9,12 @@ import { useUIModals } from "@/hooks/useUIModal";
 export default function FinanceLedger({ transactions, accounts, inventory }: any) {
     const {openTransactionForm}=useUIModals()
     return (
-        <div className="space-y-8 transition-colors duration-500">
+        <div className="space-y-5 transition-colors duration-500">
 
-            {/* REPORT SECTION - Already Themed */}
             <ReportCenter transactions={transactions} accounts={accounts} />
 
-            {/* HEADER */}
-            <div className="flex justify-between items-center px-2">
-                {/* Typography: text-zinc-900 -> text-text */}
-                <h2 className="text-xl md:text-2xl font-black text-text tracking-tighter">
+            <div className="flex justify-between items-center px-1">
+                <h2 className="font-ubuntu text-[13px] font-black text-text tracking-tight">
                     All Transactions
                 </h2>
 

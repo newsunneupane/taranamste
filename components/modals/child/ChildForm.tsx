@@ -27,6 +27,8 @@ export const ChildForm = ({ initialData, closeModal }: { initialData?: any, clos
 
     const [arrivalType, setArrivalType] = useState(initialData?.arrivalCategory || 'OTHER');
 
+    useEffect(() => { setArrivalType(initialData?.arrivalCategory || 'OTHER'); }, [initialData?._id, initialData?.arrivalCategory]);
+
     const dob = initialData?.dateOfBirth ? new Date(initialData.dateOfBirth).toISOString().split('T')[0] : '';
     const adminDate = initialData?.admissionDate
         ? new Date(initialData.admissionDate).toISOString().split('T')[0]
@@ -97,7 +99,7 @@ export const ChildForm = ({ initialData, closeModal }: { initialData?: any, clos
                             ]}
                         />
            
-                        <SelectChildStatus/>
+                        <SelectChildStatus defaultValue={initialData?.currentStatus || initialData?.status || ""} name="currentStatus"/>
                         <NepaliDateField label="Date of Birth" name="dateOfBirth" required defaultValue={dob} />
                         <NepaliDateField label="Admission Date" name="admissionDate" required defaultValue={adminDate} />
                     </div>
@@ -170,7 +172,7 @@ export const ChildForm = ({ initialData, closeModal }: { initialData?: any, clos
                     disabled={isPending} 
                     className="bg-primary text-text-invert px-12 h-14 rounded-2xl font-black shadow-lg hover:scale-[1.02] active:scale-95 transition-all"
                 >
-                    {isPending ? "Syncing..." : (initialData ? "Update Record" : "Finalize Admission")}
+                    {isPending ? "Loading..." : (initialData ? "Update Record" : "Finalize Admission")}
                 </Button>
             </div>
         </form>

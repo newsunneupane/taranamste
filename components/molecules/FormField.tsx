@@ -11,12 +11,11 @@ export const FormField: React.FC<FormFieldProps> = ({
   label, error, id, required, ...props 
 }) => {
   return (
-    <div className="flex flex-col gap-2 w-full transition-colors duration-500">
+    <div className="flex flex-col gap-1.5 w-full transition-colors duration-500">
       
-      {/* LABEL: Upgraded to the wide-tracked Micro-caps aesthetic */}
       <label 
         htmlFor={id} 
-        className="text-[10px] font-black uppercase tracking-[0.15em] text-text-muted opacity-90 px-1"
+        className="text-[9px] font-black uppercase tracking-[0.12em] text-text-muted opacity-90 px-1"
       >
         {label}{" "}
         {required && <span className="text-danger ml-0.5">*</span>}
@@ -38,9 +37,8 @@ export const FormField: React.FC<FormFieldProps> = ({
         {...props} 
       />
       
-      {/* ERROR: Animated for better UX feedback */}
       {error && (
-        <span className="text-[11px] text-danger font-bold mt-1 px-1 animate-in fade-in slide-in-from-top-1">
+        <span className="text-[10px] text-danger font-bold mt-1 px-1 animate-in fade-in slide-in-from-top-1">
           ⚠️ {error}
         </span>
       )}

@@ -37,8 +37,13 @@ export default function TransactionRow({
                         }`}
                     />
                     {/* Account Name: text-zinc-800 -> text-text */}
-                    <span className="font-bold text-text group-hover:text-primary transition-colors">
+                    <span className="flex items-center gap-1.5 font-bold text-text group-hover:text-primary transition-colors">
                         {txn.accountHead?.name || "Unknown"}
+                        {txn.subType && (
+                            <span className="text-[10px] font-semibold text-text-muted/70">
+                                · {txn.subType}
+                            </span>
+                        )}
                     </span>
                 </div>
             </td>

@@ -24,13 +24,12 @@ const AddSubType: React.FC<{
   };
 
   return (
-    <div className="flex flex-col gap-3 transition-colors duration-500">
+    <div className="flex flex-col gap-2 transition-colors duration-500">
       
-      <label className="text-[10px] uppercase font-black text-text-muted tracking-[0.15em]">
+      <label className="text-[9px] uppercase font-black text-primary tracking-[0.12em]">
         Account Sub-Groups (Categories)
       </label>
 
-      {/* INPUT ROW */}
       <div className="flex gap-2">
         <input
           type="text"
@@ -38,27 +37,13 @@ const AddSubType: React.FC<{
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="e.g. Living, Education..."
-          className="
-            flex-1 p-3 text-sm
-            bg-bg text-text
-            placeholder:text-text-muted/40
-            border border-border/60
-            rounded-xl outline-none
-            focus:ring-1 focus:ring-primary focus:border-primary
-            transition-all shadow-inner
-          "
+          className="flex-1 px-3 py-2.5 text-[13px] bg-bg text-text placeholder:text-text-muted/40 border border-border/60 rounded-lg outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all shadow-inner"
         />
 
         <Button
           type="button"
           onClick={handleAdd}
-          className="
-            bg-primary/10 !text-primary 
-            border border-primary/30
-            hover:bg-primary hover:!text-text-invert
-            px-6 rounded-xl text-[10px] font-black uppercase tracking-widest
-            transition-all duration-300 active:scale-95 shadow-[0_0_15px_rgba(59,130,246,0.1)]
-          "
+          className="bg-primary/10 !text-primary border border-primary/30 hover:bg-primary hover:!text-text-invert px-4 rounded-lg text-[10px] font-black uppercase tracking-widest h-9 transition-all active:scale-95"
         >
           + Add
         </Button>

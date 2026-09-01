@@ -3,17 +3,16 @@
 import dbConnect from "@/lib/db";
 import AccountHead from "@/models/AccountHead";
 import { revalidatePath } from "next/cache";
-import { requireRole } from "@/lib/guards";
-import { ROLES } from "@/lib/permission";
+import { requireWrite } from "@/lib/guards";
 
 export async function addAccountHead(prevState: any, formData: FormData) {
     await dbConnect();
 
     try {
-        // Account heads can be added from the Finance page (WORK) or the
-        // Categories page (ADMIN). Limited roles (CAREGIVER etc.) are blocked.
-        const role = await requireRole(ROLES.ADMIN, ROLES.SAMITY, ROLES.STAFF);
-        if (!role) return { success: false, error: "Security Violation: You are not allowed to manage categories." };
+        // Check write on either accounts_headers or finance
+        const a = await requireWrite("/accounts_headers");
+        const b = await requireWrite("/finance");
+        if (!(a as any).ok && !(b as any).ok) return { success: false, error: "Write access denied. Need Finance or Chart of Accounts permission." };
 
         const id = formData.get("id") as string;
         const subTypesArray = formData.getAll("subType").filter(Boolean) as string[];
@@ -71,5 +70,34 @@ export async function addAccountHead(prevState: any, formData: FormData) {
             return { success: false, error: "An account with this Name or GL Code already exists." };
         }
         return { success: false, error: error.message || "Failed to save Account Head" };
+    }
+}
+
+export async function addAccountHeadSubType(prevState: any, formData: FormData) {
+    await dbConnect();
+
+    try {
+        const a = await requireWrite("/accounts_headers");
+        const b = await requireWrite("/finance");
+        if (!(a as any).ok && !(b as any).ok) return { success: false, error: "Write access denied. Need Finance or Chart of Accounts permission." };
+
+        const headId = formData.get("headId") as string;
+        const subType = (formData.get("subType") as string || "").trim();
+
+        if (!headId) return { success: false, error: "Account head is required." };
+        if (!subType) return { success: false, error: "Sub-head name is required." };
+
+        await AccountHead.findByIdAndUpdate(
+            headId,
+            { $addToSet: { subType } },
+            { runValidators: true }
+        );
+
+        revalidatePath("/finance");
+        revalidatePath("/accounts_headers");
+
+        return { success: true, error: null };
+    } catch (error: any) {
+        return { success: false, error: error.message || "Failed to add Sub-Head" };
     }
 }

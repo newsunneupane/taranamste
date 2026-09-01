@@ -34,9 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="
         min-h-full flex flex-col 
         /* Set Inter as the default base font */
-        font-sans
+        font-sans text-[13px]
         /* Theme Foundation */
-        bg-background text-text-main 
+        bg-bg text-text 
         /* Smooth cross-fade */
         transition-colors duration-500 
         selection:bg-primary/30 selection:text-primary

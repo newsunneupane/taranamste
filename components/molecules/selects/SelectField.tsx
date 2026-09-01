@@ -36,10 +36,10 @@ export const SelectField: React.FC<SelectFieldProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 w-full transition-colors duration-500">
+    <div className="flex flex-col gap-1.5 w-full transition-colors duration-500">
       <label
         htmlFor={id}
-        className="text-[10px] font-black uppercase tracking-[0.15em] text-text-muted opacity-90"
+        className="text-[9px] font-black uppercase tracking-[0.12em] text-text-muted opacity-90"
       >
         {label}{" "}
         {required && <span className="text-danger ml-0.5">*</span>}
@@ -52,7 +52,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
           onChange={handleSelectChange}
           {...props}
           className={`
-            w-full px-4 py-3 text-sm rounded-xl
+            w-full px-3 py-2.5 text-[13px] rounded-lg
             bg-card text-text
             border border-border
             outline-none appearance-none cursor-pointer
@@ -97,7 +97,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
       </div>
 
       {error && (
-        <span className="text-[11px] text-danger font-bold mt-1 animate-in fade-in slide-in-from-top-1">
+        <span className="text-[10px] text-danger font-bold mt-1 animate-in fade-in slide-in-from-top-1">
           ⚠️ {error}
         </span>
       )}

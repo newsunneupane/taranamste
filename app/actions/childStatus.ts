@@ -3,6 +3,7 @@
 import dbConnect from "@/lib/db";
 import ChildStatus from "@/models/ChildCurrentStatus";
 import { revalidatePath } from "next/cache";
+import { requireWrite } from "@/lib/guards";
 
 export type ActionState = {
   success: boolean;
@@ -14,6 +15,8 @@ export async function saveChildStatus(
   prevState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
+  const w = await requireWrite("/children");
+  if (!(w as any).ok) return { success: false, error: (w as any).error, data: null };
   await dbConnect();
   const name = formData.get("name") as string;
 

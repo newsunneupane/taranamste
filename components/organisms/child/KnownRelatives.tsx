@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { FormField } from "@/components/molecules/FormField";
 import { X } from "lucide-react";
@@ -17,6 +17,8 @@ export const KnownRelatives = ({ initialRelatives = [] }: { initialRelatives?: a
   const [relatives, setRelatives] = useState<Relative[]>(
     initialRelatives.length > 0 ? initialRelatives : []
   );
+
+  useEffect(() => { setRelatives(initialRelatives.length > 0 ? initialRelatives : []); }, [JSON.stringify(initialRelatives)]);
 
   const addRelative = () => {
     setRelatives([

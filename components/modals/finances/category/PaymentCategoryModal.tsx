@@ -20,10 +20,11 @@ const PaymentCategoryForm: React.FC<PaymentCategoryFormProps> = ({
   onSaved,
   defaultIdentifier // ✨ Destructure it here
 }) => {
-  // ✨ Logic: Priority 1: initialData (Editing) | Priority 2: defaultIdentifier (Forced via Select) | Default: "CASH"
   const [categoryType, setCategoryType] = useState(
     initialData?.type || defaultIdentifier || "CASH"
   );
+
+  useEffect(() => { setCategoryType(initialData?.type || defaultIdentifier || "CASH"); }, [initialData?._id, initialData?.type, defaultIdentifier]);
 
   const [state, formAction, isPending] = useActionState(
     savePaymentCategory,
@@ -145,7 +146,7 @@ const PaymentCategoryForm: React.FC<PaymentCategoryFormProps> = ({
           disabled={isPending}
           className="bg-primary text-text-invert px-10 h-12 rounded-xl font-black shadow-glow active:scale-95 transition-all"
         >
-          {isPending ? "SYNCING..." : "SAVE CATEGORY"}
+          {isPending ? "Loading..." : "SAVE CATEGORY"}
         </Button>
       </div>
     </form>

@@ -27,8 +27,8 @@ export const GuardianModal = ({ mode, initialData, closeModal }: GuardianModalPr
         success: false
     });
 
-    // 2. IMAGE PREVIEW LOGIC
     const [previewImage, setPreviewImage] = useState<string | null>(initialData?.profileImageUrl || null);
+    useEffect(() => { setPreviewImage(initialData?.profileImageUrl || null); }, [initialData?._id, initialData?.profileImageUrl]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -199,7 +199,7 @@ export const GuardianModal = ({ mode, initialData, closeModal }: GuardianModalPr
                     disabled={isPending}
                     className="btn-primary min-w-[200px] h-12 shadow-glow"
                 >
-                    {isPending ? "Syncing Record..." : (isEdit ? "Update" : "SAVE ")}
+                    {isPending ? "Loading..." : (isEdit ? "Update" : "SAVE ")}
                 </Button>
             </div>
         </form>

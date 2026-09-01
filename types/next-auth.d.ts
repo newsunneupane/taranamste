@@ -9,11 +9,15 @@ declare module "next-auth" {
     user: {
       id: string;
       role: string;
+      isSuperAdmin?: boolean;
+      permissions?: Record<string, { read: boolean; write: boolean }>;
     } & DefaultSession["user"];
   }
 
   interface User {
     role: string;
+    isSuperAdmin?: boolean;
+    permissions?: Record<string, { read: boolean; write: boolean }>;
   }
 }
 
@@ -22,5 +26,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     role?: string;
     id?: string;
+    isSuperAdmin?: boolean;
+    permissions?: Record<string, { read: boolean; write: boolean }>;
   }
 }

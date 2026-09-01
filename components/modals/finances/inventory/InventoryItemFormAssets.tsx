@@ -28,7 +28,7 @@ export const FixedAssetItemForm = ({ item, closeModal }: { item?: any; closeModa
                             <ClipboardCheck size={14}/> Asset Info
                         </h3>
                         <FormField label="Asset Name *" name="name" required placeholder="e.g. Study Table" defaultValue={item?.name} />
-                        <SelectAssetCategory name="category" defaultValue={item?.category} required />
+                        <SelectAssetCategory name="category" defaultValue={item?.category?._id || item?.category || ""} required />
                     </div>
 
                     {/* Stewardship - Using accent/5 for the tinted well */}

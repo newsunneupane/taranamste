@@ -4,6 +4,8 @@ import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
 export async function registerUser(prevState: any, formData: FormData) {
+  // Self-registration is disabled. All accounts are created by SuperAdmin via User Management.
+  return { error: "Self-registration is disabled. Please contact SuperAdmin for an account." };
   await dbConnect();
 
   const name = formData.get("name") as string;
@@ -13,7 +15,6 @@ export async function registerUser(prevState: any, formData: FormData) {
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
 
-  // 1. Security & Validation Checks
   if (password !== confirmPassword) {
     return { error: "Security keys do not match." };
   }

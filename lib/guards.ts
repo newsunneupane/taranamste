@@ -1,5 +1,5 @@
-// Server-only guard helpers. Import these from server components ("use server"
-// files and Server Components) to enforce the role policy.
+// Server-only guard helpers. New model: isSuperAdmin + per-page {read,write}.
+// Legacy helpers kept for compat where referenced but prefer requireRead/requireWrite.
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
@@ -8,70 +8,79 @@ import {
   allowedRolesFor,
   isAdmin,
   type Role,
+  canRead,
+  canWrite,
+  type PermissionsMap,
 } from "@/lib/permission";
 
-/**
- * Returns the current user's roles carried in the session (id, email, role).
- * Returns null when there is no authenticated session.
- */
 export async function getCurrentSession() {
   return await getServerSession(authOptions);
 }
 
-/**
- * Returns the current user's role, or null if not logged in.
- */
 export async function getCurrentRole(): Promise<Role | null> {
   const session = await getCurrentSession();
   return (session?.user?.role as Role) ?? null;
 }
 
-/**
- * Guard for pages (Server Components). Redirects unauthenticated users to the
- * login route and non-allowed roles to the dashboard.
- */
-export async function requirePageAccess(path: string) {
+export async function getCurrentActor(): Promise<{ id: string; isSuperAdmin: boolean; permissions: PermissionsMap } | null> {
   const session = await getCurrentSession();
-  if (!session?.user?.id) {
-    redirect("/");
-  }
-  const role = session.user.role as Role;
-  if (!canAccess(path, role)) {
-    redirect("/");
-  }
-  return { session, role };
+  if (!session?.user?.id) return null;
+  return {
+    id: session.user.id as string,
+    isSuperAdmin: !!(session.user as any).isSuperAdmin,
+    permissions: ((session.user as any).permissions as PermissionsMap) || {},
+  };
 }
 
-/**
- * Guard for server actions requiring an authenticated session.
- * Returns the session or null (caller decides how to handle it).
- */
+export async function requirePageAccess(path: string) {
+  const session = await getCurrentSession();
+  if (!session?.user?.id) redirect("/");
+  const actor = {
+    isSuperAdmin: !!(session.user as any).isSuperAdmin,
+    permissions: ((session.user as any).permissions as PermissionsMap) || {},
+  };
+  if (!canRead(path, actor)) redirect("/");
+  return { session, role: session.user.role as Role, actor };
+}
+
 export async function requireAuth() {
   const session = await getCurrentSession();
   return session;
 }
 
-/**
- * Guard for server actions that must only be performed by a specific role or
- * set of roles. Returns the role, or null if the user is not allowed.
- */
 export async function requireRole(...allowed: Role[]): Promise<Role | null> {
   const role = await getCurrentRole();
   if (!role || !allowed.includes(role)) return null;
   return role;
 }
 
-/**
- * Convenience: true if the current user is an ADMIN.
- */
-export async function isCurrentAdmin() {
-  const role = await getCurrentRole();
-  return isAdmin(role);
+export async function requireRead(path: string): Promise<{ ok: true; session: any; actor: any } | { ok: false; error: string }> {
+  const session = await getCurrentSession();
+  if (!session?.user?.id) return { ok: false, error: "Not authenticated." };
+  const actor = {
+    isSuperAdmin: !!(session.user as any).isSuperAdmin,
+    permissions: ((session.user as any).permissions as PermissionsMap) || {},
+  };
+  if (!canRead(path, actor)) return { ok: false, error: "Read access denied for " + path };
+  return { ok: true, session, actor };
 }
 
-/**
- * Human-readable list of roles allowed on a path (for error messages).
- */
+export async function requireWrite(path: string): Promise<{ ok: true; session: any; actor: any } | { ok: false; error: string }> {
+  const session = await getCurrentSession();
+  if (!session?.user?.id) return { ok: false, error: "Not authenticated." };
+  const actor = {
+    isSuperAdmin: !!(session.user as any).isSuperAdmin,
+    permissions: ((session.user as any).permissions as PermissionsMap) || {},
+  };
+  if (!canWrite(path, actor)) return { ok: false, error: "Write access denied for " + path };
+  return { ok: true, session, actor };
+}
+
+export async function isCurrentAdmin() {
+  const actor = await getCurrentActor();
+  return !!actor?.isSuperAdmin;
+}
+
 export function describeAccess(path: string) {
   const roles = allowedRolesFor(path);
   if (!roles) return "all signed-in users";

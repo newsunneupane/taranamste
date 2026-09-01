@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
+    "dev": "next dev --experimental-https --experimental-https-key ./certificates/localhost-key.pem --experimental-https-cert ./certificates/localhost.pem",
+    "dev:http": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
@@ -19,11 +20,11 @@
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^1.8.0",
     "mongoose": "^9.4.1",
-    "next": "16.2.2",
+    "next": "^16.3.4",
     "next-auth": "^4.24.13",
-    "react": "19.2.4",
+    "react": "^19.2.8",
     "react-datepicker": "^9.1.0",
-    "react-dom": "19.2.4",
+    "react-dom": "^19.2.8",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
@@ -34,7 +35,7 @@
     "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.2",
+    "eslint-config-next": "^16.3.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

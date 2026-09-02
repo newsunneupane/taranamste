@@ -27,19 +27,22 @@ const PageHeader = ({ accounts, categories }: { accounts?: any[]; categories?: a
                 </div>
             </div>
 
-            {/* ACTIONS */}
-            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            {/* ACTIONS — grid even on desktop, smaller */}
+            <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:min-w-[300px]">
                 <Button
                     onClick={() => openBulkExpenseUpload({ accounts, categories })}
-                    className="w-full sm:w-auto bg-card border border-border text-text hover:bg-shaded font-black py-2 px-4 rounded-xl text-[11px] uppercase tracking-widest transition-all"
+                    size="sm"
+                    variant="secondary"
+                    className="font-black text-[10px] tracking-widest h-8 px-3"
                 >
-                    Bulk Upload (PDF)
+                    Bulk Upload
                 </Button>
                 <Button
                     onClick={() => openTransactionForm()}
-                    className="w-full sm:w-auto bg-primary text-text-invert hover:opacity-90 shadow-glow font-bold py-2 sm:py-2 px-5 rounded-xl text-xs transition-all"
+                    size="sm"
+                    className="font-black text-[10px] tracking-widest h-8 px-3"
                 >
-                    + New Transaction
+                    + NEW
                 </Button>
             </div>
         </div>

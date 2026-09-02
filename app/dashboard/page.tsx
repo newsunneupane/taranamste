@@ -79,10 +79,10 @@ export default async function Home() {
         </div>
         <AlertStatCard count={urgentActions.length} />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-10">
-        <QuickActionSidebar />
+      {/* Quick actions — 3 in same row, compact grid, not full-width stack */}
+      <QuickActionSidebar />
 
-        <div className="lg:col-span-2 flex flex-col gap-6 md:gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* URGENT CARE FEED */}
           <div id="urgent" className="bg-card rounded-[2rem] border border-border overflow-hidden shadow-sm">
             <div className="p-5 md:p-6 border-b border-border bg-shaded flex justify-between items-center">
@@ -133,7 +133,7 @@ export default async function Home() {
           {/* INVENTORY TRAY */}
           <div className="bg-card rounded-[2rem] border border-border p-6 md:p-8 shadow-sm">
             <h2 className="font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-[0.3em] mb-6">Stock Depletion</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 gap-3">
               {lowStockItems.map((item: any) => (
                 <Link
                   key={item._id}
@@ -146,7 +146,6 @@ export default async function Home() {
               ))}
             </div>
           </div>
-        </div>
       </div>
     </div >
   );

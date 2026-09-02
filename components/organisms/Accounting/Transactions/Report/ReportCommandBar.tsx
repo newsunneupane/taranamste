@@ -17,14 +17,14 @@ export default function ReportCommandBar({ filter, setFilter, accounts, setIsMod
         <select
             value={value}
             onChange={onChange}
-            className="w-full p-3.5 text-xs font-bold border border-border rounded-xl bg-bg text-text focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer appearance-none hover:border-primary/40"
+            className="w-full px-3 py-2 text-[11px] font-bold border border-border rounded-lg bg-card text-text focus:ring-1 focus:ring-primary outline-none transition-all cursor-pointer appearance-none hover:border-primary/40 h-8"
         >
             {children}
         </select>
     );
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 bg-shaded/30 p-8 border-t border-border/40 transition-colors">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 bg-shaded/20 p-4 border-t border-border/40 transition-colors">
             {/* TIMEFRAME */}
             <div className="flex flex-col gap-1">
                 <Label>Temporal Scope</Label>

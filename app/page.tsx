@@ -99,45 +99,45 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* --- EXECUTIVE ADMIN ALERTS ROW --- */}
+      {/* --- EXECUTIVE ADMIN ALERTS ROW — flex grid, not full width --- */}
       {isAdmin && (pendingUsersCount > 0 || pendingTransactionsCount > 0 || totalUnsettledCash > 0) && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="flex flex-wrap gap-3">
             {pendingUsersCount > 0 && (
-                <Link href="/usersmanagement" className="p-4 rounded-2xl border bg-warning/5 border-warning/20 flex justify-between items-center group hover:bg-warning/10 transition-all">
+                <Link href="/usersmanagement" className="flex-1 min-w-[240px] max-w-[360px] p-3.5 rounded-xl border bg-warning/5 border-warning/20 flex justify-between items-center group hover:bg-warning/10 transition-all">
                     <div className="flex items-center gap-3">
-                        <ShieldAlert className="text-warning" size={20} />
+                        <ShieldAlert className="text-warning" size={18} />
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-warning">New Member Requests</span>
-                            <span className="text-xs font-bold text-text-muted">Review {pendingUsersCount} new people</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-warning">New Member Requests</span>
+                            <span className="text-[11px] font-bold text-text-muted">Review {pendingUsersCount} new people</span>
                         </div>
                     </div>
-                    <span className="text-xl font-black text-warning">{pendingUsersCount}</span>
+                    <span className="text-lg font-black text-warning">{pendingUsersCount}</span>
                 </Link>
             )}
 
             {pendingTransactionsCount > 0 && (
-                <Link href="/approvals" className="p-4 rounded-2xl border bg-danger/5 border-danger/20 flex justify-between items-center group hover:bg-danger/10 transition-all">
+                <Link href="/approvals" className="flex-1 min-w-[240px] max-w-[360px] p-3.5 rounded-xl border bg-danger/5 border-danger/20 flex justify-between items-center group hover:bg-danger/10 transition-all">
                     <div className="flex items-center gap-3">
-                        <Clock className="text-danger" size={20} />
+                        <Clock className="text-danger" size={18} />
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-danger">Pending Approvals</span>
-                            <span className="text-xs font-bold text-text-muted">Awaiting your approval</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-danger">Pending Approvals</span>
+                            <span className="text-[11px] font-bold text-text-muted">Awaiting your approval</span>
                         </div>
                     </div>
-                    <span className="text-xl font-black text-danger">{pendingTransactionsCount}</span>
+                    <span className="text-lg font-black text-danger">{pendingTransactionsCount}</span>
                 </Link>
             )}
 
             {totalUnsettledCash > 0 && (
-                <Link href="/settlements" className="p-4 rounded-2xl border bg-primary/5 border-primary/20 flex justify-between items-center group hover:bg-primary/10 transition-all">
+                <Link href="/settlements" className="flex-1 min-w-[240px] max-w-[360px] p-3.5 rounded-xl border bg-primary/5 border-primary/20 flex justify-between items-center group hover:bg-primary/10 transition-all">
                     <div className="flex items-center gap-3">
-                        <Wallet className="text-primary" size={20} />
+                        <Wallet className="text-primary" size={18} />
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Cash Not Yet Paid In</span>
-                            <span className="text-xs font-bold text-text-muted">Money collected but not deposited</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">Cash Not Yet Paid In</span>
+                            <span className="text-[11px] font-bold text-text-muted">Money collected but not deposited</span>
                         </div>
                     </div>
-                    <span className="text-lg font-black font-mono text-primary">Rs. {totalUnsettledCash.toLocaleString()}</span>
+                    <span className="text-base font-black font-mono text-primary">Rs. {totalUnsettledCash.toLocaleString()}</span>
                 </Link>
             )}
         </div>
@@ -162,11 +162,11 @@ export default async function Home() {
         <AlertStatCard count={urgentActions.length} />
       </div>
 
-      {/* --- FEED SECTION --- */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-10">
-        <QuickActionSidebar />
-        <div className="lg:col-span-2 flex flex-col gap-10">
-          
+      {/* --- QUICK ACTIONS — full-width grid row (3 in same row) --- */}
+      <QuickActionSidebar />
+
+      {/* --- FEED SECTION — 2-col grid, not full-width stack --- */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* URGENT CARE FEED */}
           <div className="bg-card rounded-[2rem] border border-border overflow-hidden shadow-sm">
             <div className="p-5 md:p-6 border-b border-border bg-shaded flex justify-between items-center">
@@ -200,7 +200,7 @@ export default async function Home() {
           {/* STOCK DEPLETION */}
           <div className="bg-card rounded-[2rem] border border-border p-6 shadow-sm">
             <h2 className="font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-[0.3em] mb-6">Stock Alerts</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               {lowStockItems.length === 0 ? (
                   <p className="text-[10px] font-black text-text-muted uppercase opacity-50">Supply lines stable.</p>
               ) : (
@@ -213,7 +213,6 @@ export default async function Home() {
               )}
             </div>
           </div>
-        </div>
       </div>
     </div>
   );

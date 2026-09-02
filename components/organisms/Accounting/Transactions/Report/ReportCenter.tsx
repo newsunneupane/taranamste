@@ -103,30 +103,38 @@ export default function ReportCenter({ transactions, accounts }: any) {
     };
 
     return (
-        <div className="bg-card border border-border rounded-xl shadow-sm mb-6 overflow-hidden transition-all duration-500">
-            <div className="p-4 md:p-5 border-b border-border/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div className="flex justify-between items-start w-full md:w-auto">
-                    <div>
-                        <h2 className="font-ubuntu text-[13px] font-black text-text tracking-tight">
-                            Reports
-                        </h2>
-                        <p className="text-[10px] font-semibold text-primary/70 tracking-wide">
-                            {filter.timeframe === "CUSTOM" && filter.startDate
-                                ? `Selected: ${filter.startDate} → ${filter.endDate}`
-                                : "Make a report of your transactions"}
-                        </p>
+        <div className="bg-gradient-to-br from-card via-card to-primary/[0.03] border border-primary/10 rounded-2xl shadow-sm mb-6 overflow-hidden transition-all duration-500">
+            <div className="p-4 md:p-5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <div className="flex justify-between items-start w-full lg:w-auto gap-3">
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/15 flex items-center justify-center text-primary shrink-0">📊</div>
+                        <div>
+                            <h2 className="font-ubuntu text-[12px] font-black text-text tracking-tight">
+                                Report Center
+                            </h2>
+                            <p className="text-[10px] font-bold text-text-muted tracking-wide">
+                                {filter.timeframe === "CUSTOM" && filter.startDate
+                                    ? `${filter.startDate} → ${filter.endDate}`
+                                    : "Generate transaction reports"}
+                            </p>
+                        </div>
                     </div>
                     <button 
                         onClick={() => setIsExpanded(!isExpanded)} 
-                        className="md:hidden p-1.5 bg-bg border border-border rounded-lg text-primary shadow-sm"
+                        className="lg:hidden p-1.5 bg-card border border-border rounded-lg text-primary shadow-sm"
                     >
                         <ChevronDown className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} size={16} />
                     </button>
                 </div>
 
-                <Button onClick={handleGenerate} className="w-full md:w-auto px-6 h-9 font-black font-mono text-xs tracking-widest">
-                    MAKE REPORT
-                </Button>
+                <div className="grid grid-cols-2 gap-2 w-full lg:w-auto">
+                    <Button onClick={handleGenerate} size="sm" className="font-black tracking-widest text-[10px] h-8 px-4 bg-primary hover:bg-primary/90 shadow-sm">
+                        MAKE REPORT
+                    </Button>
+                    <Button onClick={() => setIsExpanded(!isExpanded)} variant="secondary" size="sm" className="font-black tracking-widest text-[10px] h-8 px-4">
+                        {isExpanded ? "HIDE" : "FILTERS"}
+                    </Button>
+                </div>
             </div>
 
             {/* ERROR ALERT */}

@@ -118,6 +118,8 @@ export function useUIModals() {
                 !!initialData ? "Edit Account Head" : "New Account Head",
                 { initialData, defaultType, onSaved } // ✨ Pass onSaved to the form
             ),
+        openBulkExpenseUpload: ({ accounts, categories }: { accounts?: any[], categories?: any[] } = {}) =>
+            openModal("BULK_EXPENSE_UPLOAD", "Bulk Upload — Expenses (PDF Form)", { accounts, categories }),
         // --- INVENTORY ---
         openManageStock: ({ item }: { item: any }) =>
             openModal(

@@ -3,8 +3,8 @@ import React from "react";
 import { Button } from "@/components/atoms/Button";
 import { useUIModals } from "@/hooks/useUIModal";
 
-const PageHeader = () => {
-    const { openTransactionForm } = useUIModals();
+const PageHeader = ({ accounts, categories }: { accounts?: any[]; categories?: any[] }) => {
+    const { openTransactionForm, openBulkExpenseUpload } = useUIModals();
     
     return (
         // ✨ Compact header - distinct hierarchy
@@ -27,13 +27,21 @@ const PageHeader = () => {
                 </div>
             </div>
 
-            {/* ACTION */}
-            <Button
-                onClick={() => openTransactionForm()}
-                className="w-full sm:w-auto bg-primary text-text-invert hover:opacity-90 shadow-glow font-bold py-2 sm:py-2 px-5 rounded-xl text-xs transition-all"
-            >
-                + New Transaction
-            </Button>
+            {/* ACTIONS */}
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <Button
+                    onClick={() => openBulkExpenseUpload({ accounts, categories })}
+                    className="w-full sm:w-auto bg-card border border-border text-text hover:bg-shaded font-black py-2 px-4 rounded-xl text-[11px] uppercase tracking-widest transition-all"
+                >
+                    Bulk Upload (PDF)
+                </Button>
+                <Button
+                    onClick={() => openTransactionForm()}
+                    className="w-full sm:w-auto bg-primary text-text-invert hover:opacity-90 shadow-glow font-bold py-2 sm:py-2 px-5 rounded-xl text-xs transition-all"
+                >
+                    + New Transaction
+                </Button>
+            </div>
         </div>
     );
 };

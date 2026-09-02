@@ -9,6 +9,7 @@ import "@/models/InventoryItem";
 import PageHeader from "@/components/organisms/Accounting/Transactions/PageHeader";
 import FinanceLedger from "@/components/organisms/Accounting/Transactions/LedgerTable/FinanceLedger";
 import { requirePageAccess } from "@/lib/guards";
+import PaymentCategory from "@/models/paymentCategory";
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,9 @@ export default async function FinancePage() {
 
     const rawInventory = await InventoryItem.find({}).lean();
     const inventory = JSON.parse(JSON.stringify(rawInventory));
+
+    const rawCategories = await PaymentCategory.find({ isActive: true }).lean();
+    const categories = JSON.parse(JSON.stringify(rawCategories));
 
     const rawTransactions = await Transaction.find({})
         .populate("accountHead", "name code")
@@ -48,7 +52,7 @@ export default async function FinancePage() {
 
     return (
         <div className="max-w-7xl mx-auto space-y-5 w-full p-3 md:p-5 lg:p-6 transition-colors duration-500">
-            <PageHeader />
+            <PageHeader accounts={accounts} categories={categories} />
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-4">
                 <SummaryCard
                     label="Available Balance"

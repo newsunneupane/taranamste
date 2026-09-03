@@ -71,7 +71,7 @@ export function BulkExpenseUploadModal({ closeModal, accounts, categories }: any
       <p className="text-[10px] text-center text-text-muted font-bold -mt-1">Excel recommended for copy-paste: select rows in Excel/Sheets and paste into template in one go. PDF also available.</p>
 
       <div className="bg-shaded/60 border border-border rounded-xl p-3 text-[10px] leading-relaxed text-text-muted">
-        <span className="font-black text-danger">Compulsory *: Head (name, case-insensitive, auto-created), Amount, Date BS or AD (YYYY-MM-DD, e.g. 2082-05-17 BS auto-converts).</span> Description optional. Type locked EXPENSE. BS dates auto-converted to AD for storage. Heads/Sub-heads created automatically. Empty rows ignored. Multifile .xlsx/.pdf — 15 MB per file, 30 MB total.
+        <span className="font-black text-danger">Compulsory *: Head (name, case-insensitive, must already exist), Amount, Date BS or AD (YYYY-MM-DD, e.g. 2082-05-17 BS auto-converts).</span> Description optional. Type locked EXPENSE. BS dates auto-converted to AD. Heads/Sub-heads must be created first in Finance → Chart of Accounts (strict, case-insensitive). Empty rows ignored. Multifile .xlsx/.pdf — 15 MB per file, 30 MB total.
       </div>
 
       <form action={parseAction} className="space-y-3">
@@ -124,8 +124,8 @@ export function BulkExpenseUploadModal({ closeModal, accounts, categories }: any
             <span className="px-3 py-1 rounded-full bg-success/10 text-success border border-success/20">Valid: {(parseState as any).validCount}</span>
             <span className="px-3 py-1 rounded-full bg-danger/10 text-danger border border-danger/20">Invalid: {(parseState as any).invalidCount}</span>
             <span className="px-3 py-1 rounded-full bg-shaded border border-border text-text-muted">Total: {rows.length}</span>
-            {(parseState as any).willCreateCount > 0 && (
-              <span className="px-3 py-1 rounded-full bg-warning/10 text-warning border border-warning/20">New heads: {(parseState as any).willCreateCount}</span>
+            {(((parseState as any).unknownCount ?? (parseState as any).willCreateCount) > 0) && (
+              <span className="px-3 py-1 rounded-full bg-danger/10 text-danger border border-danger/20">Unknown heads/subs: {((parseState as any).unknownCount ?? (parseState as any).willCreateCount)}</span>
             )}
           </div>
 
@@ -149,8 +149,8 @@ export function BulkExpenseUploadModal({ closeModal, accounts, categories }: any
                     <td className="p-2 font-mono text-[10px] truncate max-w-[90px]" title={r._sourceFile}>{(r._sourceFile || "").slice(0,18)}</td>
                     <td className="p-2 font-mono" title={r._wasBs ? `BS ${r._originalDate} → AD ${r.dateObj}` : r.dateObj || r.date}>{r._wasBs ? `${r._originalDate} → ${r.dateObj}` : (r.dateDisplay || r.dateObj || r.date || "—")}</td>
                     <td className="p-2">
-                      {r.account} {r.willCreate && <span className="ml-1 px-1.5 py-0.5 rounded bg-warning/20 text-warning text-[9px] font-black uppercase">new head</span>}
-                      {r.subType ? ` / ${r.subType}` : ""} {r.subTypeWillCreate && <span className="px-1.5 py-0.5 rounded bg-warning/10 text-warning text-[9px]">new sub</span>}
+                      {r.account} {!r.isValid && r.errors?.some((e:string)=>e.includes("Unknown head")) && <span className="ml-1 px-1.5 py-0.5 rounded bg-danger/10 text-danger border border-danger/20 text-[9px] font-black uppercase">unknown head</span>}
+                      {r.subType ? ` / ${r.subType}` : ""} {!r.isValid && r.errors?.some((e:string)=>e.includes("Unknown sub-head")) && <span className="ml-1 px-1.5 py-0.5 rounded bg-danger/10 text-danger border border-danger/20 text-[9px] font-black uppercase">unknown sub</span>}
                     </td>
                     <td className="p-2 font-mono">{r.amountNum ?? r.amount}</td>
                     <td className="p-2 max-w-[180px] truncate" title={r.desc}>{r.desc || "—"}</td>
@@ -163,7 +163,7 @@ export function BulkExpenseUploadModal({ closeModal, accounts, categories }: any
             </table>
             {rows.length > 400 && <div className="p-2 text-center text-[10px] text-text-muted font-bold">Showing 400 of {rows.length} rows — all {validRows.length} valid will be imported</div>}
           </div>
-          {invalidRows.length > 0 && <p className="text-[10px] text-danger font-bold">{invalidRows.length} invalid rows will be skipped. Fix in PDF and re-upload or import only valid.</p>}
+          {invalidRows.length > 0 && <p className="text-[10px] text-danger font-bold">{invalidRows.length} invalid rows have unknown head/sub-head (strict, case-insensitive — create them first in Chart of Accounts) or other errors. Fix the file and re-upload.</p>}
 
           <form action={commitAction} className="flex justify-end gap-2 pt-2 border-t border-border">
             <input type="hidden" name="payload" value={JSON.stringify(rows)} />
@@ -171,11 +171,11 @@ export function BulkExpenseUploadModal({ closeModal, accounts, categories }: any
             <input type="hidden" name="createdBy" value={session?.user?.id || ""} />
             <Button type="button" variant="ghost" onClick={closeModal} className="h-9 text-[11px] uppercase font-bold">Cancel</Button>
             <Button type="submit" disabled={validRows.length === 0 || isCommitting} className="bg-danger text-white font-black text-[11px] uppercase h-9 px-6">
-              {isCommitting ? "Importing..." : `Import ${validRows.length} Expenses${(parseState as any).willCreateCount ? ` (+${(parseState as any).willCreateCount} new heads)` : ""}`}
+              {isCommitting ? "Importing..." : `Import ${validRows.length} Expenses`}
             </Button>
           </form>
           {(commitState as any)?.error && <div className="text-[11px] font-bold text-danger bg-danger/10 border border-danger/20 rounded-lg p-3">{(commitState as any).error}</div>}
-          {(commitState as any)?.success && <div className="text-[11px] font-bold text-success bg-success/10 border border-success/20 rounded-lg p-3">✓ Imported {(commitState as any).inserted} expenses (heads/subheads resolved case-insensitive). Refreshing...</div>}
+          {(commitState as any)?.success && <div className="text-[11px] font-bold text-success bg-success/10 border border-success/20 rounded-lg p-3">✓ Imported {(commitState as any).inserted} expenses (strict heads/subs, case-insensitive). Refreshing...</div>}
         </div>
       )}
     </div>

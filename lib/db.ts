@@ -74,15 +74,142 @@ async function seedDefaults() {
         code: "INC-GEN",
         description: "Default account for incoming unrestricted funds.",
         isSystem: true,
-      }
+      },
+      // --- Canonical Expense Heads for historical import (12 heads, merged Fees → Education Supplies) ---
+      {
+        name: "Food & Groceries",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-FOOD",
+        description: "Food, grocery, vegetables, dairy, fruits, snacks, meat, tiffin",
+        subType: ["Grocery","Fruits","Vegetables","Dairy & Milk","Snacks & Refreshments","Meat","Tiffin"],
+        isSystem: false,
+      },
+      {
+        name: "Clothing & Apparel",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-CLOTH",
+        description: "Clothes, footwear and apparel",
+        subType: ["Clothes","Footwear"],
+        isSystem: false,
+      },
+      {
+        name: "Utilities & Rent",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-UTIL",
+        description: "Electricity, water, gas, rent, internet, government services",
+        subType: ["Electricity","Water","LPG / Cooking Gas","Room Rent","Drinking Water","Internet Bill","Government Services","Birth Registry / Copy Fee"],
+        isSystem: false,
+      },
+      {
+        name: "Repairs & Maintenance",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-MAINT",
+        description: "Repairs, maintenance, printer, government services, water tank, appliances",
+        subType: ["Government Services","Water","Printer Repair","Installation","Electric Appliances","Photocopy Repair","Raw Materials","Spare Part","Plumbing / Plastic Pipe"],
+        isSystem: false,
+      },
+      {
+        name: "Kitchen & Cleaning",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-KITCH",
+        description: "Kitchen and cleaning supplies and utensils",
+        subType: ["Cleaning Supplies","Kitchen Supplies","Kitchen Utensils & Supplies","Cleaning & Repairs","Kitchen Items"],
+        isSystem: false,
+      },
+      {
+        name: "Bought Things",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-BOUGHT",
+        description: "Appliances and bought items (curtains, books, speaker etc.)",
+        subType: ["Appliance"],
+        isSystem: false,
+      },
+      {
+        name: "Education Supplies",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-EDU",
+        description: "Education fees, college, tuition, computer (Fees merged)",
+        subType: ["College Fees","Tuition / Coaching Fees","Computer Fee","Admission Fee","Admission","Certificate"],
+        isSystem: false,
+      },
+      {
+        name: "Medical Expenses",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-MED",
+        description: "Medical treatment, medicines, insurance",
+        subType: ["Medicines","Health Insurance","Dinesh Treatment"],
+        isSystem: false,
+      },
+      {
+        name: "Fun & Festival",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-FEST",
+        description: "Festival, puja and gift expenses",
+        subType: ["Festival","Gift","Mahendra Puja Samagri","Purinima Agro's"],
+        isSystem: false,
+      },
+      {
+        name: "Vehicle & Transport",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-VEH",
+        description: "Vehicle and transport expenses",
+        subType: ["Bus Fare / Travel"],
+        isSystem: false,
+      },
+      {
+        name: "Legal & Administrative",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-LEGAL",
+        description: "Legal and administrative fees",
+        subType: ["Land Transfer Fee"],
+        isSystem: false,
+      },
+      {
+        name: "Miscellaneous",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-MISC",
+        description: "Miscellaneous expenses",
+        subType: ["Key,Mirror,Plastic"],
+        isSystem: false,
+      },
+      {
+        name: "Staff Salary",
+        type: "EXPENSE",
+        fundCategory: "UNRESTRICTED",
+        code: "EXP-SALARY",
+        description: "Staff salaries — per-employee subheads, Not Mentioned for combined/unknown",
+        subType: ["Yashoda Chapagain","Durga Ojha","Bina Kambang","Mahadevi","Dilu Gurung","Mina","Not Mentioned"],
+        isSystem: false,
+      },
     ];
 
     for (const head of defaultHeads) {
+      const { subType, ...headBase } = head as any;
+      // Upsert head by code (create if missing)
       await AccountHead.updateOne(
         { code: head.code },
-        { $setOnInsert: head },
+        { $setOnInsert: headBase },
         { upsert: true }
       );
+      // Ensure subTypes exist (merge, don't overwrite). For canonical heads, keep subType synced.
+      if (subType && Array.isArray(subType) && subType.length) {
+        await AccountHead.updateOne(
+          { code: head.code },
+          { $addToSet: { subType: { $each: subType } } }
+        );
+      }
     }
 
     // 2. Seed System Payment Categories (The "Where" - Cash/Bank/Staff)

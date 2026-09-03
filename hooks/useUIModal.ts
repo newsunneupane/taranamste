@@ -120,6 +120,8 @@ export function useUIModals() {
             ),
         openBulkExpenseUpload: ({ accounts, categories }: { accounts?: any[], categories?: any[] } = {}) =>
             openModal("BULK_EXPENSE_UPLOAD", "Bulk Upload — Expenses (PDF Form)", { accounts, categories }),
+        openTransactionDetail: (transaction: any) =>
+            openModal("TRANSACTION_DETAIL", "Transaction Detail", { transaction }),
         // --- INVENTORY ---
         openManageStock: ({ item }: { item: any }) =>
             openModal(

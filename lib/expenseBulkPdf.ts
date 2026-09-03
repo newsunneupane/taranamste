@@ -2,7 +2,7 @@
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
 // Compulsory: amount*, head*, date* — type locked EXPENSE. Description is OPTIONAL.
-// Head = Category/Head name only (case-insensitive), no code, no money account. Heads/subheads auto-created later case-insensitive.
+// Head = name only (case-insensitive, must already exist — strict). No money account.
 
 export interface BulkTemplateAccount {
   _id: string;
@@ -45,11 +45,11 @@ export async function generateExpenseBulkTemplatePDF(
         x: 24, y, size: 13, font: fontBold, color: rgb(0.09, 0.09, 0.12),
       });
       y -= 12;
-      page.drawText("Instructions: 1) Fill ONLY EXPENSE rows.  2) Compulsory marked *.  3) Date BS or AD (YYYY-MM-DD, BS e.g. 2082-05-17 auto-converts to AD).  4) Head = name only (case-insensitive, new heads auto-created, e.g. Food, Rent).  5) Save PDF and upload via Finance > Bulk Upload (multifile 15 MB).", {
+      page.drawText("Instructions: 1) Fill ONLY EXPENSE rows.  2) Compulsory *.  3) Date BS or AD (YYYY-MM-DD, e.g. 2082-05-17).  4) Head/Sub-Head = name only (case-insensitive, must already exist in Finance → Chart of Accounts, e.g. Food).  5) Save PDF and upload via Finance > Bulk Upload (multifile 15 MB).", {
         x: 24, y, size: 6, font, color: rgb(0.35, 0.35, 0.38), maxWidth: width - 48,
       });
       y -= 8;
-      page.drawText("Compulsory *: Amount > 0, Head (name), Date (BS or AD). Description optional. Heads/Sub-heads auto-created case-insensitive. Empty rows ignored.", {
+      page.drawText("Compulsory *: Amount > 0, Head (must exist), Date (BS or AD). Description optional. Head/Sub-Head strict, case-insensitive. Empty rows ignored.", {
         x: 24, y, size: 6, font: fontBold, color: rgb(0.7, 0.15, 0.15),
       });
       y -= 10;
@@ -112,13 +112,13 @@ export async function generateExpenseBulkTemplatePDF(
     page.drawText(`Page ${pageIdx + 1}/${totalPages} — Generated: ${new Date().toLocaleString()}`, { x: width - 210, y: 16, size: 5.5, font, color: rgb(0.45, 0.45, 0.48) });
   }
 
-  // Reference page — Head names only (case-insensitive, auto-created)
+  // Reference page — Head names only (case-insensitive, must exist)
   const refPage = pdfDoc.addPage([595, 842]);
   let ry = 800;
   const fontSmall = font;
-  refPage.drawText("Reference — Existing Heads (name — will auto-create if missing, case-insensitive)", { x: 24, y: ry, size: 10, font: fontBold, color: rgb(0.06, 0.09, 0.16) });
+  refPage.drawText("Reference — Existing Heads (must already exist, case-insensitive)", { x: 24, y: ry, size: 10, font: fontBold, color: rgb(0.06, 0.09, 0.16) });
   ry -= 12;
-  refPage.drawText("Column 2: Head name only (e.g. Food). New names typed here will create a new AccountHead (type EXPENSE) on upload. Sub-Head auto-adds. Description is optional.", { x: 24, y: ry, size: 6.5, font: fontSmall, color: rgb(0.35, 0.35, 0.38) });
+  refPage.drawText("Column 2: Head name only (e.g. Food). Must match an existing Head (Finance → Chart of Accounts). Sub-Head must already exist under that Head. Description optional.", { x: 24, y: ry, size: 6.5, font: fontSmall, color: rgb(0.35, 0.35, 0.38) });
   ry -= 14;
   refPage.drawText("Existing Expense Heads (name / sub-heads)", { x: 24, y: ry, size: 7.5, font: fontBold, color: rgb(0.09, 0.09, 0.12) });
   ry -= 8;
@@ -140,7 +140,7 @@ export async function generateExpenseBulkTemplatePDF(
       ry -= 10;
     }
   }
-  refPage.drawText("New Head names will be created automatically. Download fresh template after bulk to see updated list.", {
+  refPage.drawText("Unknown Head/Sub-Head will be rejected — create them in Finance → Chart of Accounts first (case-insensitive). Download fresh template after creating heads.", {
     x: 24, y: 22, size: 5.5, font: fontSmall, color: rgb(0.45, 0.45, 0.48)
   });
 

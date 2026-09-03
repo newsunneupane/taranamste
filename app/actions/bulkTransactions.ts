@@ -14,13 +14,9 @@ type ParseResult = {
   rows?: any[];
   validCount?: number;
   invalidCount?: number;
-  willCreateCount?: number;
+  unknownCount?: number;
+  willCreateCount?: number; // kept for backward compat
 };
-
-function codeFromName(name: string): string {
-  const base = String(name || "EXPENSE").toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 24) || "EXPENSE";
-  return base.startsWith("EXP_") ? base : `EXP_${base}`;
-}
 
 export async function parseBulkExpensePdfAction(_prev: any, formData: FormData): Promise<ParseResult> {
   const w = await requireWrite("/finance");
@@ -75,42 +71,38 @@ export async function parseBulkExpensePdfAction(_prev: any, formData: FormData):
 
   const accountByNameLower = new Map(accounts.map((a: any) => [norm(a.name), a]));
 
-  // collect distinct heads that will be auto-created (case-insensitive)
-  const willCreateSet = new Set<string>();
-  for (const r of rawRows) if (r.account && !accountByNameLower.has(norm(r.account))) willCreateSet.add(norm(r.account));
+  // Strict mode: unknown heads/subs are errors (case-insensitive, must exist)
+  const unknownSet = new Set<string>();
+  for (const r of rawRows) if (r.account && !accountByNameLower.has(norm(r.account))) unknownSet.add(norm(r.account));
 
   const rows = rawRows.map((r) => {
     const baseError = validateBulkRow(r);
     const nAccount = norm(r.account);
     const nSub = norm(r.subType);
     let accountResolved: any = null;
-    let categoryResolved: any = null;
 
     if (r.account) accountResolved = accountByNameLower.get(nAccount) || null;
-
-    // Money Account column removed — ignore r.paymentCategory (kept only for backward compat)
-    if (r.subType && accountResolved) {
-      const availableLower = (accountResolved.subType || []).map((s: string) => norm(s));
-      void availableLower;
-    }
-
-    const accountWillCreate = !!r.account && !accountResolved;
-
-    let categoryWarn: string | null = null;
 
     const amountNum = Number(String(r.amount).replace(/,/g, "").trim());
     // BS-aware date handling — converts BS 2082-05-17 -> AD 2025-09-02
     const parsedDate = parseBsOrAdDate(r.date);
-    const dateValid = !!parsedDate.adIso;
     const adIso = parsedDate.adIso || r.date;
 
     const errors: string[] = [];
     if (baseError) errors.push(baseError);
-    // Avoid duplicate invalid date error — validateBulkRow already covers it via BS logic
-    // do NOT push account unknown as error — auto-create
 
-    const willCreate = accountWillCreate;
-    const subTypeWillCreate = !!(r.subType && accountResolved && !accountResolved.subType.map((s: string) => norm(s)).includes(nSub));
+    // Strict: head must exist (case-insensitive)
+    if (!accountResolved && r.account) {
+      errors.push(`Unknown head "${r.account}" — create it in Finance → Chart of Accounts first (case-insensitive)`);
+    } else if (r.subType && accountResolved) {
+      const existsLower = new Set((accountResolved.subType || []).map((s: string) => norm(s)));
+      if (!existsLower.has(nSub)) {
+        errors.push(`Unknown sub-head "${r.subType}" for head "${r.account}" — add it to that head first`);
+      }
+    }
+
+    const willCreate = false;
+    const subTypeWillCreate = false;
 
     return {
       ...r,
@@ -125,7 +117,7 @@ export async function parseBulkExpensePdfAction(_prev: any, formData: FormData):
       subTypeWillCreate,
       nAccount,
       nSub,
-      categoryWarn,
+      categoryWarn: null,
       errors,
       isValid: errors.length === 0,
     };
@@ -134,7 +126,7 @@ export async function parseBulkExpensePdfAction(_prev: any, formData: FormData):
   const validCount = rows.filter((r: any) => r.isValid).length;
   const invalidCount = rows.length - validCount;
 
-  return { success: true, rows, validCount, invalidCount, willCreateCount: willCreateSet.size };
+  return { success: true, rows, validCount, invalidCount, unknownCount: unknownSet.size, willCreateCount: unknownSet.size };
 }
 
 export async function commitBulkExpensesAction(_prev: any, formData: FormData) {
@@ -197,91 +189,28 @@ export async function commitBulkExpensesAction(_prev: any, formData: FormData) {
 
   await dbConnect();
 
-  // Prepare session for atomic transaction
+  // Prepare session for atomic transaction — strict mode: heads/subs must already exist (no auto-create)
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
 
-    // --- Auto-create heads case-insensitive (within txn) ---
-    const needed = new Map<string, { displayName: string; subTypes: Map<string, string> }>();
-    for (const r of validRows) {
-      if (r.willCreate) {
-        const key = norm(r.account);
-        if (!needed.has(key)) needed.set(key, { displayName: String(r.account).trim(), subTypes: new Map() });
-        if (r.subType) {
-          const ns = norm(r.subType);
-          if (!needed.get(key)!.subTypes.has(ns)) needed.get(key)!.subTypes.set(ns, String(r.subType).trim());
-        }
-      }
-    }
-
-    const existingForSub = await AccountHead.find({ type: "EXPENSE" }).session(session).lean();
-    const existingByLower = new Map(existingForSub.map((a: any) => [norm(a.name), a]));
-
-    // create missing heads
-    for (const [lower, info] of needed) {
-      if (existingByLower.has(lower)) continue;
-      let code = codeFromName(info.displayName);
-      let tryCode = code;
-      let suffix = 2;
-      while (await AccountHead.findOne({ code: tryCode }).session(session).lean()) {
-        tryCode = `${code}_${suffix++}`;
-      }
-      const subArray = Array.from(info.subTypes.values());
-      try {
-        const createdArr = await AccountHead.create(
-          [
-            {
-              name: info.displayName,
-              code: tryCode,
-              type: "EXPENSE",
-              fundCategory: "UNRESTRICTED",
-              subType: subArray,
-              description: "Auto-created via bulk " + new Date().toISOString().slice(0, 10),
-              isActive: true,
-              isSystem: false,
-            },
-          ],
-          { session }
-        );
-        const created = createdArr[0] as any;
-        existingByLower.set(lower, created.toObject ? created.toObject() : created);
-      } catch (e: any) {
-        if (e.code === 11000) {
-          const ex = await AccountHead.findOne({ name: new RegExp(`^${info.displayName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") })
-            .session(session)
-            .lean();
-          if (ex) existingByLower.set(lower, ex);
-          else throw e;
-        } else throw e;
-      }
-    }
-
-    // add new subTypes to existing heads (case-insensitive)
-    const subAdds = new Map<string, Set<string>>();
-    for (const r of validRows) {
-      if (!r.willCreate && r.subType && r.accountResolved) {
-        const head = existingByLower.get(norm(r.account));
-        if (!head) continue;
-        const existsLower = new Set((head.subType || []).map((s: string) => norm(s)));
-        const ns = norm(r.subType);
-        if (!existsLower.has(ns)) {
-          const id = String(head._id);
-          if (!subAdds.has(id)) subAdds.set(id, new Set());
-          subAdds.get(id)!.add(String(r.subType).trim());
-        }
-      }
-    }
-    for (const [headId, set] of subAdds) {
-      const arr = Array.from(set);
-      await AccountHead.findByIdAndUpdate(headId, { $addToSet: { subType: { $each: arr } } }, { session });
-      const fresh = await AccountHead.findById(headId).session(session).lean();
-      if (fresh) existingByLower.set(norm(fresh.name), fresh);
-    }
-
-    // rebuild final accountByLower to include created (within txn)
+    // Strict: no auto-create; just load existing heads for validation
     const finalAccounts = await AccountHead.find({ type: "EXPENSE" }).session(session).lean();
     const finalByLower = new Map(finalAccounts.map((a: any) => [norm(a.name), a]));
+
+    // Safety: if any validRow references unknown head (should have been filtered), abort
+    for (const r of validRows) {
+      if (!finalByLower.has(norm(r.account))) {
+        throw new Error(`Unknown head "${r.account}" — create it in Finance → Chart of Accounts first`);
+      }
+      if (r.subType) {
+        const head = finalByLower.get(norm(r.account));
+        const existsLower = new Set((head.subType || []).map((s: string) => norm(s)));
+        if (!existsLower.has(norm(r.subType))) {
+          throw new Error(`Unknown sub-head "${r.subType}" for head "${r.account}"`);
+        }
+      }
+    }
 
     // ---------- Duplicate against DB ----------
     // Build keys for DB check: date (day), headId, sub, amount, vendor, ref, desc

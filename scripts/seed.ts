@@ -51,6 +51,13 @@ async function seed() {
   console.log("   📧 Email:    admin@taranamaste.org");
   console.log("   🔑 Password: taranamaste@123");
   console.log(`   Role: ${admin.role} | Active: ${admin.isActive}\n`);
+  console.log("   (If you changed email/password in code, use THOSE values — log above matches DB hash)");
+  // Also clean any stale old email entry if you renamed:
+  const stale = await User.findOne({ email: "admin@taranamaste" });
+  if (stale) {
+    console.log("🧹 Found stale admin@taranamaste (without .org) — removing to avoid confusion...");
+    await User.deleteOne({ email: "admin@taranamaste" });
+  }
 
   await mongoose.disconnect();
   process.exit(0);

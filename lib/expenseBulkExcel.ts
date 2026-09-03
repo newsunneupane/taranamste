@@ -4,7 +4,7 @@ import { todayBs, formatBs } from "@itzsa/bs-date";
 
 // Spreadsheet-style Excel template: 100 blank rows, copy-paste friendly
 // Columns: Date* (YYYY-MM-DD) | Head* | Sub-Head | Amount (NPR)* | Vendor | Ref | Description (optional)
-// Head is case-insensitive; new heads auto-created. Money Account removed. Description optional.
+// Head/Sub-Head case-insensitive, must already exist (strict). Money Account removed. Description optional.
 
 export interface BulkExcelAccount {
   _id: string;
@@ -72,7 +72,7 @@ export function generateExpenseBulkExcel(
 
   // 5. Data validation hints: add second sheet as reference
   const refData: any[][] = [];
-  refData.push(["Existing Heads (name) — new names will auto-create (case-insensitive)"]);
+  refData.push(["Existing Heads (name) — must already exist (strict, case-insensitive) — create via Finance → Chart of Accounts first"]);
   refData.push(["Head Name", "Sub-Heads (comma separated)"]);
   accounts.slice(0, 80).forEach(a => {
     refData.push([a.name, (a.subType || []).join(", ") || "—"]);
@@ -86,7 +86,7 @@ export function generateExpenseBulkExcel(
   refData.push([]);
   refData.push(["Instructions:"]);
   refData.push(["- Fill ONLY EXPENSE rows. Compulsory: Head, Amount>0, Date BS or AD (YYYY-MM-DD, e.g. 2082-05-17 BS auto-converts to AD). Description optional."]);
-  refData.push(["- Head name only, case-insensitive. New heads auto-created. Sub-Head auto-added."]);
+  refData.push(["- Head/Sub-Head name only, case-insensitive. Must already exist — create them first. Unknown values will be rejected on upload."]);
   refData.push(["- Copy full rows from your spreadsheet and paste starting at A3 (below example)."]);
   refData.push(["- Keep header row. Upload via Finance > Bulk Upload (multifile .pdf/.xlsx, 15 MB)."]);
   const wsRef = XLSX.utils.aoa_to_sheet(refData);

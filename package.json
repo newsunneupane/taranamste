@@ -8,7 +8,9 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "seed": "npx tsx scripts/seed.ts"
+    "seed": "npx tsx scripts/seed.ts",
+    "clear": "npx tsx scripts/clear.ts",
+    "clear:all": "npx tsx scripts/clear.ts --wipe-users"
   },
   "dependencies": {
     "@itzsa/bs-date": "^0.1.1",

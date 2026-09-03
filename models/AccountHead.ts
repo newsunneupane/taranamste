@@ -27,6 +27,12 @@ const AccountHeadSchema = new Schema<IAccountHead>({
   fundCategory: { type: String, enum: ['RESTRICTED', 'UNRESTRICTED'], default: 'UNRESTRICTED', required: true },
   subType: [{ type: String, trim: true }], 
   description: { type: String, trim: true },
+  isBankAccount: { type: Boolean, default: false },
+  bankDetails: {
+    accountNumber: { type: String, trim: true, default: '' },
+    bankName: { type: String, trim: true, default: '' },
+    branch: { type: String, trim: true, default: '' },
+  },
   isSystem: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });

@@ -37,7 +37,7 @@ export interface TPaymentCategory {
 // ==========================================
 // TRANSACTION (FINANCE) TYPES
 // ==========================================
-export type TransactionType = 'INCOME' | 'EXPENSE';
+export type TransactionType = 'INCOME' | 'EXPENSE' | 'ASSET' | 'LIABILITY';
 export type TransactionStatus = 'PENDING' | 'VERIFIED' | 'REJECTED';
 
 export interface TTransaction {
@@ -67,18 +67,24 @@ export interface TTransaction {
 }
 
 // ==========================================
-// INVENTORY TYPES (Keep these as they were)
+// INVENTORY TYPES (Fixed)
 // ==========================================
-export type InventoryCategory = 'FOOD' | 'CLOTHING' | 'EDUCATION' | 'MEDICAL' | 'MAINTENANCE';
+export type InventoryCategory = string; // now InventoryCategory ObjectId
+export type InventoryItemType = 'CONSUMABLE' | 'ASSET';
 export type InventoryLogType = 'IN' | 'OUT';
 
 export interface TInventoryItem {
   _id: string;
   name: string;
-  category: InventoryCategory;
+  category: InventoryCategory | any;
+  type: InventoryItemType;
   unit: string;
   currentStock: number;
   minimumStockLevel: number;
+  location?: string;
+  condition?: 'NEW' | 'GOOD' | 'REPAIR';
+  description?: string;
+  isActive?: boolean;
 }
 
 export interface TInventoryLog {

@@ -7,7 +7,7 @@ import SelectAccountHead from "@/components/molecules/selects/SelectAccontHead" 
 
 interface FinanceBridgeProps {
     transaction?: any;
-    transactionType: "INCOME" | "EXPENSE"; 
+    transactionType: "INCOME" | "EXPENSE" | "ASSET" | "LIABILITY";
 }
 
 export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
@@ -19,39 +19,41 @@ export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
         transaction?.accountHead?._id || transaction?.accountHead || ""
     );
 
-    // Dynamic label logic for clarity
-    const isPurchase = transactionType === "EXPENSE";
+    const isAsset = transactionType === "ASSET";
+    const isPurchase = transactionType === "EXPENSE" || isAsset;
+
+    const theme = isAsset ? { bg:"bg-primary/5", border:"border-primary/20", text:"text-primary", badgeBg:"bg-primary/20 text-primary border-primary/30"} : { bg:"bg-success/5", border:"border-success/20", text:"text-success", badgeBg:"bg-success/20 text-success border-success/30"};
 
     return (
-        <div className="bg-success/5 p-6 rounded-2xl border border-success/20 flex flex-col gap-6 animate-in fade-in duration-500">
+        <div className={`${theme.bg} p-6 rounded-2xl border ${theme.border} flex flex-col gap-6 animate-in fade-in duration-500`}>
             
             {/* AUDIT HEADER */}
-            <div className="border-b border-success/20 pb-3 flex justify-between items-end">
+            <div className={`border-b ${theme.border} pb-3 flex justify-between items-end`}>
                 <div>
-                    <p className="text-[10px] uppercase font-black text-success tracking-[0.2em]">
-                        Linked Transaction
+                    <p className={`text-[10px] uppercase font-black tracking-[0.2em] ${theme.text}`}>
+                        {isAsset ? "Capitalized Asset" : "Linked Transaction"}
                     </p>
                     <p className="text-[9px] text-text-muted uppercase font-bold mt-1 opacity-70">
-                        {isPurchase ? "Inventory Purchase" : "Stock Value"}
+                        {isAsset ? "Purchase Price — adds to Net Worth" : isPurchase ? "Inventory Purchase" : "Stock Value"}
                     </p>
                 </div>
                 {Number(costEntered) > 0 && (
-                    <span className="text-[9px] font-black bg-success/20 text-success px-2 py-0.5 rounded border border-success/30 uppercase tracking-tighter">
+                    <span className={`text-[9px] font-black px-2 py-0.5 rounded border uppercase tracking-tighter ${theme.badgeBg}`}>
                         Entry Required
                     </span>
                 )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* 1. THE COST */}
+                {/* 1. THE COST — single Amount with dynamic label (keep what is good) */}
                 <FormField
                     id="cost"
-                    label={isPurchase ? "Total Purchase Cost (NPR)" : "Estimated Value (NPR)"}
+                    label={isAsset ? "Purchase Price (NPR) — Capitalized *" : isPurchase ? "Total Purchase Cost (NPR)" : "Estimated Value (NPR)"}
                     name="cost"
                     type="number"
                     value={costEntered}
                     onChange={(e) => setCostEntered(e.target.value)} 
-                    placeholder="Enter 0 if donated/no cost"
+                    placeholder={isAsset ? "e.g. 120000 for Furniture" : "Enter 0 if donated/no cost"}
                     className="text-text font-mono"
                 />
 

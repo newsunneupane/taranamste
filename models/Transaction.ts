@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface ITransaction extends Document {
   amount: number;
   date: Date;
-  type: 'INCOME' | 'EXPENSE';
+  type: 'INCOME' | 'EXPENSE' | 'ASSET' | 'LIABILITY';
   accountHead?: mongoose.Types.ObjectId | null;
   subType?: string; 
 
@@ -23,7 +23,7 @@ export interface ITransaction extends Document {
 const TransactionSchema = new Schema({
   amount: { type: Number, required: true, min: 0 },
   date: { type: Date, required: true, default: Date.now },
-  type: { type: String, enum: ['INCOME', 'EXPENSE'], required: true },
+  type: { type: String, enum: ['INCOME', 'EXPENSE', 'ASSET', 'LIABILITY'], required: true },
 
   accountHead: {
     type: Schema.Types.ObjectId,

@@ -193,6 +193,34 @@ async function seedDefaults() {
         subType: ["Yashoda Chapagain","Durga Ojha","Bina Kambang","Mahadevi","Dilu Gurung","Mina","Not Mentioned"],
         isSystem: false,
       },
+      // --- Asset & Liability starter heads (true capitalization) ---
+      {
+        name: "Cash & Bank",
+        type: "ASSET",
+        fundCategory: "UNRESTRICTED",
+        code: "AST-CASH",
+        description: "Cash on hand and bank balances",
+        subType: ["Petty Cash","Bank Balance"],
+        isSystem: false,
+      },
+      {
+        name: "Fixed Assets",
+        type: "ASSET",
+        fundCategory: "UNRESTRICTED",
+        code: "AST-FIXED",
+        description: "Capitalized fixed assets — furniture, equipment, vehicles",
+        subType: ["Furniture","Equipment","Vehicle"],
+        isSystem: false,
+      },
+      {
+        name: "Loans Payable",
+        type: "LIABILITY",
+        fundCategory: "UNRESTRICTED",
+        code: "LIA-LOAN",
+        description: "Outstanding loans and payables",
+        subType: ["Bank Loan","Staff Advance","Vendor Due"],
+        isSystem: false,
+      },
     ];
 
     for (const head of defaultHeads) {

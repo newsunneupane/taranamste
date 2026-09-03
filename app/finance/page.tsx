@@ -41,14 +41,22 @@ export default async function FinancePage() {
 
     let totalIncome = 0;
     let totalExpense = 0;
+    let totalAssets = 0;
+    let totalLiabilities = 0;
 
     const transactions = safeTransactions.map((txn: any) => {
-        if (txn.type === "INCOME") totalIncome += txn.amount;
-        if (txn.type === "EXPENSE") totalExpense += txn.amount;
+        const isMoneyMovement = !txn.accountHead && String(txn.referenceNumber || "").startsWith("CONTRA-");
+        if (!isMoneyMovement) {
+            if (txn.type === "INCOME") totalIncome += txn.amount;
+            if (txn.type === "EXPENSE") totalExpense += txn.amount;
+            if (txn.type === "ASSET") totalAssets += txn.amount;
+            if (txn.type === "LIABILITY") totalLiabilities += txn.amount;
+        }
         return txn;
     });
 
-    const netBalance = totalIncome - totalExpense;
+    const netBalance = totalIncome - totalExpense; // Available Balance (cash)
+    const netWorth = totalAssets - totalLiabilities; // Balance sheet
 
     return (
         <div className="max-w-7xl mx-auto space-y-5 w-full p-3 md:p-5 lg:p-6 transition-colors duration-500">
@@ -58,7 +66,7 @@ export default async function FinancePage() {
                     label="Available Balance"
                     value={netBalance}
                     variant={netBalance >= 0 ? "default" : "danger"}
-                    className="col-span-2 md:col-span-1" // ✨ Makes Balance span full-width on mobile!
+                    className="col-span-2 md:col-span-1"
                 />
                 <SummaryCard
                     label="Total Inflow"
@@ -71,6 +79,26 @@ export default async function FinancePage() {
                     value={totalExpense}
                     variant="warning"
                     prefix="- "
+                />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-4">
+                <SummaryCard
+                    label="Total Assets"
+                    value={totalAssets}
+                    variant="default"
+                    prefix="+ "
+                />
+                <SummaryCard
+                    label="Total Liabilities"
+                    value={totalLiabilities}
+                    variant="warning"
+                    prefix="- "
+                />
+                <SummaryCard
+                    label="Net Worth"
+                    value={netWorth}
+                    variant={netWorth >= 0 ? "default" : "danger"}
+                    prefix=""
                 />
             </div>
             <FinanceLedger

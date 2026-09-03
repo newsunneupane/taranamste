@@ -1,0 +1,141 @@
+TARA NAMASTE BAAL GRAM — ADMIN PORTAL USER MANUAL
+Version 1.0 — September 2026
+For: Caretakers, Accountants, Admins (No technical expertise needed)
+Admin Login: admin@taranamaste.org / taranamaste@123 (SuperAdmin — you will receive this separately, keep private)
+
+===============================================================================
+TABLE OF CONTENTS
+1. How to Log In
+2. Dashboard (Home Page) — What Numbers Mean
+3. Children
+4. Guardians
+5. Inventory (Stock & Supplies)
+6. Finance (MOST IMPORTANT — Available Balance vs Net Worth)
+7. Approvals
+8. Settlements (Cash Hand-Over)
+9. Staff
+10. Team Members & Permissions (Who can see what)
+11. Heads & Money Accounts Management
+12. Daily Typical Flow
+13. Common Questions
+===============================================================================
+
+1. HOW TO LOG IN
+---------------
+- Open the website. If browser says “Not Secure” on localhost, it's due to the dev certificate (mkcert) — click Proceed.
+- Login screen is at “/”. Enter Email + Password.
+- If you are new and went to “/register”, you will see: “Strict Notice: All new accounts are locked...” — wait for SuperAdmin to activate you in Team Members. You cannot use the system until activated.
+- Roles: SuperAdmin (you, full access) vs Staff/Samity/Caregiver (limited by permissions).
+
+2. DASHBOARD ( /dashboard and / )
+-----------------------------------
+This is overview only — no calculations to do, numbers are automatic.
+
+- Children in Care: count of children with status IN_CARE
+- Active Staff: count of staff with status ACTIVE
+- Funds: Available Balance = Total Income − Total Expense (green if positive, red if negative). Same number as Finance → Available Balance.
+- Low Stock Items: items where currentStock <= minimumStockLevel (shows up to 3, links to Inventory)
+- Critical Care Feed: ActionPlans that are PENDING or IN_PROGRESS and priority HIGH or URGENT (medical/legal) — click to open child documents.
+- Quick Actions: 3 shortcuts (e.g., Admit Child, New Transaction).
+
+3. CHILDREN (/children and /children/:id)
+-----------------------------------------
+- Header: “Children in Care” + “+ Admit Child” → form (first name, last name, DOB, gender, admission date). All dates are Bikram Sambat (BS) — picker auto-converts BS like 2082-05-17 to AD for storage.
+- Stats cards: Total Records, In Care, Placed (Adopted/Fostered), Recent Admissions (last 30 days).
+- Table: Search by name, Filter by status. Columns: Name+Avatar, Care Status, Admitted (BS date), DOB, Actions. Buttons: Edit (pencil → update form), View (eye → profile).
+- Detail page /children/:id: Back link, Documents tab, Gallery tab, Profile (identity, medical, school), Action Plans (+ Log Need).
+
+4. GUARDIANS (/guardians)
+--------------------------
+- Purpose: Family registry for foster/adoptive families.
+- Stats: Total Applicants, Under Review (VETTING), Approved, Blacklisted.
+- Table: Search by name/email, Filter by vettingStatus. Row shows Family Applicant, Type (FOSTER/ADOPTIVE/SPONSOR), Vetting badge, Assigned children count.
+- Buttons: Edit, View Profile → shows background check documents, Assigned Children list, Modify Placements / Assign Children (this changes child's status to ADOPTED/FOSTERED or back to IN_CARE).
+
+5. INVENTORY (/inventory)
+--------------------------
+- Header: Track stock for food, medical supplies, etc.
+- Stats (automatic, no math needed):
+  * Total Categories = count of distinct Inventory Categories in use
+  * Items in Stock = sum of all currentStock numbers
+  * Low Stock Alerts = count where currentStock <= minimumStockLevel (highlighted red)
+- How stock works:
+  * When you “Register New Item” you set: Item Name*, Category* (via + Add New Option if empty — manual, no defaults), Low Stock Alert (e.g. 10). Stock starts at 0 automatically.
+  * Do NOT put quantity in the creation form. After creation, card shows “0” + Low warning. Then click Manage → Stock IN → Quantity (e.g. 50) + Reason (“Purchased”) + Date. For cost>0 fill Purchase Price + Paid From (Cash/Bank) + Vendor → also creates a finance entry (Expense if consumable, Asset if fixed asset, capitalized). For donated set cost 0, fill donor — stock still increases (0 + 50 = 50) and appears in history even though no finance entry.
+  * Stock OUT reduces stock (consumption). If consumable and would go negative, system blocks: “Insufficient stock.”
+- Delete: Trash icon on card/table → allowed only if no history. If item has any IN/OUT history, deletion is blocked with message “Cannot delete — history must stay” (name preserved for audit).
+- History Timeline (global, like Finance): Below dashboard, filters Search (item/reason/donor/user) | Time (All/Day/Week/Month/Year/Custom BS) | Movement (All/IN/OUT) | Category | Item (cascaded from Category) | Format (PDF/Excel). Table Date | Item | Category | Type (IN green / OUT orange) | Qty (+/-) | Reason/Donor | User. Shows every addition/subtraction including donated (cost 0). Download button exports filtered history.
+
+6. FINANCE (/finance) — MOST IMPORTANT
+--------------------------------------
+- Summary cards (all automatic, money movements excluded):
+  * Available Balance = Total Income − Total Expense (cash you can spend now) — spans full width on mobile, green if >=0 else red.
+  * Total Inflow = sum of INCOME amounts ( + prefix, green)
+  * Total Outflow = sum of EXPENSE amounts ( - prefix, orange)
+  * Total Assets = sum of ASSET amounts ( + , blue) — e.g. furniture purchase 120,000 capitalized
+  * Total Liabilities = sum of LIABILITY amounts ( - , orange) — e.g. loan 80,000 owed
+  * Net Worth = Assets − Liabilities (what you own minus what you owe, not cash) — red if negative.
+
+- Filters (6 dropdowns + search + custom dates, same as inventory history):
+  1. Search: head name, description, subType, vendor
+  2. Time: All/Day/Week/Month/Year/Custom (Custom shows two BS pickers)
+  3. Cashflow Type: All / Income / Expense / Asset / Liability / Money Movement
+     → When Income selected, Head dropdown shows only Income heads (e.g. General Donations); Expense shows only Expense heads (Food & Groceries, Staff Salary etc.); Asset shows only Asset heads (Cash & Bank, Fixed Assets); Liability shows only Loans Payable. Money Movement hides Head/SubHead (shows —).
+  4. Head: filtered by Cashflow Type. Choosing a Head resets SubHead to All.
+  5. SubHead: shows sub-heads of selected Head (e.g. Staff Salary → Yashoda Chapagain, Durga Ojha, Not Mentioned).
+  6. Format: PDF / Excel
+
+- Table:
+  * Desktop: Date | Head | SubHead | Amount | Type (badge) | Actions. For Money Movement group: Date | From → To | Amount | Note | Ref (single row per transfer, not two).
+  * Mobile: 5 columns (Date | Head | SubHead | Amount | Type) or for Money Movement (Date | From | To | Amount | Ref).
+  * Row colors: dot/badge per type — Income green, Expense red, Asset blue, Liability amber, Money Movement primary. Amount sign: + for Income/Asset/Liability, − for Expense.
+  * Actions per row: Eye (view detail), Pencil (edit, type locked when editing), Trash (delete with confirm).
+  * Pagination: 30 per page, Prev/Next + 5 page numbers. Footer shows “Showing X-Y of N · Total: +Income −Expense +Assets +Liabilities” (or Total Moved for Money Movement).
+
+- Buttons:
+  * Bulk Upload (top right, secondary): Download Excel (100 rows, recommended for copy-paste) or PDF template (Head-only). Fill Date BS/AD (YYYY-MM-DD, 2082-05-17 auto → AD), Head* (must exist, case-insensitive), SubHead, Amount*, Vendor/Ref/Description. Heads/SubHeads must be created first in Chart of Accounts (strict). Empty rows ignored. Upload multifile .xlsx/.pdf (15 MB per file, 30 MB total) → Parse & Preview (Valid/Invalid/Unknown counts, table up to 400 rows, BS→AD shown) → Import Verified (if admin) or Pending (if staff). Duplicates (same date|head|sub|amount|vendor|ref|desc) blocked, up to 2000 per import.
+  * + NEW (primary): 4 tabs Expense / Income / Asset Bought / Liability → single Amount field label changes: Expense: “Amount — Money Out”, Income: “Money In”, Asset: “Purchase Price — Capitalized (adds to Net Worth)”, Liability: “Amount Owed”. Helper text explains. Fill Head* (filtered by type), Money Account* (Cash/Bank), Date, Vendor/Donor/Lender, Ref, Description* → Save. Non-admin creates PENDING (needs approval).
+
+- Money Movement (Move Money via Accounts → Move Money or Finance → Move Money): Moves liquidity between Payment Categories (e.g. Bank → Cash). Select Source (Credit, red) and Destination (Debit, green) payment categories, Amount, Date, Audit Note → creates paired CONTRA- transactions (one EXPENSE from source, one INCOME to destination, both VERIFIED, not counted in Available Balance/Net Worth). Only visible under Cashflow Type → Money Movement as grouped single row From → To.
+
+7. APPROVALS (/approvals) — Why it exists
+------------------------------------------
+- Only PENDING transactions (created by non-admin staff via Finance/Inventory/Bulk) appear here, sorted newest first. Shows amount, type badge, payment category, head/code, description, Submitted By, Date (BS).
+- Admin actions: Approve → VERIFIED, Reject → prompts reason and prefixes description with [REJECTED].
+- After approval, appears in Finance ledger; after rejection, stays hidden. Available Balance only counts VERIFIED.
+
+8. SETTLEMENTS (Payments) (/settlements)
+---------------------------------------
+- Purpose: Reconcile staff cash. Aggregates VERIFIED, not settled CASH/ PERSONAL per staff: CASH adds, PERSONAL subtracts → netBalance per staff.
+- Shows cards: Money Owed to Staff (warning) vs Cash Not Yet Paid In (primary). Dropdown Destination (Bank/Cash active) → Pay Staff or Deposit to Bank → creates [SYSTEM SETTLEMENT] INCOME entry.
+
+9. STAFF (/staff and /staff/:id)
+---------------------------------
+- List: + Add Employee (can link pending User logins), Search by name, filter by department. Table: Employee Details (name+email/phone), Designation & Dept, Employment badges, Gross Salary (basic+grade+DA+allowances). Stats: Active count, SSF Enrolled, Linked Logins (payroll card removed — salaries now via Finance Staff Salary head).
+- Detail /staff/:id: Basic info, compliance (citizenship/PAN/TDS), bank, salary breakdown (Gross − SSF% − Insurance = Net, Bonus months, Employer SSF%), Cash Inventory on Person (netBalance from unsettled verified entries: CASH INCOME + vs PERSONAL EXPENSE -).
+- NOTE: Payroll automation removed — varying manual amounts via Finance → Staff Salary head + sub (Yashoda etc.) or Bulk Upload. No payroll page.
+
+10. TEAM MEMBERS (/usersmanagement) & CHART & MONEY ACCOUNTS
+------------------------------------------------------------
+- Team Members (SuperAdmin only): Active/Pending tabs, + Create (name, email, phone, password, permissions matrix Read/Write per page Finance, Inventory, etc. Write implies Read). Pending cards: Grant Access / Delete. Active: Edit name/email/phone, Edit Permissions (matrix Save), Reset Password, Revoke, Delete (cannot delete own SuperAdmin).
+- Chart of Accounts (/accounts_headers): Accordion Incomes (green), Expenses (red), Assets (blue), Liabilities (amber). Each shows count + + Add Head (name, code, type, fund restricted/unrestricted, subheads, bank details). Edit via pencil. Download Report PDF. Move Money button here too.
+- Money Accounts (/payment-categories): Table Status dot, Name (+ shield if system), Identifier, Type (CASH/BANK/WALLET/KIND/PERSONAL), Edit/Delete (system cannot be deleted). Main Office Cash (CASH), Staff Wallet (PERSONAL), General Bank Account (BANK) are seeded.
+
+11. HEADS & MONEY ACCOUNTS
+--------------------------
+- Heads are spending categories (what the money is for). Money Accounts are where the money is (Cash, Bank). Every transaction links one of each (except Money Movement which links only Money Account).
+
+12. DAILY TYPICAL FLOW
+---------------------
+1. Admit Child → Register Inventory Category (Manual + Add New if first time) → Register Item (0 stock) → Manage Stock IN 50 (add quantity) → Finance Bulk Upload past expenses (or + NEW for single) → Approvals → Approve → Inventory History verify → done.
+
+13. COMMON QUESTIONS
+-------------------
+- BS dates: Pick 2082-05-17 in Nepali picker → stored as AD, shown as BS via formatNepaliDateShort.
+- Low Stock Alert: Set threshold per item (e.g. 10) — card shows Low when currentStock <= threshold.
+- Inventory history shows donated: Yes, even cost 0 logs appear in Global Timeline with donor name.
+- Money Movement not in totals: Correct — it's internal move, excluded from Available Balance/Net Worth.
+- Inventory item cannot be deleted if history exists: Correct — name preserved for audit, use Manage OUT to zero stock instead.
+
+Need help? Contact SuperAdmin. Provide your role and page name when reporting an issue.
+

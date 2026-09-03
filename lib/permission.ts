@@ -36,7 +36,6 @@ export const PAGE_KEYS = [
   "/dashboard",
   "/children",
   "/children/:path*",
-  "/my-finances",
   "/finance",
   "/inventory",
   "/guardians",
@@ -56,7 +55,6 @@ export const PAGE_LABELS: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/children": "Children",
   "/children/:path*": "Children — profiles / docs / images",
-  "/my-finances": "My Finances",
   "/finance": "Finance",
   "/inventory": "Inventory",
   "/guardians": "Guardians",
@@ -71,7 +69,7 @@ export const PAGE_LABELS: Record<string, string> = {
 };
 
 export const PAGE_GROUPS: { label: string; keys: string[] }[] = [
-  { label: "Core", keys: ["/", "/dashboard", "/children", "/children/:path*", "/my-finances"] },
+  { label: "Core", keys: ["/", "/dashboard", "/children", "/children/:path*"] },
   { label: "Operations", keys: ["/finance", "/inventory", "/guardians"] },
   { label: "Administration", keys: ["/approvals", "/settlements", "/staff", "/staff/:path*", "/payroll", "/payment-categories", "/accounts_headers", "/usersmanagement"] },
 ];
@@ -95,7 +93,6 @@ export const PAGE_ACCESS: Record<string, Role[]> = {
   "/dashboard": LIMITED_ROLES_ALLOWED,
   "/children": LIMITED_ROLES_ALLOWED,
   "/children/:path*": LIMITED_ROLES_ALLOWED,
-  "/my-finances": LIMITED_ROLES_ALLOWED,
   "/finance": WORK_ROLES_ALLOWED,
   "/inventory": WORK_ROLES_ALLOWED,
   "/guardians": WORK_ROLES_ALLOWED,
@@ -188,13 +185,13 @@ export function defaultPermissionsForRole(role: string): PermissionsMap {
   if (role === ROLES.ADMIN) return {};
   const readAll: PermissionsMap = {};
   const opsReadWrite = ["/finance", "/inventory", "/guardians"];
-  const childrenOnly = ["/", "/dashboard", "/children", "/children/:path*", "/my-finances"];
+  const childrenOnly = ["/", "/dashboard", "/children", "/children/:path*"];
   if (role === ROLES.SAMITY || role === ROLES.STAFF) {
-    for (const k of [...childrenOnly, ...opsReadWrite]) readAll[k] = { read: true, write: k !== "/" && k !== "/dashboard" && k !== "/my-finances" ? true : false };
+    for (const k of [...childrenOnly, ...opsReadWrite]) readAll[k] = { read: true, write: k !== "/" && k !== "/dashboard" ? true : false };
     // staff can read but not write approvals etc
     for (const k of ["/approvals", "/settlements", "/staff", "/staff/:path*", "/accounts_headers", "/usersmanagement", "/payroll", "/payment-categories"]) readAll[k] = { read: false, write: false };
   } else {
-    for (const k of childrenOnly) readAll[k] = { read: true, write: k === "/children" || k === "/children/:path*" ? false : false };
+    for (const k of childrenOnly) readAll[k] = { read: true, write: false };
     for (const k of PAGE_KEYS) if (!readAll[k]) readAll[k] = { read: false, write: false };
   }
   return readAll;

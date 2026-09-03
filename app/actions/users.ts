@@ -25,7 +25,6 @@ export async function updateUserStatus(userId: string, newStatus: boolean) {
       updates.permissions = {
         "/children": { read: true, write: false },
         "/children/:path*": { read: true, write: false },
-        "/my-finances": { read: true, write: false },
       };
     }
     await User.findByIdAndUpdate(userId, updates);

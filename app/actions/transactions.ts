@@ -56,7 +56,6 @@ export async function deleteTransaction(id: string) {
     await Transaction.findByIdAndDelete(id);
 
     revalidatePath("/finance");
-    revalidatePath("/my-finances");
     return { success: true };
   } catch (e: any) {
     console.error("Delete Error:", e);

@@ -50,7 +50,6 @@ export const Sidebar = () => {
     { label: "Finances", path: "/finance", icon: Wallet },
     { label: "Inventory", path: "/inventory", icon: Package },
     { label: "Guardians", path: "/guardians", icon: Shield },
-    { label: "My Transactions", path: "/my-finances", icon: Wallet },
   ];
 
   // ADMIN ONLY ITEMS: Only visible to roles allowed by the permission policy

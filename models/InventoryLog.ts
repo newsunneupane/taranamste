@@ -12,6 +12,8 @@ export interface IInventoryLog extends Document {
   childId?: mongoose.Types.ObjectId;       // Links to the child who received the item
   
   createdBy: mongoose.Types.ObjectId; // Audit Trail
+  donorOrVendorName?: string;
+  cost?: number;
 }
 
 const InventoryLogSchema = new Schema({
@@ -28,7 +30,9 @@ const InventoryLogSchema = new Schema({
   transactionId: { type: Schema.Types.ObjectId, ref: 'Transaction' },
   childId: { type: Schema.Types.ObjectId, ref: 'Child' },
 
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  donorOrVendorName: { type: String, trim: true },
+  cost: { type: Number, default: 0 }
 }, { timestamps: true });
 
 export default mongoose.models.InventoryLog || mongoose.model<IInventoryLog>('InventoryLog', InventoryLogSchema);

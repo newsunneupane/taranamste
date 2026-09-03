@@ -1,7 +1,10 @@
 import dbConnect from "@/lib/db";
 import InventoryItem from "@/models/InventoryItem";
+import InventoryLog from "@/models/InventoryLog";
+import InventoryCategory from "@/models/InventoryCategory";
 import "@/models/InventoryCategory";
 import InventoryDashboard from "@/components/organisms/Accounting/Inventory/InventoryDashboard";
+import InventoryHistoryTable from "@/components/organisms/Accounting/Inventory/InventoryHistoryTable";
 import { requirePageAccess } from "@/lib/guards";
 
 export default async function InventoryPage() {
@@ -12,9 +15,19 @@ export default async function InventoryPage() {
     const safeItems = JSON.parse(JSON.stringify(rawItems));
     const items = safeItems.map((item: any) => ({
         ...item,
-        // ensure legacy docs get default type
         type: item.type || "CONSUMABLE",
     }));
+
+    const rawLogs = await InventoryLog.find({})
+        .populate("item", "name")
+        .populate({ path: "item", populate: { path: "category", select: "name type" } })
+        .populate("createdBy", "name")
+        .sort({ date: -1 })
+        .lean();
+    const logs = JSON.parse(JSON.stringify(rawLogs));
+
+    const rawCats = await InventoryCategory.find({ isActive: true }).sort({ name: 1 }).lean();
+    const categories = JSON.parse(JSON.stringify(rawCats));
 
     return (
         // ✨ FIX: Added pt-20 and standardized padding
@@ -38,6 +51,8 @@ export default async function InventoryPage() {
             </div>
 
             <InventoryDashboard items={items} />
+
+            <InventoryHistoryTable logs={logs} categories={categories} items={items} />
         </div>
     );
 }

@@ -115,14 +115,16 @@ export async function adjustStock(prevState: any, formData: FormData) {
             throw new Error(`Insufficient stock. Only ${updatedItem.currentStock + quantity} available.`);
         }
 
-        // 2. CREATE LOG
+        // 2. CREATE LOG — persist donor/cost even if donated (cost 0)
         const log = await InventoryLog.create({
             item: itemId,
             quantity,
             type,
             reason,
-            date: new Date(),
-            createdBy 
+            date: formData.get("date") ? new Date(formData.get("date") as string) : new Date(),
+            createdBy,
+            donorOrVendorName: String(formData.get("donorOrVendorName") || ""),
+            cost
         });
 
         // 3. FINANCIAL INTEGRATION (Only if cost is involved) — true capitalization

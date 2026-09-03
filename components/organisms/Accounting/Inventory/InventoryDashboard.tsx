@@ -12,6 +12,8 @@ import {
     Package 
 } from "lucide-react";
 
+const getCategoryName = (c:any) => typeof c === 'string' ? c : c?.name || 'Uncategorized';
+
 export default function InventoryDashboard({ items }: { items: any[] }) {
     const { openManageStock, openInventoryItemForm } = useUIModals();
     const [view, setView] = useState<"GRID" | "TABLE">("GRID");
@@ -27,7 +29,7 @@ export default function InventoryDashboard({ items }: { items: any[] }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard 
                     label="Total Categories" 
-                    value={new Set(items.map(i => i.category)).size} 
+                    value={new Set(items.map(i => (i.category?._id || i.category || 'uncat'))).size} 
                     icon={<Package className="text-primary" size={20} />} 
                 />
                 <StatCard 
@@ -127,7 +129,7 @@ const InventoryTable = ({ items, onEdit, onManage }: any) => (
                                 <p className="text-[10px] text-text-muted truncate max-w-[200px]">{item.description || "No description"}</p>
                             </td>
                             <td className="px-6 py-4">
-                                <span className="text-[9px] font-black uppercase bg-shaded px-2.5 py-1 rounded-lg border border-border">{item.category}</span>
+                                <span className="text-[9px] font-black uppercase bg-shaded px-2.5 py-1 rounded-lg border border-border">{getCategoryName(item.category)}</span>
                             </td>
                             <td className="px-6 py-4 font-mono font-bold">
                                 {item.currentStock} <span className="text-[10px] font-sans text-text-muted uppercase">{item.unit}</span>
@@ -165,7 +167,7 @@ const InventoryCard = ({ item, onEdit, onManage }: any) => (
         <div>
             <div className="flex justify-between items-start mb-4">
                 <span className="text-[9px] font-black uppercase tracking-widest text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-lg">
-                    {item.category}
+                    {getCategoryName(item.category)}
                 </span>
                 <div className="flex items-center gap-2">
                     {item.currentStock <= item.minimumStockLevel && (

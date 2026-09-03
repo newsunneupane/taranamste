@@ -10,10 +10,11 @@ export const ConsumableItemForm = ({ item, closeModal }: { item?: any; closeModa
     const action = item ? updateInventoryItem : addInventoryItem;
     const [state, formAction, isPending] = useActionState(action as any, { error: null, success: false });
 
-    useEffect(() => { if (state?.success) closeModal(); }, [state?.success, closeModal]);
+     useEffect(() => { if (state?.success) closeModal(); }, [state?.success, closeModal]);
 
     return (
         <form action={formAction} className="flex flex-col h-full w-full animate-in fade-in duration-500">
+            {state?.error && <div className="mx-4 mt-2 p-3 bg-danger/10 border border-danger/20 rounded-xl text-[11px] font-bold text-danger">{state.error}</div>}
             {item?._id && <input type="hidden" name="id" value={item._id} />}
             <input type="hidden" name="type" value="CONSUMABLE" />
 

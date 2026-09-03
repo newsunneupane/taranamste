@@ -14,16 +14,22 @@ export async function addInventoryItem(prevState: any, formData: FormData) {
     await dbConnect();
 
     try {
+        const name = String(formData.get("name") || "").trim();
+        const categoryRaw = formData.get("category") as string | null;
+        if (!name) return { success: false, error: "Item Name is required." };
+        if (!categoryRaw || !String(categoryRaw).trim()) return { success: false, error: "Category required — add via + Add New" };
+        const category = String(categoryRaw).trim();
+        if (!/^[a-fA-F0-9]{24}$/.test(category)) return { success: false, error: "Invalid category — please re-select after adding." };
+
         await InventoryItem.create({
-            name: String(formData.get("name")),
-            category: String(formData.get("category")),
-            type: String(formData.get("type") || "CONSUMABLE"), // ✨ NEW: ASSET or CONSUMABLE
+            name,
+            category,
+            type: String(formData.get("type") || "CONSUMABLE"),
             unit: String(formData.get("unit")),
             description: String(formData.get("description") || ""),
-            location: String(formData.get("location") || ""), // ✨ NEW
-            condition: String(formData.get("condition") || "NEW"), // ✨ NEW
-            currentStock: 0, 
-            // Assets might not need stock alerts, so we handle 0/null
+            location: String(formData.get("location") || ""),
+            condition: String(formData.get("condition") || "NEW"),
+            currentStock: 0,
             minimumStockLevel: Number(formData.get("minimumStockLevel")) || 0,
         });
 
@@ -46,14 +52,18 @@ export async function updateInventoryItem(prevState: any, formData: FormData) {
         const id = formData.get("id") as string;
         if (!id) throw new Error("Missing Item ID for update.");
 
+        const categoryRaw = formData.get("category") as string | null;
+        if (!categoryRaw || !String(categoryRaw).trim()) throw new Error("Category required — add via + Add New");
+        const category = String(categoryRaw).trim();
+        if (!/^[a-fA-F0-9]{24}$/.test(category)) throw new Error("Invalid category — please re-select after adding.");
         const updateData = {
             name: String(formData.get("name")),
-            category: String(formData.get("category")),
-            type: String(formData.get("type")), // ✨ Sync type
+            category,
+            type: String(formData.get("type")),
             unit: String(formData.get("unit")),
             description: String(formData.get("description")),
-            location: String(formData.get("location") || ""), // ✨ Sync location
-            condition: String(formData.get("condition")), // ✨ Sync condition
+            location: String(formData.get("location") || ""),
+            condition: String(formData.get("condition")),
             minimumStockLevel: Number(formData.get("minimumStockLevel")) || 0,
         };
 
@@ -117,15 +127,18 @@ export async function adjustStock(prevState: any, formData: FormData) {
             createdBy 
         });
 
-        // 3. FINANCIAL INTEGRATION (Only if cost is involved)
+        // 3. FINANCIAL INTEGRATION (Only if cost is involved) — true capitalization
         if (type === 'IN' && cost > 0) {
             
-            // Magic Fallback for Account Head
+            // Magic Fallback for Account Head — keep what is good, fix name to seeded head
             if (!accountHead) {
-                let defaultAccount = await AccountHead.findOne({ name: "Staff/Samity Personal Cash Spend" });
+                let defaultAccount = await AccountHead.findOne({ name: "Staff Personal Expense" });
+                if (!defaultAccount) {
+                    defaultAccount = await AccountHead.findOne({ code: "EXP-STAFF" });
+                }
                 if (!defaultAccount) {
                     defaultAccount = await AccountHead.create({
-                        name: "Staff/Samity Personal Cash Spend",
+                        name: "Staff Personal Expense",
                         type: "EXPENSE",
                         fundCategory: "UNRESTRICTED",
                         code: "EXP-STAFF",
@@ -136,23 +149,26 @@ export async function adjustStock(prevState: any, formData: FormData) {
                 accountHead = defaultAccount._id.toString();
             }
 
-            await Transaction.create({
+            // True capitalization: asset stock IN → ASSET type, consumable → EXPENSE
+            const headDoc = accountHead ? await AccountHead.findById(accountHead).lean() : null;
+            const resolvedType = (headDoc as any)?.type === "ASSET" ? "ASSET" : (updatedItem.type === 'ASSET' ? 'ASSET' : 'EXPENSE');
+
+            const txn = await Transaction.create({
                 amount: cost,
                 date: new Date(formData.get("date") as string || Date.now()),
-                type: 'EXPENSE',
+                type: resolvedType,
                 logId: log._id,
                 accountHead: accountHead,
                 subType: formData.get("subType") || undefined,
-                
-                // ✨ NEW: Link the dynamic Payment Category (Bank/Wallet/Cash)
                 paymentCategory: paymentCategoryId, 
-                
                 donorOrVendorName: formData.get("donorOrVendorName") || "Inventory Supplier",
                 referenceNumber: formData.get("referenceNumber"),
-                description: `${updatedItem.type === 'ASSET' ? 'Asset Purchase' : 'Inventory Purchase'}: ${quantity} ${updatedItem.unit} of ${updatedItem.name}.`,
+                description: `${resolvedType === 'ASSET' ? 'Asset Purchase — Capitalized' : 'Inventory Purchase'}: ${quantity} ${updatedItem.unit} of ${updatedItem.name}.`,
                 createdBy, 
                 status     
             });
+            // Link back for traceability
+            await InventoryLog.findByIdAndUpdate(log._id, { transactionId: txn._id } as any);
         }
 
         revalidatePath("/inventory");

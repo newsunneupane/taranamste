@@ -1,24 +1,20 @@
 import dbConnect from "@/lib/db";
 import InventoryItem from "@/models/InventoryItem";
 import InventoryDashboard from "@/components/organisms/Accounting/Inventory/InventoryDashboard";
-import AccountHead from "@/models/AccountHead";
 import { requirePageAccess } from "@/lib/guards";
 
 export default async function InventoryPage() {
     await requirePageAccess("/inventory");
     await dbConnect();
 
-    const rawItems = await InventoryItem.find({}).sort({ category: 1, name: 1 }).lean();
-    const rawAccounts = await AccountHead.find({ type: 'EXPENSE' }).lean();
-    
-    const accounts = rawAccounts.map((acc: any) => ({
-        ...acc,
-        _id: acc._id.toString()
-    }));
+    const rawItems = await InventoryItem.find({}).populate("category", "name type").sort({ name: 1 }).lean();
     
     const items = rawItems.map((item: any) => ({
         ...item,
         _id: item._id.toString(),
+        category: item.category || null,
+        // keep what is good — ensure legacy docs get default type
+        type: item.type || "CONSUMABLE",
         createdAt: item.createdAt?.toISOString() || new Date().toISOString(),
         updatedAt: item.updatedAt?.toISOString() || new Date().toISOString(),
     }));

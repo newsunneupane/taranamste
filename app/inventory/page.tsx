@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/db";
 import InventoryItem from "@/models/InventoryItem";
+import "@/models/InventoryCategory";
 import InventoryDashboard from "@/components/organisms/Accounting/Inventory/InventoryDashboard";
 import { requirePageAccess } from "@/lib/guards";
 

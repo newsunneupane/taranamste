@@ -45,8 +45,6 @@ const PaymentCategorySchema = new Schema<IPaymentCategory>(
   { timestamps: true }
 );
 
-PaymentCategorySchema.index({ identifier: 1 });
-
 const PaymentCategory: Model<IPaymentCategory> = 
   mongoose.models.PaymentCategory || mongoose.model<IPaymentCategory>("PaymentCategory", PaymentCategorySchema);
 

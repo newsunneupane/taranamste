@@ -31,8 +31,8 @@ export const ConsumableItemForm = ({ item, closeModal }: { item?: any; closeModa
                     {/* Inventory Logic */}
                     <div className="lg:col-span-5 bg-shaded p-8 rounded-[2rem] border-2 border-dashed border-primary/20 space-y-6">
                         <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-2"><AlertTriangle size={14}/> Thresholds</h3>
-                        <FormField label="Unit (kg/pkt)" name="unit" required defaultValue={item?.unit || "kg"} />
-                        <FormField label="Low Stock Alert" name="minimumStockLevel" type="number" defaultValue={item?.minimumStockLevel} placeholder="0" />
+                        <FormField label="Low Stock Alert" name="minimumStockLevel" type="number" defaultValue={item?.minimumStockLevel} placeholder="e.g. 10" />
+                        <p className="text-[10px] text-text-muted">Stock starts at 0 — add quantity via Manage → Stock IN after creation.</p>
                     </div>
                 </div>
 

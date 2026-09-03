@@ -23,15 +23,14 @@ export async function addInventoryItem(prevState: any, formData: FormData) {
 
         await InventoryItem.create({
             name,
-            category,
-            type: String(formData.get("type") || "CONSUMABLE"),
-            unit: String(formData.get("unit")),
+            category: category as any,
+            type: (String(formData.get("type") || "CONSUMABLE") as any),
             description: String(formData.get("description") || ""),
             location: String(formData.get("location") || ""),
-            condition: String(formData.get("condition") || "NEW"),
+            condition: (String(formData.get("condition") || "NEW") as any),
             currentStock: 0,
             minimumStockLevel: Number(formData.get("minimumStockLevel")) || 0,
-        });
+        } as any);
 
         revalidatePath("/inventory");
         return { success: true };
@@ -58,14 +57,13 @@ export async function updateInventoryItem(prevState: any, formData: FormData) {
         if (!/^[a-fA-F0-9]{24}$/.test(category)) throw new Error("Invalid category — please re-select after adding.");
         const updateData = {
             name: String(formData.get("name")),
-            category,
-            type: String(formData.get("type")),
-            unit: String(formData.get("unit")),
+            category: category as any,
+            type: String(formData.get("type")) as any,
             description: String(formData.get("description")),
             location: String(formData.get("location") || ""),
-            condition: String(formData.get("condition")),
+            condition: String(formData.get("condition")) as any,
             minimumStockLevel: Number(formData.get("minimumStockLevel")) || 0,
-        };
+        } as any;
 
         const updatedItem = await InventoryItem.findByIdAndUpdate(id, updateData, { 
             new: true,
@@ -163,7 +161,7 @@ export async function adjustStock(prevState: any, formData: FormData) {
                 paymentCategory: paymentCategoryId, 
                 donorOrVendorName: formData.get("donorOrVendorName") || "Inventory Supplier",
                 referenceNumber: formData.get("referenceNumber"),
-                description: `${resolvedType === 'ASSET' ? 'Asset Purchase — Capitalized' : 'Inventory Purchase'}: ${quantity} ${updatedItem.unit} of ${updatedItem.name}.`,
+                description: `${resolvedType === 'ASSET' ? 'Asset Purchase — Capitalized' : 'Inventory Purchase'}: ${quantity} of ${updatedItem.name}.`,
                 createdBy, 
                 status     
             });

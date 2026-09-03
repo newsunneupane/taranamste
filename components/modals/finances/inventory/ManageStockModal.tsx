@@ -80,7 +80,6 @@ export const ManageStockModal: React.FC<ManageStockProps> = ({ closeModal, item 
 
                 {/* PHYSICAL STOCK FIELDS */}
                 <StockFormFields 
-                    unit={inventoryItem.unit} 
                     actionType={actionType} 
                     defaultValue={logId} 
                 />

@@ -132,7 +132,7 @@ const InventoryTable = ({ items, onEdit, onManage }: any) => (
                                 <span className="text-[9px] font-black uppercase bg-shaded px-2.5 py-1 rounded-lg border border-border">{getCategoryName(item.category)}</span>
                             </td>
                             <td className="px-6 py-4 font-mono font-bold">
-                                {item.currentStock} <span className="text-[10px] font-sans text-text-muted uppercase">{item.unit}</span>
+                                {item.currentStock}
                             </td>
                             <td className="px-6 py-4">
                                 {item.currentStock <= item.minimumStockLevel ? (
@@ -196,7 +196,7 @@ const InventoryCard = ({ item, onEdit, onManage }: any) => (
             <div>
                 <p className="font-ubuntu text-[9px] text-text-muted font-black uppercase tracking-widest">In Stock</p>
                 <p className="font-black font-mono text-3xl text-text tracking-tighter mt-1">
-                    {item.currentStock} <span className="text-sm text-text-muted font-sans tracking-normal opacity-60">{item.unit}</span>
+                    {item.currentStock}
                 </p>
             </div>
             <Button onClick={() => onManage({item})} className="btn-primary h-9 px-4 text-[10px]">Manage</Button>

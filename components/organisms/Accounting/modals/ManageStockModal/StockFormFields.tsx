@@ -5,24 +5,22 @@ import { NepaliDateField } from "@/components/molecules/NepaliDateField";
 import { IInventoryLog } from "@/models/InventoryLog";
 
 interface StockFieldsProps {
-    unit: string;
     actionType: 'IN' | 'OUT';
     defaultValue?: IInventoryLog;
 }
 
-export const StockFormFields: React.FC<StockFieldsProps> = ({ unit, actionType, defaultValue }) => {
+export const StockFormFields: React.FC<StockFieldsProps> = ({ actionType, defaultValue }) => {
 
     return (
         <div className="space-y-6 transition-colors duration-500">
             {/* Quantity Field */}
             <FormField
-                label={`Quantity (${unit}) *`}
+                label={`Quantity *`}
                 name="quantity"
                 type="number"
                 required
                 defaultValue={defaultValue?.quantity}
-                placeholder="e.g. 5"
-                // Ensuring text color is linked to theme
+                placeholder="e.g. 50"
                 className="text-text"
             />
 

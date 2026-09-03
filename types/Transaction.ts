@@ -78,7 +78,6 @@ export interface TInventoryItem {
   name: string;
   category: InventoryCategory | any;
   type: InventoryItemType;
-  unit: string;
   currentStock: number;
   minimumStockLevel: number;
   location?: string;

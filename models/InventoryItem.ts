@@ -4,7 +4,6 @@ export interface IInventoryItem extends Document {
   name: string;
   category: mongoose.Types.ObjectId; // ref InventoryCategory
   type: 'CONSUMABLE' | 'ASSET';
-  unit: string;
   currentStock: number;
   minimumStockLevel: number;
   location?: string;
@@ -17,7 +16,6 @@ const InventoryItemSchema = new Schema({
   name: { type: String, required: true, unique: true, trim: true },
   category: { type: Schema.Types.ObjectId, ref: 'InventoryCategory', required: true },
   type: { type: String, enum: ['CONSUMABLE', 'ASSET'], required: true, default: 'CONSUMABLE' },
-  unit: { type: String, required: true, trim: true },
   currentStock: { type: Number, default: 0, required: true },
   minimumStockLevel: { type: Number, default: 10 },
   location: { type: String, trim: true, default: '' },

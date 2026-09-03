@@ -18,7 +18,6 @@ export const FixedAssetItemForm = ({ item, closeModal }: { item?: any; closeModa
             {state?.error && <div className="mx-4 mt-2 p-3 bg-danger/10 border border-danger/20 rounded-xl text-[11px] font-bold text-danger">{state.error}</div>}
             {item?._id && <input type="hidden" name="id" value={item._id} />}
             <input type="hidden" name="type" value="ASSET" />
-            <input type="hidden" name="unit" value="pcs" />
 
             <div className="flex-1 overflow-y-auto px-4 pb-8 space-y-8 custom-scrollbar">
                 

@@ -8,15 +8,11 @@ export default async function InventoryPage() {
     await dbConnect();
 
     const rawItems = await InventoryItem.find({}).populate("category", "name type").sort({ name: 1 }).lean();
-    
-    const items = rawItems.map((item: any) => ({
+    const safeItems = JSON.parse(JSON.stringify(rawItems));
+    const items = safeItems.map((item: any) => ({
         ...item,
-        _id: item._id.toString(),
-        category: item.category || null,
-        // keep what is good — ensure legacy docs get default type
+        // ensure legacy docs get default type
         type: item.type || "CONSUMABLE",
-        createdAt: item.createdAt?.toISOString() || new Date().toISOString(),
-        updatedAt: item.updatedAt?.toISOString() || new Date().toISOString(),
     }));
 
     return (

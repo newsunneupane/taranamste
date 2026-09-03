@@ -79,6 +79,24 @@ export async function updateInventoryItem(prevState: any, formData: FormData) {
     }
 }
 
+// --- DELETE ITEM ---
+export async function deleteInventoryItem(id: string) {
+    const w = await requireWrite("/inventory");
+    if (!(w as any).ok) return { success: false, error: (w as any).error };
+    await dbConnect();
+    try {
+        if (!id) throw new Error("Inventory item ID is required.");
+        const item = await InventoryItem.findById(id);
+        if (!item) throw new Error("Inventory item not found.");
+        await InventoryItem.findByIdAndDelete(id);
+        // Keep logs for audit; optionally delete them too: await InventoryLog.deleteMany({ item: id });
+        revalidatePath("/inventory");
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}
+
 export async function adjustStock(prevState: any, formData: FormData) {
     const w3 = await requireWrite("/inventory");
     if (!(w3 as any).ok) return { success: false, error: (w3 as any).error };

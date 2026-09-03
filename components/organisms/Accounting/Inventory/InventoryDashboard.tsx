@@ -4,6 +4,7 @@ import { Button } from "@/components/atoms/Button";
 import { useUIModals } from "@/hooks/useUIModal";
 import { 
     Edit2, 
+    Trash2,
     PackageOpen, 
     LayoutGrid, 
     List, 
@@ -11,12 +12,19 @@ import {
     TrendingUp, 
     Package 
 } from "lucide-react";
+import { deleteInventoryItem } from "@/app/actions/inventory";
 
 const getCategoryName = (c:any) => typeof c === 'string' ? c : c?.name || 'Uncategorized';
 
 export default function InventoryDashboard({ items }: { items: any[] }) {
     const { openManageStock, openInventoryItemForm } = useUIModals();
     const [view, setView] = useState<"GRID" | "TABLE">("GRID");
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("Delete this inventory item? This cannot be undone. Logs will be kept for audit.")) return;
+        const res = await deleteInventoryItem(id);
+        if (!res.success) alert(res.error || "Failed to delete");
+    };
 
     if (items.length === 0) return <EmptyInventoryState openForm={openInventoryItemForm} />;
 
@@ -77,7 +85,8 @@ export default function InventoryDashboard({ items }: { items: any[] }) {
                             key={item._id} 
                             item={item} 
                             onEdit={openInventoryItemForm} 
-                            onManage={openManageStock} 
+                            onManage={openManageStock}
+                            onDelete={handleDelete}
                         />
                     ))}
                 </div>
@@ -85,7 +94,8 @@ export default function InventoryDashboard({ items }: { items: any[] }) {
                 <InventoryTable 
                     items={items} 
                     onEdit={openInventoryItemForm} 
-                    onManage={openManageStock} 
+                    onManage={openManageStock}
+                    onDelete={handleDelete}
                 />
             )}
         </div>
@@ -108,7 +118,7 @@ const StatCard = ({ label, value, icon, isAlert }: any) => (
     </div>
 );
 
-const InventoryTable = ({ items, onEdit, onManage }: any) => (
+const InventoryTable = ({ items, onEdit, onManage, onDelete }: any) => (
     <div className="bg-card rounded-[2rem] border border-border overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -145,8 +155,11 @@ const InventoryTable = ({ items, onEdit, onManage }: any) => (
                             </td>
                             <td className="px-6 py-4 text-right">
                                 <div className="flex justify-end gap-2">
-                                    <button onClick={() => onEdit({item})} className="p-2 text-text-muted hover:text-primary transition-colors">
+                                    <button onClick={() => onEdit({item})} className="p-2 text-text-muted hover:text-primary transition-colors" title="Edit">
                                         <Edit2 size={16} />
+                                    </button>
+                                    <button onClick={() => onDelete(item._id)} className="p-2 text-text-muted hover:text-danger transition-colors" title="Delete">
+                                        <Trash2 size={16} />
                                     </button>
                                     <Button onClick={() => onManage({item})} className="h-8 px-3 text-[9px] uppercase tracking-tighter">Manage</Button>
                                 </div>
@@ -162,7 +175,7 @@ const InventoryTable = ({ items, onEdit, onManage }: any) => (
    RE-ADDED SUB-COMPONENTS
    ========================================= */
 
-const InventoryCard = ({ item, onEdit, onManage }: any) => (
+const InventoryCard = ({ item, onEdit, onManage, onDelete }: any) => (
     <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm flex flex-col justify-between card-hover group transition-all">
         <div>
             <div className="flex justify-between items-start mb-4">
@@ -180,6 +193,13 @@ const InventoryCard = ({ item, onEdit, onManage }: any) => (
                         className="opacity-0 group-hover:opacity-100 p-1.5 text-text-muted hover:text-primary transition-all"
                     >
                         <Edit2 size={16} />
+                    </button>
+                    <button 
+                        onClick={() => onDelete(item._id)} 
+                        className="opacity-0 group-hover:opacity-100 p-1.5 text-text-muted hover:text-danger transition-all"
+                        title="Delete"
+                    >
+                        <Trash2 size={16} />
                     </button>
                 </div>
             </div>

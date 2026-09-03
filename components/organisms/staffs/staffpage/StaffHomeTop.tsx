@@ -17,7 +17,7 @@ export default function StaffHomeTop() {
                         Employees
                     </h1>
                     <p className="font-ubuntu text-xs md:text-sm text-text-muted font-medium truncate">
-                        Manage workforce, roles, payroll & compliance
+                        Manage workforce, roles & compliance
                     </p>
                 </div>
             </div>

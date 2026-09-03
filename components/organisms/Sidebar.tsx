@@ -20,8 +20,7 @@ import {
   X,
   ClipboardCheck, // New icon for Approvals
   Users2,          // New icon for User Management
-  ArrowRightLeft,
-  Banknote
+  ArrowRightLeft
 } from "lucide-react";
 import { canRead } from "@/lib/permission";
 
@@ -59,7 +58,6 @@ export const Sidebar = () => {
     { label: "Staff", path: "/staff", icon: UserCog },
     { label: "Categories", path: "/accounts_headers", icon: BookOpen },
     { label: "Team Members", path: "/usersmanagement", icon: Users2 },
-    { label: "Payroll", path: "/payroll", icon: Banknote },
     { label: "Money Accounts", path: "/payment-categories", icon: CreditCard },];
 
   const baseNav = navItems.filter((item) => canRead(item.path, actor));

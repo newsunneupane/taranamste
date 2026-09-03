@@ -45,7 +45,6 @@ export const PAGE_KEYS = [
   "/staff/:path*",
   "/accounts_headers",
   "/usersmanagement",
-  "/payroll",
   "/payment-categories",
 ] as const;
 export type PageKey = (typeof PAGE_KEYS)[number];
@@ -64,14 +63,13 @@ export const PAGE_LABELS: Record<string, string> = {
   "/staff/:path*": "Staff — detail",
   "/accounts_headers": "Chart of Accounts",
   "/usersmanagement": "User Management",
-  "/payroll": "Payroll",
   "/payment-categories": "Payment Categories",
 };
 
 export const PAGE_GROUPS: { label: string; keys: string[] }[] = [
   { label: "Core", keys: ["/", "/dashboard", "/children", "/children/:path*"] },
   { label: "Operations", keys: ["/finance", "/inventory", "/guardians"] },
-  { label: "Administration", keys: ["/approvals", "/settlements", "/staff", "/staff/:path*", "/payroll", "/payment-categories", "/accounts_headers", "/usersmanagement"] },
+  { label: "Administration", keys: ["/approvals", "/settlements", "/staff", "/staff/:path*", "/payment-categories", "/accounts_headers", "/usersmanagement"] },
 ];
 
 export type PagePermission = { read: boolean; write: boolean };
@@ -102,7 +100,6 @@ export const PAGE_ACCESS: Record<string, Role[]> = {
   "/staff/:path*": ADMIN_ONLY,
   "/accounts_headers": ADMIN_ONLY,
   "/usersmanagement": ADMIN_ONLY,
-  "/payroll": ADMIN_ONLY,
   "/payment-categories": ADMIN_ONLY,
 };
 
@@ -189,7 +186,7 @@ export function defaultPermissionsForRole(role: string): PermissionsMap {
   if (role === ROLES.SAMITY || role === ROLES.STAFF) {
     for (const k of [...childrenOnly, ...opsReadWrite]) readAll[k] = { read: true, write: k !== "/" && k !== "/dashboard" ? true : false };
     // staff can read but not write approvals etc
-    for (const k of ["/approvals", "/settlements", "/staff", "/staff/:path*", "/accounts_headers", "/usersmanagement", "/payroll", "/payment-categories"]) readAll[k] = { read: false, write: false };
+    for (const k of ["/approvals", "/settlements", "/staff", "/staff/:path*", "/accounts_headers", "/usersmanagement", "/payment-categories"]) readAll[k] = { read: false, write: false };
   } else {
     for (const k of childrenOnly) readAll[k] = { read: true, write: false };
     for (const k of PAGE_KEYS) if (!readAll[k]) readAll[k] = { read: false, write: false };

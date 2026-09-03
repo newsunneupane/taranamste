@@ -37,7 +37,6 @@ async function clear() {
     "actionplans",
     "childcurrentstatuses",
     "donors",
-    "payrolls",
     "users",
   ];
 

@@ -15,7 +15,7 @@ const StaffHomeTop = ({ pendingUsers = [] }: { pendingUsers?: any[] }) => {
                 </div>
                 <div className="flex flex-col flex-1 min-w-0">
                     <h1 className="font-ubuntu text-[15px] md:text-lg font-black text-text tracking-tight truncate">Employees</h1>
-                    <p className="font-ubuntu text-[11px] font-semibold text-primary/70 tracking-wide truncate">Manage workforce & payroll</p>
+                    <p className="font-ubuntu text-[11px] font-semibold text-primary/70 tracking-wide truncate">Manage workforce</p>
                 </div>
             </div>
 

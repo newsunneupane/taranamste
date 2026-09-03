@@ -79,7 +79,7 @@ export async function updateInventoryItem(prevState: any, formData: FormData) {
     }
 }
 
-// --- DELETE ITEM ---
+// --- DELETE ITEM --- history must stay: block delete if item has any log
 export async function deleteInventoryItem(id: string) {
     const w = await requireWrite("/inventory");
     if (!(w as any).ok) return { success: false, error: (w as any).error };
@@ -88,8 +88,11 @@ export async function deleteInventoryItem(id: string) {
         if (!id) throw new Error("Inventory item ID is required.");
         const item = await InventoryItem.findById(id);
         if (!item) throw new Error("Inventory item not found.");
+        const hasHistory = await InventoryLog.exists({ item: id });
+        if (hasHistory) {
+            return { success: false, error: "Cannot delete — this item has history (additions/subtractions). History must stay, so the name is preserved. You may deactivate it via edit if needed." };
+        }
         await InventoryItem.findByIdAndDelete(id);
-        // Keep logs for audit; optionally delete them too: await InventoryLog.deleteMany({ item: id });
         revalidatePath("/inventory");
         return { success: true };
     } catch (error: any) {

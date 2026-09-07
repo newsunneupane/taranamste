@@ -59,9 +59,9 @@ export default async function FinancePage() {
     const netWorth = totalAssets - totalLiabilities; // Balance sheet
 
     return (
-        <div className="max-w-7xl mx-auto space-y-5 w-full p-3 md:p-5 lg:p-6 transition-colors duration-500">
+        <div className="flex flex-col gap-6 w-full animate-in fade-in duration-300">
             <PageHeader accounts={accounts} categories={categories} />
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                 <SummaryCard
                     label="Available Balance"
                     value={netBalance}
@@ -81,7 +81,7 @@ export default async function FinancePage() {
                     prefix="- "
                 />
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                 <SummaryCard
                     label="Total Assets"
                     value={totalAssets}
@@ -145,14 +145,13 @@ function SummaryCard({
 
     return (
         <div
-            className={`p-3 md:p-4 rounded-xl border shadow-sm flex flex-col justify-center gap-1 transition-colors duration-500 ${containerStyles[variant]} ${className}`}
+            className={`p-4 md:p-5 rounded-2xl border shadow-card flex flex-col justify-center gap-1.5 ${containerStyles[variant]} ${className}`}
         >
-            <p className="font-ubuntu text-[8px] md:text-[9px] font-black uppercase tracking-widest text-primary">
+            <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">
                 {label}
             </p>
-
-            <p className={`text-lg md:text-xl font-black tracking-tight leading-none ${valueStyles[variant]}`}>
-                <span className="opacity-80 pr-1 text-[11px]">{prefix}</span>
+            <p className={`text-xl md:text-2xl font-bold tracking-tight leading-none ${valueStyles[variant]}`}>
+                <span className="opacity-60 pr-1 text-sm font-medium">{prefix}</span>
                 NPR {Number(value).toLocaleString("en-IN")}
             </p>
         </div>

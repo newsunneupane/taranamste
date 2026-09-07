@@ -90,24 +90,24 @@ export function ModalProvider({ children }: { children: ReactNode }) {
                     >
                         <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={closeModal} />
 
-                        <div className={`relative bg-card border max-w-[95dvw] w-fit border-border rounded-2xl shadow-glow overflow-hidden transition-all duration-300 ${
-                            !modal.isClosing ? "scale-100 translate-y-0" : "scale-95 translate-y-8"
+                            <div className={`relative bg-card border max-w-[95dvw] w-fit border-border rounded-2xl shadow-xl overflow-hidden transition-all duration-300 ${
+                            !modal.isClosing ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
                         }`}>
-                            <div className="flex items-center justify-between p-4 border-b border-border/50 bg-shaded/40">
+                            <div className="flex items-center justify-between p-4 border-b border-border bg-shaded/40">
                                 <div className="flex flex-col gap-0.5">
-                                    <span className="text-[13px] font-black text-text uppercase tracking-tight">
+                                    <span className="text-sm font-bold text-text tracking-tight">
                                         {modal.title}
                                     </span>
-                                    <span className="text-[9px] font-bold text-primary/60 uppercase tracking-widest">
-                                        {index === modals.length - 1 ? "Active Session" : "Background Task"}
+                                    <span className="text-xs font-medium text-text-muted">
+                                        {index === modals.length - 1 ? "Active session" : "Background task"}
                                     </span>
                                 </div>
-                                <button onClick={closeModal} className="w-8 h-8 rounded-xl bg-bg border border-border flex items-center justify-center text-text-muted hover:text-primary transition-all active:scale-90 shadow-sm">
+                                <button onClick={closeModal} className="w-8 h-8 rounded-xl bg-card border border-border flex items-center justify-center text-text-muted hover:text-text hover:border-border hover:shadow-sm transition-all active:scale-95">
                                     <X size={16} />
                                 </button>
                             </div>
 
-                            <div className="max-h-[80dvh] p-5 md:p-6 w-full overflow-auto custom-scrollbar bg-card">
+                            <div className="max-h-[82dvh] p-5 md:p-6 w-full overflow-auto custom-scrollbar bg-card">
                                 <ActiveComponent {...modal.props} closeModal={closeModal} />
                             </div>
                         </div>

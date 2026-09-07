@@ -15,53 +15,44 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
 
   const base = `
-    inline-flex items-center justify-center
-    rounded-xl font-bold transition-all duration-300
-    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg
+    inline-flex items-center justify-center gap-1.5
+    rounded-xl font-semibold transition-all duration-200
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg
     disabled:opacity-40 disabled:cursor-not-allowed disabled:grayscale
-    active:scale-95
+    active:scale-[0.98] select-none whitespace-nowrap
   `;
 
   const sizes = {
-    sm: "px-3 h-7 text-[10px] uppercase tracking-widest",
-    md: "px-5 h-9 text-xs",
-    lg: "px-8 h-11 text-sm"
+    sm: "px-3.5 h-8 text-xs font-semibold",
+    md: "px-5 h-10 text-sm font-semibold",
+    lg: "px-7 h-12 text-sm font-bold"
   };
 
   const variants = {
-    // Brand Action: Deep blue, glowing shadow
     primary: `
-      bg-primary text-text-invert
-      hover:opacity-90 
-      focus:ring-primary shadow-glow
+      bg-primary text-white shadow-sm
+      hover:bg-primary/90 hover:shadow-md hover:-translate-y-[1px]
+      focus-visible:ring-primary
     `,
-
-    // Surface Action: Blends with cards, pops on hover
     secondary: `
-      bg-card text-text border border-border
-      hover:bg-shaded hover:border-text-muted/30
-      focus:ring-primary shadow-sm
+      bg-card text-text border border-border shadow-sm
+      hover:bg-shaded hover:border-border hover:shadow-sm
+      focus-visible:ring-primary
     `,
-
-    // Destructive: Audit deletions and errors
     danger: `
-      bg-danger text-text-invert
-      hover:bg-danger/90
-      focus:ring-danger shadow-glow-danger
+      bg-danger text-white shadow-sm
+      hover:bg-danger/90 hover:shadow-md
+      focus-visible:ring-danger
     `,
-
-    // Constructive: Financial income and inventory additions
     success: `
-      bg-success text-text-invert
+      bg-success text-white shadow-sm
       hover:bg-success/90
-      focus:ring-success shadow-glow-success
+      focus-visible:ring-success
     `,
-
-    // Subtle: The "Glass" look for secondary header actions
     ghost: `
       bg-transparent text-text-muted
-      hover:bg-shaded/80 hover:text-text
-      focus:ring-primary/50
+      hover:bg-shaded hover:text-text
+      focus-visible:ring-primary/50
     `
   };
 

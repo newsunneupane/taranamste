@@ -13,7 +13,6 @@
   --color-card: var(--card);
   --color-border: var(--border-color);
 
-  /* ✨ NEW: Dedicated surface colors for layering */
   --color-surface: var(--bg-surface);
   --color-alt: var(--bg-alt);
 
@@ -26,47 +25,62 @@
   --color-text-invert: var(--text-invert);
 
   --shadow-glow: var(--glow-shadow);
-  --radius-dashboard: 2rem;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.06);
+  --radius-dashboard: 1.5rem;
 }
 
 /* ============================================================
    LIGHT THEME (parked — dark mode removed)
    ============================================================ */
 :root {
-  --bg-primary: #f4f4f5;      /* Light gray so white cards POP */
-  --bg-shaded: #e4e4e7;       /* Deepest light shade */
+  --bg-primary: #f1f5f9;      /* Slate-100 — soft, eye-friendly */
+  --bg-shaded: #e2e8f0;       /* Slate-200 for wells */
   --card: #ffffff;            /* Pure white card */
 
-  --bg-alt: #fafafa;          /* Off-white for alternating cards */
-  --bg-surface: #f8f8f8;      /* Slight gray for inner data wells */
+  --bg-alt: #f8fafc;
+  --bg-surface: #f1f5f9;
 
-  --bg-invert: #000000;
-  --text-primary: #09090b;
-  --text-muted: #71717a;
+  --bg-invert: #0f172a;
+  --text-primary: #0f172a;    /* Slate-900 — richer contrast */
+  --text-muted: #64748b;      /* Slate-500 — softer secondary */
   --text-invert: #ffffff;
 
-  --primary: #2563eb;
-  --border-color: #e4e4e7;
+  --primary: #2563eb;         /* Blue-600 */
+  --border-color: #e2e8f0;    /* Slate-200 — subtle */
 
-  --success: #059669;
-  --warning: #d97706;
+  --success: #0d9488;          /* Teal-600 — calmer than emerald */
+  --warning: #ea580c;          /* Orange-600 */
   --danger: #dc2626;
-  --accent: #9333ea;
+  --accent: #7c3aed;
 
-  --glow-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --glow-shadow: 0 4px 20px rgba(37,99,235,0.08);
 }
 
 
+
+/* Base refinements */
+* { scrollbar-width: thin; scrollbar-color: var(--border-color) transparent; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { line-height: 1.6; letter-spacing: -0.01em; }
+
+::selection { background: color-mix(in srgb, var(--primary) 18%, transparent); }
+
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 999px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+
+:focus-visible { outline: 2px solid color-mix(in srgb, var(--primary) 40%, transparent); outline-offset: 2px; }
+
+/* Card hover lift */
+.card-hover { transition: all 0.25s ease; }
+.card-hover:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); }
 
 @keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
+  100% { transform: translateX(100%); }
 }
-
-.animate-shimmer {
-  animation: shimmer 1.5s infinite;
-}
+.animate-shimmer { animation: shimmer 1.5s infinite; }
 
 /* ============================================================
    NEPALI DATE PICKER (Bikram Sambat) — theme alignment

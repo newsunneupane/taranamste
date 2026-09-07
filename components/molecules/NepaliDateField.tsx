@@ -51,13 +51,13 @@ export const NepaliDateField: React.FC<NepaliDateFieldProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-1.5 w-full transition-colors duration-500">
+    <div className="flex flex-col gap-2 w-full">
       <label
         htmlFor={id}
-        className="text-[9px] font-black uppercase tracking-[0.12em] text-text-muted opacity-90 px-1"
+        className="text-xs font-semibold text-text-muted tracking-wide px-0.5 flex items-center gap-1"
       >
         {label}
-        {required && <span className="text-danger ml-0.5">*</span>}
+        {required && <span className="text-danger text-[11px]">*</span>}
       </label>
 
       {name && <input type="hidden" name={name} value={bsToAdIso(value)} />}
@@ -67,10 +67,10 @@ export const NepaliDateField: React.FC<NepaliDateFieldProps> = ({
         value={value ?? undefined}
         onChange={handleChange}
         language={language}
-        dateFormat="YYYY-MM-DD"
+        dateFormat="MM/DD/YYYY"
         captionLayout="dropdown"
         placeholder={placeholder}
-        className={`w-full px-3 py-2.5 text-[13px] rounded-lg bg-bg text-text border border-border placeholder:text-text-muted/40 outline-none transition-all duration-300 hover:border-border focus:ring-2 focus:ring-primary/10 focus:border-primary ${className}`}
+        className={`w-full px-3.5 py-2.5 text-sm rounded-xl bg-card text-text border border-border shadow-sm placeholder:text-text-muted/50 outline-none transition-all duration-200 hover:border-slate-300 hover:shadow focus:border-primary focus:ring-4 focus:ring-primary/10 ${className}`}
         calendarClassName="rounded-xl shadow-lg border border-border bg-card"
         closeOnSelect
       />

@@ -41,41 +41,38 @@ export default async function Home() {
   const urgentActions = JSON.parse(JSON.stringify(urgentActionsRaw));
 
   return (
-    <div className="flex flex-col gap-6 max-w-7xl mx-auto  md:p-6 md:pt-6 lg:p-8 animate-in fade-in duration-500">
+    <div className="flex flex-col gap-6 animate-in fade-in duration-300">
 
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-5 md:p-6 rounded-[2rem] shadow-sm border border-border">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-5 md:p-6 rounded-2xl shadow-card border border-border">
         <div className="flex items-center gap-4 w-full">
-          <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center text-2xl border border-primary/20 shrink-0">
-            <Sparkles className="animate-pulse" size={24} />
+          <div className="w-11 h-11 bg-primary/10 text-primary rounded-xl flex items-center justify-center border border-primary/15 shrink-0">
+            <Sparkles className="animate-pulse" size={22} />
           </div>
           <div className="flex flex-col flex-1 min-w-0">
-            <h1 className="font-ubuntu text-xl md:text-2xl font-black text-text tracking-tight truncate">
+            <h1 className="text-base md:text-lg font-bold text-text tracking-tight truncate">
               System Overview
             </h1>
-            <p className="font-ubuntu text-[10px] text-text-muted uppercase tracking-[0.3em] font-black opacity-60">
-              Tara Namaste Baal gram // Management Portal
+            <p className="text-sm text-text-muted truncate">
+              Tara Namaste Baal Gram — Management Portal
             </p>
           </div>
         </div>
       </div>
 
-      {/* --- COMPACT KPI GRID (2x2 on Mobile) --- */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <StatCard icon="👧" label="Children" value={kidsCount} sub="Active Intake" variant="primary" />
         <StatCard icon="👩‍🏫" label="Staff" value={staffCount} sub="On-Duty" variant="secondary" />
-
-        {/* Finance Balance */}
-        <div className="bg-card p-4 md:p-6 rounded-2xl md:rounded-dashboard border border-border shadow-sm flex flex-col">
-          <div className="flex justify-between items-center md:items-start mb-2 md:mb-4">
-            <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-[9px] md:text-[10px] font-black border ${currentBalance < 0 ? 'bg-danger/10 text-danger border-danger/20' : 'bg-success/10 text-success border-success/20'}`}>
+        <div className="bg-card p-4 md:p-5 rounded-2xl border border-border shadow-card flex flex-col">
+          <div className="flex justify-between items-center mb-3">
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold border ${currentBalance < 0 ? 'bg-danger/10 text-danger border-danger/20' : 'bg-success/10 text-success border-success/20'}`}>
               NPR
             </div>
-            <span className="text-[9px] md:text-[10px] font-black text-text-muted uppercase tracking-widest">Funds</span>
+            <span className="text-xs font-semibold text-text-muted uppercase tracking-widest">Funds</span>
           </div>
-          <span className={`text-xl md:text-2xl font-black truncate tracking-tighter ${currentBalance < 0 ? 'text-danger' : 'text-success'}`}>
+          <span className={`text-xl md:text-2xl font-bold tracking-tight truncate ${currentBalance < 0 ? 'text-danger' : 'text-success'}`}>
             Rs. {currentBalance.toLocaleString()}
           </span>
-          <p className="hidden md:block text-[10px] font-black text-text-muted mt-2 uppercase tracking-widest opacity-60">Available Balance</p>
+          <p className="hidden md:block text-xs font-medium text-text-muted mt-1">Available Balance</p>
         </div>
         <AlertStatCard count={urgentActions.length} />
       </div>
@@ -83,14 +80,13 @@ export default async function Home() {
       <QuickActionSidebar />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* URGENT CARE FEED */}
-          <div id="urgent" className="bg-card rounded-[2rem] border border-border overflow-hidden shadow-sm">
-            <div className="p-5 md:p-6 border-b border-border bg-shaded flex justify-between items-center">
-              <h2 className="font-ubuntu font-black text-[10px] md:text-[11px] uppercase tracking-[0.2em] flex items-center gap-3 text-text">
+          <div id="urgent" className="bg-card rounded-2xl border border-border overflow-hidden shadow-card">
+            <div className="p-5 border-b border-border bg-shaded/40 flex justify-between items-center">
+              <h2 className="text-xs font-semibold uppercase tracking-widest flex items-center gap-2.5 text-text">
                 <Activity className={`w-4 h-4 ${urgentActions.length > 0 ? 'text-danger animate-pulse' : 'text-success'}`} />
                 Critical Care Feed
               </h2>
-              <Link href="/children" className="text-[9px] font-black text-primary hover:tracking-widest transition-all uppercase">View All →</Link>
+              <Link href="/children" className="text-xs font-semibold text-primary hover:underline">View All →</Link>
             </div>
 
             <div className="flex flex-col">
@@ -130,9 +126,8 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* INVENTORY TRAY */}
-          <div className="bg-card rounded-[2rem] border border-border p-6 md:p-8 shadow-sm">
-            <h2 className="font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-[0.3em] mb-6">Stock Depletion</h2>
+          <div className="bg-card rounded-2xl border border-border p-5 md:p-6 shadow-card">
+            <h2 className="text-xs font-semibold text-text-muted uppercase tracking-widest mb-4">Stock Depletion</h2>
             <div className="grid grid-cols-2 gap-3">
               {lowStockItems.map((item: any) => (
                 <Link
@@ -154,15 +149,15 @@ export default async function Home() {
 function StatCard({ icon, label, value, sub, variant }: any) {
   const isPrimary = variant === "primary";
   return (
-    <div className="bg-card p-4 md:p-6 rounded-2xl md:rounded-dashboard border border-border shadow-sm hover:translate-y-[-2px] transition-all duration-300 group">
-      <div className="flex justify-between items-center md:items-start mb-2 md:mb-4">
-        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-lg border transition-all ${isPrimary ? 'bg-primary/10 text-primary border-primary/20' : 'bg-shaded text-text-muted border-border'}`}>
+    <div className="bg-card p-4 md:p-5 rounded-2xl border border-border shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200">
+      <div className="flex justify-between items-center mb-3">
+        <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base border ${isPrimary ? 'bg-primary/10 text-primary border-primary/15' : 'bg-shaded text-text-muted border-border'}`}>
           {icon}
         </div>
-        <span className="text-[9px] md:text-[10px] font-black text-text-muted uppercase tracking-widest">{label}</span>
+        <span className="text-xs font-semibold text-text-muted uppercase tracking-widest">{label}</span>
       </div>
-      <span className="text-2xl md:text-4xl font-black text-text tracking-tighter">{value || 0}</span>
-      <p className="hidden md:block text-[10px] font-black text-text-muted mt-2 uppercase tracking-widest opacity-60">{sub}</p>
+      <span className="text-2xl md:text-3xl font-bold text-text tracking-tight">{value || 0}</span>
+      <p className="hidden md:block text-xs font-medium text-text-muted mt-1">{sub}</p>
     </div>
   );
 }

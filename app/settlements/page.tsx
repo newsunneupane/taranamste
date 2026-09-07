@@ -88,10 +88,10 @@ export default async function SettlementsPage() {
     const sanitizedBanks = JSON.parse(JSON.stringify(destinationAccounts));
 
     return (
-        <div className="max-w-7xl mx-auto p-4 md:p-8">
+        <div className="flex flex-col gap-6 max-w-7xl mx-auto animate-in fade-in duration-300">
             <SettlementDashboard
                 staffBalances={aggregatedBalances}
-                bankAccounts={sanitizedBanks} // UI uses this for the "Deposit To" dropdown
+                bankAccounts={sanitizedBanks}
             />
         </div>
     );

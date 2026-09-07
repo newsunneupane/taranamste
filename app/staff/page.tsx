@@ -39,12 +39,11 @@ export default async function StaffPage() {
     });
 
     return (
-        <div className="flex flex-col gap-6 max-w-7xl mx-auto md:p-6 md:pt-6 lg:p-8 animate-in fade-in duration-500">
-            {/* ✨ Pass pendingUsers down */}
+        <div className="flex flex-col gap-6 animate-in fade-in duration-300">
             <StaffHomeTop pendingUsers={pendingUsers} />
             <StaffStatCards staffMembers={staffMembers} />
-            <div className="flex flex-col gap-3 mt-2">
-                <h2 className="font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-[0.3em] pl-2">
+            <div className="flex flex-col gap-3">
+                <h2 className="text-xs font-semibold text-text-muted uppercase tracking-widest px-1">
                     Staff List
                 </h2>
                 <InteractiveStaffTable staffMembers={staffMembers} />

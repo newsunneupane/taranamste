@@ -12,11 +12,9 @@ export default async function ChildrenPage() {
     const children = JSON.parse(JSON.stringify(rawChildren));
 
     return (
-        <div className="flex flex-col gap-6 max-w-7xl mx-auto md:p-6 md:pt-6 lg:p-8 animate-in fade-in duration-500">
+        <div className="flex flex-col gap-6 animate-in fade-in duration-300">
             <ChildrenHeader />
-
             <ChildrenStatCards children={children} />
-
             <InteractiveChildrenTable children={children} />
         </div>
     );

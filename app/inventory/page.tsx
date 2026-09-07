@@ -30,20 +30,17 @@ export default async function InventoryPage() {
     const categories = JSON.parse(JSON.stringify(rawCats));
 
     return (
-        // ✨ FIX: Added pt-20 and standardized padding
-        <div className="max-w-7xl mx-auto space-y-8 md:p-6 md:pt-6 lg:p-8 transition-colors duration-500">
-            
-            {/* ✨ Standardized Header Wrapper */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-5 md:p-6 rounded-[2rem] shadow-sm border border-border">
+        <div className="flex flex-col gap-6 animate-in fade-in duration-300">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-5 md:p-6 rounded-2xl shadow-card border border-border">
                 <div className="flex items-center gap-4 w-full">
-                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center text-2xl border border-primary/20 shrink-0">
+                    <div className="w-11 h-11 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-xl border border-primary/15 shrink-0">
                         📦
                     </div>
                     <div className="flex flex-col flex-1 min-w-0">
-                        <h1 className="font-ubuntu text-xl md:text-2xl font-black text-text tracking-tight truncate">
+                        <h1 className="text-base md:text-lg font-bold text-text tracking-tight truncate">
                             Inventory
                         </h1>
-                        <p className="font-ubuntu text-xs md:text-sm text-text-muted font-medium truncate">
+                        <p className="text-sm text-text-muted truncate">
                             Track stock levels for food, medical supplies, and more.
                         </p>
                     </div>

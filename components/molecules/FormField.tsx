@@ -11,35 +11,29 @@ export const FormField: React.FC<FormFieldProps> = ({
   label, error, id, required, ...props 
 }) => {
   return (
-    <div className="flex flex-col gap-1.5 w-full transition-colors duration-500">
-      
+    <div className="flex flex-col gap-2 w-full">
       <label 
         htmlFor={id} 
-        className="text-[9px] font-black uppercase tracking-[0.12em] text-text-muted opacity-90 px-1"
+        className="text-xs font-semibold text-text-muted tracking-wide px-0.5 flex items-center gap-1"
       >
-        {label}{" "}
-        {required && <span className="text-danger ml-0.5">*</span>}
+        {label}
+        {required && <span className="text-danger text-[11px]">*</span>}
       </label>
-      
-      {/* INPUT: Calibrated focus rings and error borders */}
       <Input 
         id={id} 
         required={required} 
+        aria-invalid={!!error}
         className={`
-          transition-all duration-300
           ${error 
-            ? "border-danger focus:ring-danger/20" 
-            : "border-border focus:ring-primary/20 focus:border-primary"
+            ? "border-danger focus:border-danger focus:ring-danger/15 bg-danger/5" 
+            : ""
           }
-          /* Ensure text inside inherits theme color */
-          text-text placeholder:text-text-muted/40
         `}
         {...props} 
       />
-      
       {error && (
-        <span className="text-[10px] text-danger font-bold mt-1 px-1 animate-in fade-in slide-in-from-top-1">
-          ⚠️ {error}
+        <span className="text-xs text-danger font-medium flex items-center gap-1 px-0.5 animate-in fade-in slide-in-from-top-1">
+          <span className="w-3.5 h-3.5 rounded-full bg-danger/10 flex items-center justify-center text-[10px]">!</span> {error}
         </span>
       )}
     </div>

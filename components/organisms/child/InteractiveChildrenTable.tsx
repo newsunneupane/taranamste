@@ -40,11 +40,9 @@ export default function InteractiveChildrenTable({ children }: { children: any[]
             {/* =========================================
                 THE FILTER TOOLBAR
                 ========================================= */}
-            <div className="flex flex-col sm:flex-row gap-3 bg-card p-3 rounded-[1.5rem] border border-border shadow-sm">
-                
-                {/* Search Bar */}
+            <div className="flex flex-col sm:flex-row gap-3 bg-card p-3.5 rounded-2xl border border-border shadow-card">
                 <div className="relative flex-1">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-muted">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
                         <Search size={16} />
                     </div>
                     <input
@@ -52,19 +50,18 @@ export default function InteractiveChildrenTable({ children }: { children: any[]
                         placeholder="Search by name..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-background border border-border/50 text-text placeholder:text-text-muted text-sm rounded-xl pl-10 pr-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-inner"
+                        className="w-full bg-card border border-border text-text placeholder:text-text-muted/60 text-sm rounded-xl pl-10 pr-4 py-2.5 outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all shadow-sm"
                     />
                 </div>
 
-                {/* Status Dropdown */}
                 <div className="relative shrink-0">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-muted">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
                         <Filter size={16} />
                     </div>
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="w-full sm:w-48 bg-background border border-border/50 text-text text-sm rounded-xl pl-10 pr-10 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer shadow-inner font-bold"
+                        className="w-full sm:w-48 bg-card border border-border text-text text-sm rounded-xl pl-10 pr-10 py-2.5 outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all appearance-none cursor-pointer shadow-sm font-medium"
                     >
                         <option value="ALL">All Statuses</option>
                         <option value="IN_CARE">In Care</option>
@@ -95,11 +92,11 @@ export default function InteractiveChildrenTable({ children }: { children: any[]
                 DESKTOP VIEW (Hidden on Mobile) 
                 ========================================= */}
             {filteredChildren.length > 0 && (
-                <div className="hidden md:block bg-card rounded-[2rem] shadow-sm border border-border overflow-hidden transition-colors duration-500">
+                <div className="hidden md:block bg-card rounded-2xl shadow-card border border-border overflow-hidden">
                     <div className="overflow-x-auto custom-scrollbar">
                         <table className="w-full text-left border-collapse min-w-[800px]">
                             <TableHead />
-                            <tbody className="divide-y divide-border">
+                            <tbody className="divide-y divide-border/60">
                                 {/* ✨ Changed from children.map to filteredChildren.map */}
                                 {filteredChildren.map((child) => (
                                     <tr key={child._id} className="hover:bg-shaded/80 transition-colors group">
@@ -230,23 +227,23 @@ function ChildStatusBadge({ status }: { status: string }) {
 
 const TableHead = () => (
     <thead>
-        <tr className="bg-shaded/50 border-b border-border">
-            <th className="p-5 font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-widest whitespace-nowrap">Name & Profile</th>
-            <th className="p-5 font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-widest whitespace-nowrap">Care Status</th>
-            <th className="p-5 font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-widest whitespace-nowrap">Admitted</th>
-            <th className="p-5 font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-widest whitespace-nowrap">DOB</th>
-            <th className="p-5 font-ubuntu text-[10px] font-black text-text-muted uppercase tracking-widest text-right whitespace-nowrap">Actions</th>
+        <tr className="bg-shaded/40 border-b border-border">
+            <th className="p-4 text-xs font-semibold text-text-muted uppercase tracking-widest whitespace-nowrap">Name & Profile</th>
+            <th className="p-4 text-xs font-semibold text-text-muted uppercase tracking-widest whitespace-nowrap">Care Status</th>
+            <th className="p-4 text-xs font-semibold text-text-muted uppercase tracking-widest whitespace-nowrap">Admitted</th>
+            <th className="p-4 text-xs font-semibold text-text-muted uppercase tracking-widest whitespace-nowrap">DOB</th>
+            <th className="p-4 text-xs font-semibold text-text-muted uppercase tracking-widest text-right whitespace-nowrap">Actions</th>
         </tr>
     </thead>
 );
 
 function EmptyChildrenState() {
     return (
-        <div className="bg-card rounded-[2rem] shadow-sm border border-border overflow-hidden p-16 text-center flex flex-col items-center gap-3 transition-colors duration-500">
-            <div className="w-16 h-16 bg-shaded rounded-full flex items-center justify-center text-3xl shadow-sm border border-border text-text-muted">🧸</div>
+        <div className="bg-card rounded-2xl shadow-card border border-border overflow-hidden p-12 md:p-16 text-center flex flex-col items-center gap-3">
+            <div className="w-14 h-14 bg-shaded rounded-2xl flex items-center justify-center text-2xl border border-border text-text-muted">🧸</div>
             <div>
-                <p className="text-text font-bold">No children registered yet.</p>
-                <p className="text-sm text-text-muted mt-1">Click "Admit Child" to create the first profile.</p>
+                <p className="text-text font-semibold">No children registered yet.</p>
+                <p className="text-sm text-text-muted mt-1">Click “Admit Child” to create the first profile.</p>
             </div>
         </div>
     );

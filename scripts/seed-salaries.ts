@@ -98,9 +98,9 @@ async function main(){
   // --- Build salary transactions ---
   // Proper dated rows (13) + month-only (11) = 24 rows total? Let's enumerate:
   // Proper: 2082-12-29 Mahadevi 26600, 2082-12-25 Durga Ojha 22250, 2082-12-28 Dilu 13650, 2082-04-28 Durga Ojha 22250, 2082-04-28 Yashoda 26600, 2082-04-28 Bina 13650, 2082-10-30 Durga 22250, 2082-10-30 Yashoda 26600, 2082-10-30 Bina 13650, 2082-05-30 Not Mentioned 64800, 2082-06-31 Durga 22250, 2082-06-31 Yashoda 26600, 2082-06-31 Bina 13650
-  // Month-only (fixed 28, year 2082 per your instruction Baisakh 2082): 
-  // SALARY DURGA YASHODA BINA 64800 JESTHA -> Not Mentioned 64800 2082-Jestha-28
-  // SALARY YASHODA DURGA 64800 BAISAKH -> Not Mentioned 64800 2082-Baisakh-28
+  // Month-only (fixed 28): year corrected to 2083 for Jestha/Baisakh per user request
+  // SALARY DURGA YASHODA BINA 64800 JESTHA -> Not Mentioned 64800 2083-Jestha-28 (was 2082)
+  // SALARY YASHODA DURGA 64800 BAISAKH -> Not Mentioned 64800 2083-Baisakh-28 (was 2082)
   // DURGA 23250 FALGUN -> Durga Ojha 23250 2082-Falgun-28
   // YASHODA 27700 FALGUN -> Yashoda 27700 Falgun-28
   // MINA 13850 FALGUN -> Mina 13850
@@ -130,8 +130,8 @@ async function main(){
     {dateRaw:"2082-06-31", head:"Staff Salary", sub:"Yashoda Chapagain", amount:26600, desc:"Salary given"},
     {dateRaw:"2082-06-31", head:"Staff Salary", sub:"Bina Kambang", amount:13650, desc:"Salary given"},
     // Month-only fixed 28 (12)
-    {dateRaw:"MONTH:2082-Jestha-28", head:"Staff Salary", sub:"Not Mentioned", amount:64800, desc:"Salary Durga Yashoda Bina - Jestha (combined)"},
-    {dateRaw:"MONTH:2082-Baisakh-28", head:"Staff Salary", sub:"Not Mentioned", amount:64800, desc:"Salary Yashoda Durga - Baisakh (combined)"},
+    {dateRaw:"MONTH:2083-Jestha-28", head:"Staff Salary", sub:"Not Mentioned", amount:64800, desc:"Salary Durga Yashoda Bina - Jestha (combined)"},
+    {dateRaw:"MONTH:2083-Baisakh-28", head:"Staff Salary", sub:"Not Mentioned", amount:64800, desc:"Salary Yashoda Durga - Baisakh (combined)"},
     {dateRaw:"MONTH:2082-Falgun-28", head:"Staff Salary", sub:"Durga Ojha", amount:23250, desc:"Salary FALGUN"},
     {dateRaw:"MONTH:2082-Falgun-28", head:"Staff Salary", sub:"Yashoda Chapagain", amount:27700, desc:"Salary FALGUN"},
     {dateRaw:"MONTH:2082-Falgun-28", head:"Staff Salary", sub:"Mina", amount:13850, desc:"Salary FALGUN"},

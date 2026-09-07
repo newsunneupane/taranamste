@@ -2,32 +2,43 @@
 import React from "react";
 import { Button } from "@/components/atoms/Button";
 import { useUIModals } from "@/hooks/useUIModal";
+import { FileSpreadsheet } from "lucide-react";
 
 export function ChildrenHeader() {
-    const { openChildModal } = useUIModals()
+    const { openChildModal, openBulkChildUpload } = useUIModals()
     
     return (
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-card p-4 md:p-5 rounded-2xl shadow-sm border border-border transition-colors duration-500">
-            <div className="flex items-center gap-3 w-full">
-                <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-lg border border-primary/20 shrink-0">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-5 md:p-6 rounded-2xl shadow-card border border-border">
+            <div className="flex items-center gap-4 w-full">
+                <div className="w-11 h-11 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-xl border border-primary/15 shrink-0">
                     👧👦
                 </div>
                 <div className="flex flex-col flex-1 min-w-0">
-                    <h1 className="font-ubuntu text-[15px] md:text-lg font-black text-text tracking-tight truncate">
+                    <h1 className="text-base md:text-lg font-bold text-text tracking-tight truncate">
                         Children in Care
                     </h1>
-                    <p className="font-ubuntu text-[11px] font-semibold text-primary/70 tracking-wide truncate">
+                    <p className="text-sm text-text-muted truncate">
                         Manage admissions & profiles
                     </p>
                 </div>
             </div>
 
-            <Button
-                onClick={() => openChildModal()}
-                className="w-full sm:w-auto bg-primary text-text-invert hover:opacity-90 shadow-glow font-bold py-2 sm:py-2 px-5 rounded-xl text-xs transition-all"
-            >
-                + Admit Child
-            </Button>
+            <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
+                <Button
+                    onClick={() => openBulkChildUpload()}
+                    variant="secondary"
+                    className="flex-1 sm:flex-none gap-2"
+                >
+                    <FileSpreadsheet size={16} />
+                    Bulk Upload
+                </Button>
+                <Button
+                    onClick={() => openChildModal()}
+                    className="flex-1 sm:flex-none"
+                >
+                    + Admit Child
+                </Button>
+            </div>
         </div>
     );
 }

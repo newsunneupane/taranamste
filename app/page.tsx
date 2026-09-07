@@ -85,16 +85,16 @@ export default async function Home() {
   const totalUnsettledCash = unsettledCashResult[0]?.total || 0;
 
   return (
-    <div className="flex flex-col gap-5 max-w-7xl mx-auto p-3 md:p-5 lg:p-6 animate-in fade-in duration-500">
+    <div className="flex flex-col gap-6 animate-in fade-in duration-300">
 
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-card p-4 md:p-5 rounded-2xl shadow-sm border border-border">
-        <div className="flex items-center gap-3 w-full">
-          <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-lg border border-primary/20 shrink-0">
-            <Sparkles className="animate-pulse" size={20} />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-5 md:p-6 rounded-2xl shadow-card border border-border">
+        <div className="flex items-center gap-4 w-full">
+          <div className="w-11 h-11 bg-primary/10 text-primary rounded-xl flex items-center justify-center border border-primary/15 shrink-0">
+            <Sparkles className="animate-pulse" size={22} />
           </div>
           <div className="flex flex-col flex-1 min-w-0">
-            <h1 className="font-ubuntu text-[15px] md:text-lg font-black text-text tracking-tight truncate">System Overview</h1>
-            <p className="font-ubuntu text-[11px] font-semibold text-primary/70 tracking-wide truncate">Tara Namaste Baalgram // Management Portal</p>
+            <h1 className="text-base md:text-lg font-bold text-text tracking-tight truncate">System Overview</h1>
+            <p className="text-sm text-text-muted truncate">Tara Namaste Baal Gram — Management Portal</p>
           </div>
         </div>
       </div>

@@ -21,7 +21,6 @@ export async function saveInventoryCategory(
   await dbConnect();
 
   const name = formData.get("name") as string;
-  const type = formData.get("type") as "CONSUMABLE" | "ASSET";
 
   // 1. Core Protocol Validation
   if (!name || name.trim().length === 0) {
@@ -32,19 +31,10 @@ export async function saveInventoryCategory(
     };
   }
 
-  if (!type) {
-    return { 
-      success: false, 
-      error: "Registry type (Asset/Consumable) is missing.", 
-      data: null 
-    };
-  }
-
   try {
     // 2. Create the entry
     const category = await InventoryCategory.create({
       name: name.trim(),
-      type,
       isActive: true
     });
 
@@ -64,11 +54,11 @@ export async function saveInventoryCategory(
   } catch (err: any) {
     console.error("Registry Sync Failure:", err);
 
-    // 4. Handle Duplicate Logic (Unique Index: Name + Type)
+    // 4. Handle Duplicate Logic (Unique Index: Name)
     if (err.code === 11000) {
       return { 
         success: false, 
-        error: `The ${type.toLowerCase()} class "${name}" already exists.`, 
+        error: `The class "${name}" already exists.`, 
         data: null 
       };
     }

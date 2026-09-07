@@ -7,7 +7,7 @@ import SelectAccountHead from "@/components/molecules/selects/SelectAccontHead" 
 
 interface FinanceBridgeProps {
     transaction?: any;
-    transactionType: "INCOME" | "EXPENSE" | "ASSET" | "LIABILITY";
+    transactionType: "INCOME" | "EXPENSE";
 }
 
 export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
@@ -19,10 +19,9 @@ export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
         transaction?.accountHead?._id || transaction?.accountHead || ""
     );
 
-    const isAsset = transactionType === "ASSET";
-    const isPurchase = transactionType === "EXPENSE" || isAsset;
+    const isPurchase = transactionType === "EXPENSE";
 
-    const theme = isAsset ? { bg:"bg-primary/5", border:"border-primary/20", text:"text-primary", badgeBg:"bg-primary/20 text-primary border-primary/30"} : { bg:"bg-success/5", border:"border-success/20", text:"text-success", badgeBg:"bg-success/20 text-success border-success/30"};
+    const theme = { bg:"bg-success/5", border:"border-success/20", text:"text-success", badgeBg:"bg-success/20 text-success border-success/30"};
 
     return (
         <div className={`${theme.bg} p-6 rounded-2xl border ${theme.border} flex flex-col gap-6 animate-in fade-in duration-500`}>
@@ -31,10 +30,10 @@ export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
             <div className={`border-b ${theme.border} pb-3 flex justify-between items-end`}>
                 <div>
                     <p className={`text-[10px] uppercase font-black tracking-[0.2em] ${theme.text}`}>
-                        {isAsset ? "Capitalized Asset" : "Linked Transaction"}
+                        Linked Transaction
                     </p>
                     <p className="text-[9px] text-text-muted uppercase font-bold mt-1 opacity-70">
-                        {isAsset ? "Purchase Price — adds to Net Worth" : isPurchase ? "Inventory Purchase" : "Stock Value"}
+                        {isPurchase ? "Inventory Purchase" : "Stock Value"}
                     </p>
                 </div>
                 {Number(costEntered) > 0 && (
@@ -45,15 +44,15 @@ export const StockFinanceFields: React.FC<FinanceBridgeProps> = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* 1. THE COST — single Amount with dynamic label (keep what is good) */}
+                {/* 1. THE COST */}
                 <FormField
                     id="cost"
-                    label={isAsset ? "Purchase Price (NPR) — Capitalized *" : isPurchase ? "Total Purchase Cost (NPR)" : "Estimated Value (NPR)"}
+                    label={isPurchase ? "Total Purchase Cost (NPR)" : "Estimated Value (NPR)"}
                     name="cost"
                     type="number"
                     value={costEntered}
                     onChange={(e) => setCostEntered(e.target.value)} 
-                    placeholder={isAsset ? "e.g. 120000 for Furniture" : "Enter 0 if donated/no cost"}
+                    placeholder="Enter 0 if donated/no cost"
                     className="text-text font-mono"
                 />
 

@@ -84,12 +84,12 @@ export const ManageStockModal: React.FC<ManageStockProps> = ({ closeModal, item 
                     defaultValue={logId} 
                 />
 
-                {/* FINANCIAL LINKAGE — true capitalization: asset stock IN → ASSET head */}
+                {/* FINANCIAL LINKAGE */}
                 {actionType === "IN" && (
                     <div className="animate-in slide-in-from-top-2 duration-500">
                         <StockFinanceFields
                             transaction={linkedTransaction}
-                            transactionType={inventoryItem?.type === "ASSET" ? "ASSET" : "EXPENSE"}
+                            transactionType="EXPENSE"
                         />
                     </div>
                 )}

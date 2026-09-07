@@ -56,9 +56,7 @@ export default function ChartOfAccounts({ initialAccounts }: { initialAccounts: 
       <div className="flex flex-col gap-4">
         {[
           { title: "Incomes", type: "INCOME", theme: "success" as const, addIncome: true },
-          { title: "Expenses", type: "EXPENSE", theme: "danger" as const, addIncome: false },
-          { title: "Assets", type: "ASSET", theme: "primary" as const, addIncome: true },
-          { title: "Liabilities", type: "LIABILITY", theme: "warning" as const, addIncome: false }
+          { title: "Expenses", type: "EXPENSE", theme: "danger" as const, addIncome: false }
         ].map((sec) => (
           <AccountSection
             key={sec.type}

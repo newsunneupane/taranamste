@@ -96,9 +96,6 @@ export function useUIModals() {
         openAddConsumableCategory: ({onSaved}: any) => {
             openModal("CONSUMABLE_CAT_FORM", "Protocol: Consumable Registry", { onSaved });
         },
-        openAddAssetCategory: ({onSaved}: any) => {
-            openModal("ASSET_CAT_FORM", "Protocol: Asset Registry", { onSaved });
-        },
         openInternalTransfer: () =>
             openModal(
                 "INTERNAL_TRANSFER",

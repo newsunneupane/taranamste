@@ -6,18 +6,8 @@ export async function GET(request: NextRequest) {
     try {
         await dbConnect();
 
-        // ✨ Get the 'type' from the query parameters
-        const { searchParams } = new URL(request.url);
-        const type = searchParams.get("type");
-
-        // Prepare the filter
-        const filter: any = { isActive: true };
-        if (type) {
-            filter.type = type.toUpperCase(); // Ensure it matches 'CONSUMABLE' or 'ASSET'
-        }
-
-        // Fetch categories sorted alphabetically
-        const categories = await InventoryCategory.find(filter)
+        // Fetch categories sorted alphabetically — type filter removed (only consumables now)
+        const categories = await InventoryCategory.find({ isActive: true })
             .sort({ name: 1 })
             .lean();
 

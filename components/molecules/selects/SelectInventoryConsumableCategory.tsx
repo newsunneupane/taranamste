@@ -16,7 +16,7 @@ export const SelectConsumableCategory = ({ defaultValue = "", ...props }: any) =
         const fetchCats = async () => {
             setIsLoading(true);
             try {
-                const res = await fetch('/api/inventory/categories?type=CONSUMABLE', { cache: 'no-store' });
+                const res = await fetch('/api/inventory/categories', { cache: 'no-store' });
                 const data = await res.json();
                 setOptions(data.map((c: any) => ({ label: c.name, value: c._id })));
                 if (data.length === 0) setSelectedValue("");
@@ -41,7 +41,7 @@ export const SelectConsumableCategory = ({ defaultValue = "", ...props }: any) =
     return (
         <SelectField
             {...props}
-            label={isLoading ? 'Loading...' : 'Consumable Class'}
+            label={isLoading ? 'Loading...' : 'Category'}
             options={options}
             disabled={false}
             value={selectedValue}

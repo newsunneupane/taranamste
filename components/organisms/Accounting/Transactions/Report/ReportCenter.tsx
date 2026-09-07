@@ -24,8 +24,7 @@ export default function ReportCenter({ transactions, accounts }: any) {
     });
 
     const categoryLabel = (t: any) => {
-        const head = t.accountHead?.name || "Uncategorized";
-        return t.subType ? `${head} / ${t.subType}` : head;
+        return t.accountHead?.name || "Uncategorized";
     };
 
     // 1. FILTER FIRST — live computed filtered data (report data)
@@ -176,7 +175,7 @@ export default function ReportCenter({ transactions, accounts }: any) {
                                     <tr className="bg-[#0f172a] text-white text-[9px] font-black uppercase tracking-[0.12em]">
                                         <th className="py-2 px-3 border-r border-white/10 w-[32px] text-center">#</th>
                                         <th className="py-2 px-3 border-r border-white/10">Date (BS·AD)</th>
-                                        <th className="py-2 px-3 border-r border-white/10">Head / Sub</th>
+                                        <th className="py-2 px-3 border-r border-white/10">Head</th>
                                         <th className="py-2 px-3 border-r border-white/10">Description</th>
                                         <th className="py-2 px-3 border-r border-white/10 text-center">Type</th>
                                         <th className="py-2 px-3 text-right">Amount</th>

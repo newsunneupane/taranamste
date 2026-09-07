@@ -41,22 +41,17 @@ export default async function FinancePage() {
 
     let totalIncome = 0;
     let totalExpense = 0;
-    let totalAssets = 0;
-    let totalLiabilities = 0;
 
     const transactions = safeTransactions.map((txn: any) => {
         const isMoneyMovement = !txn.accountHead && String(txn.referenceNumber || "").startsWith("CONTRA-");
         if (!isMoneyMovement) {
             if (txn.type === "INCOME") totalIncome += txn.amount;
             if (txn.type === "EXPENSE") totalExpense += txn.amount;
-            if (txn.type === "ASSET") totalAssets += txn.amount;
-            if (txn.type === "LIABILITY") totalLiabilities += txn.amount;
         }
         return txn;
     });
 
     const netBalance = totalIncome - totalExpense; // Available Balance (cash)
-    const netWorth = totalAssets - totalLiabilities; // Balance sheet
 
     return (
         <div className="flex flex-col gap-6 w-full animate-in fade-in duration-300">
@@ -79,26 +74,6 @@ export default async function FinancePage() {
                     value={totalExpense}
                     variant="warning"
                     prefix="- "
-                />
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                <SummaryCard
-                    label="Total Assets"
-                    value={totalAssets}
-                    variant="default"
-                    prefix="+ "
-                />
-                <SummaryCard
-                    label="Total Liabilities"
-                    value={totalLiabilities}
-                    variant="warning"
-                    prefix="- "
-                />
-                <SummaryCard
-                    label="Net Worth"
-                    value={netWorth}
-                    variant={netWorth >= 0 ? "default" : "danger"}
-                    prefix=""
                 />
             </div>
             <FinanceLedger

@@ -5,7 +5,6 @@ export interface RawBulkRow {
   rowIndex: number; // global
   date: string;
   account: string; // head name only, case-insensitive
-  subType: string;
   paymentCategory: string;
   amount: string;
   vendor: string;
@@ -22,7 +21,7 @@ export async function parseExpenseBulkPdf(buffer: ArrayBuffer): Promise<RawBulkR
   // discover max row index from any field pattern
   let maxRow = -1;
   for (const n of fields) {
-    const m = n.match(/^(date|account|subType|paymentCategory|amount|vendor|ref|desc)_(\d+)$/);
+    const m = n.match(/^(date|account|paymentCategory|amount|vendor|ref|desc)_(\d+)$/);
     if (m) maxRow = Math.max(maxRow, parseInt(m[2], 10));
   }
   // fallback: if no fields but maybe old 25-row file, try 0..1999
@@ -40,16 +39,15 @@ export async function parseExpenseBulkPdf(buffer: ArrayBuffer): Promise<RawBulkR
     };
     const date = get(`date_${r}`);
     const account = get(`account_${r}`);
-    const subType = get(`subType_${r}`);
     const paymentCategory = get(`paymentCategory_${r}`);
     const amount = get(`amount_${r}`);
     const vendor = get(`vendor_${r}`);
     const ref = get(`ref_${r}`);
     const desc = get(`desc_${r}`);
 
-    if (!date && !account && !subType && !paymentCategory && !amount && !vendor && !ref && !desc) continue;
+    if (!date && !account && !paymentCategory && !amount && !vendor && !ref && !desc) continue;
 
-    rows.push({ rowIndex: r, date, account, subType, paymentCategory, amount, vendor, ref, desc });
+    rows.push({ rowIndex: r, date, account, paymentCategory, amount, vendor, ref, desc });
   }
   return rows;
 }
@@ -159,27 +157,33 @@ export async function parseExpenseBulkExcel(buffer: ArrayBuffer): Promise<RawBul
   for (let i = 1; i < rowsJson.length; i++) {
     const r = rowsJson[i] as any[];
     if (!r || r.length === 0) continue;
-    // COLS: Date, Head, SubHead, Amount, Vendor, Ref, Desc (7 cols)
-    // Support legacy 8-col file (with Money Account col at idx 3) by detecting 8 cols
-    let date: string, account: string, subType: string, amount: string, vendor: string, ref: string, desc: string, paymentCategory: string = "";
+    // COLS: Date, Head, Amount, Vendor, Ref, Desc (6 cols)
+    // Support legacy files (7/8 cols with SubHead) by detecting and dropping subType
+    let date: string, account: string, amount: string, vendor: string, ref: string, desc: string, paymentCategory: string = "";
     if (r.length >= 8) {
-      // legacy: Date, Head, Sub, Money, Amount, Vendor, Ref, Desc
+      // legacy: Date, Head, Sub, Money, Amount, Vendor, Ref, Desc -> ignore Sub
       date = String(r[0] ?? "").trim();
       account = String(r[1] ?? "").trim();
-      subType = String(r[2] ?? "").trim();
       paymentCategory = String(r[3] ?? "").trim();
       amount = String(r[4] ?? "").trim();
       vendor = String(r[5] ?? "").trim();
       ref = String(r[6] ?? "").trim();
       desc = String(r[7] ?? "").trim();
-    } else {
+    } else if (r.length === 7) {
+      // legacy 7-col: Date, Head, Sub, Amount, Vendor, Ref, Desc -> ignore Sub
       date = String(r[0] ?? "").trim();
       account = String(r[1] ?? "").trim();
-      subType = String(r[2] ?? "").trim();
       amount = String(r[3] ?? "").trim();
       vendor = String(r[4] ?? "").trim();
       ref = String(r[5] ?? "").trim();
       desc = String(r[6] ?? "").trim();
+    } else {
+      date = String(r[0] ?? "").trim();
+      account = String(r[1] ?? "").trim();
+      amount = String(r[2] ?? "").trim();
+      vendor = String(r[3] ?? "").trim();
+      ref = String(r[4] ?? "").trim();
+      desc = String(r[5] ?? "").trim();
     }
     // handle Date objects from xlsx (cellDates:true gives Date)
     if ((date as any) instanceof Date) date = (date as any).toISOString().slice(0,10);
@@ -191,11 +195,11 @@ export async function parseExpenseBulkExcel(buffer: ArrayBuffer): Promise<RawBul
     }
 
     // skip fully empty or header row duplicate
-    if (!date && !account && !subType && !amount && !vendor && !ref && !desc && !paymentCategory) continue;
+    if (!date && !account && !amount && !vendor && !ref && !desc && !paymentCategory) continue;
     // skip header echo if account == "Head*" or "Category"
     if (norm(account) === "head*" || norm(account) === "category*") continue;
 
-    out.push({ rowIndex: i - 1, date, account, subType, paymentCategory, amount, vendor, ref, desc });
+    out.push({ rowIndex: i - 1, date, account, paymentCategory, amount, vendor, ref, desc });
   }
   return out;
 }

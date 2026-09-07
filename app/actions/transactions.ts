@@ -21,7 +21,6 @@ export async function addTransaction(prevState: any, formData: FormData) {
       type: formData.get("type"),
       accountHead: formData.get("accountHead") || null,
       paymentCategory: formData.get("paymentCategoryId") || null,
-      subType: formData.get("subType"),
       date: formData.get("date") ? new Date(formData.get("date") as string) : new Date(),
       description: formData.get("description"),
       donorOrVendorName: formData.get("donorOrVendorName"),

@@ -22,7 +22,6 @@ export default function TransactionTable({
     const [typeFilter, setTypeFilter] = useState("ALL");
     const [timeframe, setTimeframe] = useState("ALL");
     const [accountFilter, setAccountFilter] = useState("ALL");
-    const [subHeadFilter, setSubHeadFilter] = useState("ALL");
     const [customStart, setCustomStart] = useState("");
     const [customEnd, setCustomEnd] = useState("");
     const [format, setFormat] = useState("PDF");
@@ -39,7 +38,7 @@ export default function TransactionTable({
         return accounts.filter((a: any) => a.type === typeFilter);
     }, [accounts, typeFilter, isMoneyMovement]);
 
-    // If Cashflow Type changes and current Head no longer belongs to that type, reset Head (and SubHead follows)
+    // If Cashflow Type changes and current Head no longer belongs to that type, reset Head
     React.useEffect(() => {
         if (accountFilter === "ALL") return;
         const head = accounts.find((a: any) => a._id === accountFilter);
@@ -48,26 +47,8 @@ export default function TransactionTable({
         }
     }, [typeFilter, accountFilter, accounts]);
 
-    // All subHeads (for dropdown) — derived from filtered heads, and when Head selected, only that Head's subs (type-aware). Money Movement has no subs.
-    const subHeadOptions = useMemo(() => {
-        if (isMoneyMovement) return [];
-        if (!Array.isArray(accounts) || accounts.length === 0) return [];
-        if (accountFilter !== "ALL") {
-            const head = accounts.find((a: any) => a._id === accountFilter);
-            return Array.isArray(head?.subType) ? head.subType : [];
-        }
-        // when showing All Heads, only show subs that belong to the currently visible heads (type-filtered)
-        const all = new Set<string>();
-        filteredAccountsByType.forEach((a: any) => (a.subType || []).forEach((s: string) => all.add(s)));
-        return Array.from(all);
-    }, [accounts, filteredAccountsByType, accountFilter, isMoneyMovement]);
-
-    // when Head changes, reset SubHead to ALL (sub must belong to that head)
-    React.useEffect(() => { setSubHeadFilter("ALL"); }, [accountFilter]);
-
     const categoryLabel = (t: any) => {
-        const head = t.accountHead?.name || "Uncategorized";
-        return t.subType ? `${head} / ${t.subType}` : head;
+        return t.accountHead?.name || "Uncategorized";
     };
 
     // Money Movement groups (pair of EXPENSE+INCOME with same CONTRA- ref, accountHead null)
@@ -109,7 +90,7 @@ export default function TransactionTable({
         return transactions.filter((txn) => {
             const isTransfer = !txn.accountHead && String(txn.referenceNumber || "").startsWith("CONTRA-");
             if (isTransfer) return false;
-            const searchString = `${txn.accountHead?.name || ""} ${txn.description || ""} ${txn.subType || ""} ${txn.donorOrVendorName || ""}`.toLowerCase();
+            const searchString = `${txn.accountHead?.name || ""} ${txn.description || ""} ${txn.donorOrVendorName || ""}`.toLowerCase();
             const matchesSearch = searchString.includes(searchTerm.toLowerCase());
             const matchesType = typeFilter === "ALL" || txn.type === typeFilter;
 
@@ -135,11 +116,10 @@ export default function TransactionTable({
             } else if (timeframe === "ALL") inTime = true;
 
             const matchesAccount = accountFilter === "ALL" || txn.accountHead?._id === accountFilter || txn.accountHead?.name === accountFilter || txn.paymentCategory?._id === accountFilter;
-            const matchesSubHead = subHeadFilter === "ALL" || (txn.subType || "").toLowerCase() === subHeadFilter.toLowerCase();
 
-            return matchesSearch && matchesType && inTime && matchesAccount && matchesSubHead;
+            return matchesSearch && matchesType && inTime && matchesAccount;
         });
-    }, [transactions, searchTerm, typeFilter, timeframe, accountFilter, subHeadFilter, customStart, customEnd]);
+    }, [transactions, searchTerm, typeFilter, timeframe, accountFilter, customStart, customEnd]);
 
     const filteredMoneyMovements = useMemo(() => {
         if (!isMoneyMovement) return [] as any[];
@@ -167,13 +147,11 @@ export default function TransactionTable({
     const displayTxns = isMoneyMovement ? filteredMoneyMovements : filteredTxns;
     const displayTotal = displayTxns.length;
 
-    // helper for 4-way type styling (true capitalization)
+    // helper for type styling (income/expense only)
     const getTypeMeta = (type: string) => {
         switch (type) {
             case "INCOME": return { dot: "bg-success", text: "text-success", badge: "bg-success/10 text-success border-success/20", sign: "+", rgb: [34, 197, 94] as const };
             case "EXPENSE": return { dot: "bg-danger", text: "text-danger", badge: "bg-danger/10 text-danger border-danger/20", sign: "-", rgb: [239, 68, 68] as const };
-            case "ASSET": return { dot: "bg-primary", text: "text-primary", badge: "bg-primary/10 text-primary border-primary/20", sign: "+", rgb: [59, 130, 246] as const };
-            case "LIABILITY": return { dot: "bg-warning", text: "text-warning", badge: "bg-warning/10 text-warning border-warning/20", sign: "+", rgb: [245, 158, 11] as const };
             default: return { dot: "bg-text-muted", text: "text-text-muted", badge: "bg-shaded text-text-muted border-border", sign: "", rgb: [100, 116, 139] as const };
         }
     };
@@ -250,7 +228,7 @@ export default function TransactionTable({
 
     const totalPages = Math.max(1, Math.ceil(displayTotal / PAGE_SIZE));
     // reset to page 1 when filters change
-    React.useEffect(() => { setCurrentPage(1); }, [searchTerm, typeFilter, timeframe, accountFilter, subHeadFilter, customStart, customEnd, transactions.length, displayTotal]);
+    React.useEffect(() => { setCurrentPage(1); }, [searchTerm, typeFilter, timeframe, accountFilter, customStart, customEnd, transactions.length, displayTotal]);
 
     const paginatedTxns = useMemo(() => {
         const start = (currentPage - 1) * PAGE_SIZE;
@@ -294,9 +272,9 @@ export default function TransactionTable({
                 </div>
             )}
 
-            {/* FILTERS FIRST — exactly like report before — Head + SubHead dropdowns + Search */}
+            {/* FILTERS — Head dropdown + Search (SubHead removed) */}
             <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
-                <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 p-4 bg-shaded/20 border-b border-border/40">
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 p-4 bg-shaded/20 border-b border-border/40">
                     <div className="flex flex-col gap-1 col-span-2 lg:col-span-1">
                         <label className="text-[8px] font-black uppercase tracking-widest text-primary">Search</label>
                         <div className="relative">
@@ -321,8 +299,6 @@ export default function TransactionTable({
                             <option value="ALL">All</option>
                             <option value="INCOME">Income</option>
                             <option value="EXPENSE">Expense</option>
-                            <option value="ASSET">Asset</option>
-                            <option value="LIABILITY">Liability</option>
                             <option value="MONEY_MOVEMENT">Money Movement</option>
                         </select>
                     </div>
@@ -333,15 +309,6 @@ export default function TransactionTable({
                             {!isMoneyMovement && Array.isArray(filteredAccountsByType) ? filteredAccountsByType.map((a: any) => (
                                 <option key={a._id} value={a._id}>{a.name}</option>
                             )) : null}
-                        </select>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <label className="text-[8px] font-black uppercase tracking-widest text-primary">SubHead {isMoneyMovement && <span className="text-text-muted font-normal">(not applicable)</span>}</label>
-                        <select value={subHeadFilter} onChange={(e) => setSubHeadFilter(e.target.value)} disabled={isMoneyMovement || subHeadOptions.length === 0} className="w-full px-2 py-2 text-[11px] font-bold border border-border rounded-lg bg-background h-8 disabled:opacity-40">
-                            <option value="ALL">{isMoneyMovement ? "—" : "All SubHeads"}</option>
-                            {!isMoneyMovement && subHeadOptions.map((s: string) => (
-                                <option key={s} value={s}>{s}</option>
-                            ))}
                         </select>
                     </div>
                     <div className="flex flex-col gap-1">
@@ -385,7 +352,7 @@ export default function TransactionTable({
                 <div className="hidden md:block bg-card rounded-xl shadow-sm border border-border overflow-hidden">
                     {/* List header — count */}
                     <div className="px-4 py-3 bg-shaded/40 border-b border-border flex justify-between items-center">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-primary">{isMoneyMovement ? `Money Movements — ${displayTotal} transfers (Date | From → To | Amount)` : `Report List — ${displayTotal} records (Date | Head | SubHead | Amount | Type)`}</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-primary">{isMoneyMovement ? `Money Movements — ${displayTotal} transfers (Date | From → To | Amount)` : `Report List — ${displayTotal} records (Date | Head | Amount | Type)`}</span>
                         <span className="text-[11px] font-bold text-text-muted">Page {currentPage}/{totalPages} · {pageRange.start}-{pageRange.end}</span>
                     </div>
                     {/* Column headers */}
@@ -399,10 +366,9 @@ export default function TransactionTable({
                         <span className="px-2 text-center">Ref</span>
                     </div>
                     ) : (
-                    <div className="grid grid-cols-[110px_1fr_1fr_120px_130px_90px] gap-0 bg-[#0f172a] text-white text-[9px] font-black uppercase tracking-[0.12em] px-2 py-2.5">
+                    <div className="grid grid-cols-[110px_1fr_120px_130px_90px] gap-0 bg-[#0f172a] text-white text-[9px] font-black uppercase tracking-[0.12em] px-2 py-2.5">
                         <span className="px-2 border-r border-white/10">Date</span>
                         <span className="px-2 border-r border-white/10">Head</span>
-                        <span className="px-2 border-r border-white/10">SubHead</span>
                         <span className="px-2 border-r border-white/10 text-right">Amount</span>
                         <span className="px-2 border-r border-white/10 text-center">Type</span>
                         <span className="px-2 text-center">Actions</span>
@@ -432,11 +398,10 @@ export default function TransactionTable({
                                 <div
                                     key={txn._id}
                                     onClick={() => openTransactionDetail(txn)}
-                                    className={`group cursor-pointer grid grid-cols-[110px_1fr_1fr_120px_130px_90px] gap-0 items-center px-2 py-2.5 text-xs hover:bg-primary/[0.06] transition-colors ${globalIdx % 2 === 0 ? "bg-card" : "bg-shaded/[0.14]"}`}
+                                    className={`group cursor-pointer grid grid-cols-[110px_1fr_120px_130px_90px] gap-0 items-center px-2 py-2.5 text-xs hover:bg-primary/[0.06] transition-colors ${globalIdx % 2 === 0 ? "bg-card" : "bg-shaded/[0.14]"}`}
                                 >
                                     <span className="px-2 font-mono text-[11px] text-text-muted border-r border-border/30 truncate">{formatNepaliDateShort(txn.date)}</span>
                                     <span className="px-2 font-bold text-xs text-text truncate border-r border-border/30 flex items-center gap-1.5"><span className={`w-1.5 h-1.5 rounded-full ${m.dot}`} />{txn.accountHead?.name || "—"}</span>
-                                    <span className="px-2 text-[11px] text-text truncate border-r border-border/30">{txn.subType || "—"}</span>
                                     <span className={`px-2 font-black font-mono text-xs text-right border-r border-border/30 ${m.text}`}>{m.sign}{Number(txn.amount).toLocaleString("en-IN")}</span>
                                     <span className="px-2 flex justify-center border-r border-border/30">
                                         <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase border ${m.badge}`}>{txn.type}</span>
@@ -453,7 +418,7 @@ export default function TransactionTable({
                     </div>
                     {/* Pagination + Download */}
                     <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-shaded/20 border-t border-border">
-                        <span className="text-[11px] font-bold text-text-muted">Showing {pageRange.start}-{pageRange.end} of {displayTotal}{isMoneyMovement ? <> · Total Moved: <span className="text-primary">{(filteredMoneyMovements as any[]).reduce((s:any,g:any)=>s+g.amount,0).toLocaleString("en-IN")}</span></> : <> · Total: <span className="text-success">+{filteredTxns.filter((t:any)=>t.type==="INCOME").reduce((s:any,t:any)=>s+t.amount,0).toLocaleString("en-IN")}</span> <span className="text-danger">-{filteredTxns.filter((t:any)=>t.type==="EXPENSE").reduce((s:any,t:any)=>s+t.amount,0).toLocaleString("en-IN")}</span> <span className="text-primary">+{filteredTxns.filter((t:any)=>t.type==="ASSET").reduce((s:any,t:any)=>s+t.amount,0).toLocaleString("en-IN")}</span> <span className="text-warning">+{filteredTxns.filter((t:any)=>t.type==="LIABILITY").reduce((s:any,t:any)=>s+t.amount,0).toLocaleString("en-IN")}</span></>}</span>
+                        <span className="text-[11px] font-bold text-text-muted">Showing {pageRange.start}-{pageRange.end} of {displayTotal}{isMoneyMovement ? <> · Total Moved: <span className="text-primary">{(filteredMoneyMovements as any[]).reduce((s:any,g:any)=>s+g.amount,0).toLocaleString("en-IN")}</span></> : <> · Total: <span className="text-success">+{filteredTxns.filter((t:any)=>t.type==="INCOME").reduce((s:any,t:any)=>s+t.amount,0).toLocaleString("en-IN")}</span> <span className="text-danger">-{filteredTxns.filter((t:any)=>t.type==="EXPENSE").reduce((s:any,t:any)=>s+t.amount,0).toLocaleString("en-IN")}</span></>}</span>
                         <div className="flex items-center gap-2">
                             <div className="flex items-center gap-1">
                                 <button onClick={() => setCurrentPage(p => Math.max(1, p-1))} disabled={currentPage===1} className="px-3 py-1.5 text-[11px] font-black rounded-lg border border-border bg-card disabled:opacity-40 hover:bg-shaded">Prev</button>
@@ -480,8 +445,8 @@ export default function TransactionTable({
                             <span>Date</span><span>From</span><span>To</span><span className="text-right">Amount</span><span className="text-center">Ref</span>
                         </div>
                         ) : (
-                        <div className="grid grid-cols-5 gap-1 px-3 py-2.5 bg-[#0f172a] text-white text-[8px] font-black uppercase tracking-widest">
-                            <span>Date</span><span>Head</span><span>SubHead</span><span className="text-right">Amount</span><span className="text-center">Type</span>
+                        <div className="grid grid-cols-4 gap-1 px-3 py-2.5 bg-[#0f172a] text-white text-[8px] font-black uppercase tracking-widest">
+                            <span>Date</span><span>Head</span><span className="text-right">Amount</span><span className="text-center">Type</span>
                         </div>
                         )}
                         {/* Datas below — list rows */}
@@ -506,11 +471,10 @@ export default function TransactionTable({
                                 role="button"
                                 tabIndex={0}
                                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openTransactionDetail(txn); } }}
-                                className="grid grid-cols-5 gap-1 px-3 py-2.5 text-[11px] items-center bg-card hover:bg-shaded/40 active:bg-shaded/60 transition-colors cursor-pointer"
+                                className="grid grid-cols-4 gap-1 px-3 py-2.5 text-[11px] items-center bg-card hover:bg-shaded/40 active:bg-shaded/60 transition-colors cursor-pointer"
                             >
                                     <span className="font-mono text-text-muted truncate">{formatNepaliDateShort(txn.date).split("·")[0].trim()}</span>
                                     <span className="font-bold text-text truncate">{txn.accountHead?.name || "—"}</span>
-                                    <span className="truncate text-text-muted">{txn.subType || "—"}</span>
                                     <span className={`text-right font-black font-mono ${m.text}`}>{m.sign}{Number(txn.amount).toLocaleString()}</span>
                                     <span className="flex justify-center"><span className={`px-1.5 py-0.5 rounded-full text-[8px] font-black border ${m.badge}`}>{txn.type}</span></span>
                             </div>

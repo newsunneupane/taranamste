@@ -6,7 +6,7 @@ type Populated<T> = string | T;
 // ==========================================
 // ACCOUNT HEAD TYPES
 // ==========================================
-export type AccountType = 'INCOME' | 'EXPENSE' | 'ASSET' | 'LIABILITY' | 'EQUITY';
+export type AccountType = 'INCOME' | 'EXPENSE';
 export type FundCategory = 'RESTRICTED' | 'UNRESTRICTED';
 
 export interface TAccountHead {
@@ -14,7 +14,6 @@ export interface TAccountHead {
   name: string;
   type: AccountType;
   fundCategory: FundCategory;
-  subType: string[];
   code: string;
   description?: string;
   isSystem?: boolean;
@@ -37,7 +36,7 @@ export interface TPaymentCategory {
 // ==========================================
 // TRANSACTION (FINANCE) TYPES
 // ==========================================
-export type TransactionType = 'INCOME' | 'EXPENSE' | 'ASSET' | 'LIABILITY';
+export type TransactionType = 'INCOME' | 'EXPENSE';
 export type TransactionStatus = 'PENDING' | 'VERIFIED' | 'REJECTED';
 
 export interface TTransaction {
@@ -53,7 +52,6 @@ export interface TTransaction {
   paymentCategory: Populated<TPaymentCategory>; // ✨ REPLACED 
   
   description: string;
-  subType?: string; 
   referenceNumber?: string;
   donorOrVendorName?: string;
   createdBy: any; // Ideally a TUser type
@@ -70,18 +68,14 @@ export interface TTransaction {
 // INVENTORY TYPES (Fixed)
 // ==========================================
 export type InventoryCategory = string; // now InventoryCategory ObjectId
-export type InventoryItemType = 'CONSUMABLE' | 'ASSET';
 export type InventoryLogType = 'IN' | 'OUT';
 
 export interface TInventoryItem {
   _id: string;
   name: string;
   category: InventoryCategory | any;
-  type: InventoryItemType;
   currentStock: number;
   minimumStockLevel: number;
-  location?: string;
-  condition?: 'NEW' | 'GOOD' | 'REPAIR';
   description?: string;
   isActive?: boolean;
 }

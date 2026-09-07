@@ -24,10 +24,7 @@ export async function addInventoryItem(prevState: any, formData: FormData) {
         await InventoryItem.create({
             name,
             category: category as any,
-            type: (String(formData.get("type") || "CONSUMABLE") as any),
             description: String(formData.get("description") || ""),
-            location: String(formData.get("location") || ""),
-            condition: (String(formData.get("condition") || "NEW") as any),
             currentStock: 0,
             minimumStockLevel: Number(formData.get("minimumStockLevel")) || 0,
         } as any);
@@ -58,10 +55,7 @@ export async function updateInventoryItem(prevState: any, formData: FormData) {
         const updateData = {
             name: String(formData.get("name")),
             category: category as any,
-            type: String(formData.get("type")) as any,
             description: String(formData.get("description")),
-            location: String(formData.get("location") || ""),
-            condition: String(formData.get("condition")) as any,
             minimumStockLevel: Number(formData.get("minimumStockLevel")) || 0,
         } as any;
 
@@ -130,8 +124,8 @@ export async function adjustStock(prevState: any, formData: FormData) {
         );
         if (!updatedItem) throw new Error("Item not found");
 
-        // Prevent negative stock for consumables
-        if (updatedItem.type === "CONSUMABLE" && updatedItem.currentStock < 0) {
+        // Prevent negative stock
+        if (updatedItem.currentStock < 0) {
             await InventoryItem.findByIdAndUpdate(itemId, { $inc: { currentStock: -stockChange } });
             throw new Error(`Insufficient stock. Only ${updatedItem.currentStock + quantity} available.`);
         }
@@ -148,7 +142,7 @@ export async function adjustStock(prevState: any, formData: FormData) {
             cost
         });
 
-        // 3. FINANCIAL INTEGRATION (Only if cost is involved) — true capitalization
+        // 3. FINANCIAL INTEGRATION (Only if cost is involved)
         if (type === 'IN' && cost > 0) {
             
             // Magic Fallback for Account Head — keep what is good, fix name to seeded head
@@ -170,21 +164,16 @@ export async function adjustStock(prevState: any, formData: FormData) {
                 accountHead = defaultAccount._id.toString();
             }
 
-            // True capitalization: asset stock IN → ASSET type, consumable → EXPENSE
-            const headDoc = accountHead ? await AccountHead.findById(accountHead).lean() : null;
-            const resolvedType = (headDoc as any)?.type === "ASSET" ? "ASSET" : (updatedItem.type === 'ASSET' ? 'ASSET' : 'EXPENSE');
-
             const txn = await Transaction.create({
                 amount: cost,
                 date: new Date(formData.get("date") as string || Date.now()),
-                type: resolvedType,
+                type: "EXPENSE",
                 logId: log._id,
                 accountHead: accountHead,
-                subType: formData.get("subType") || undefined,
                 paymentCategory: paymentCategoryId, 
                 donorOrVendorName: formData.get("donorOrVendorName") || "Inventory Supplier",
                 referenceNumber: formData.get("referenceNumber"),
-                description: `${resolvedType === 'ASSET' ? 'Asset Purchase — Capitalized' : 'Inventory Purchase'}: ${quantity} of ${updatedItem.name}.`,
+                description: `Inventory Purchase: ${quantity} of ${updatedItem.name}.`,
                 createdBy, 
                 status     
             });

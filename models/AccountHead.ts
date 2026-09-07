@@ -3,9 +3,8 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IAccountHead extends Document {
   name: string;
   code: string;
-  type: 'INCOME' | 'EXPENSE' | 'ASSET' | 'LIABILITY';
+  type: 'INCOME' | 'EXPENSE';
   fundCategory: 'RESTRICTED' | 'UNRESTRICTED';
-  subType: string[];
   description?: string;
   
   // ✨ NEW: Bank Account Flags & Details
@@ -23,9 +22,8 @@ export interface IAccountHead extends Document {
 const AccountHeadSchema = new Schema<IAccountHead>({
   name: { type: String, required: true, unique: true, trim: true },
   code: { type: String, required: true, unique: true, trim: true, uppercase: true },
-  type: { type: String, enum: ['INCOME', 'EXPENSE', 'ASSET', 'LIABILITY'], required: true },
+  type: { type: String, enum: ['INCOME', 'EXPENSE'], required: true },
   fundCategory: { type: String, enum: ['RESTRICTED', 'UNRESTRICTED'], default: 'UNRESTRICTED', required: true },
-  subType: [{ type: String, trim: true }], 
   description: { type: String, trim: true },
   isBankAccount: { type: Boolean, default: false },
   bankDetails: {

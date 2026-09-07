@@ -7,14 +7,13 @@ interface AccountHead {
   _id: string;
   name: string;
   code: string;
-  subType?: string[];
   [key: string]: any;
 }
 
 interface AccountSectionProps {
   title: string;
   heads: AccountHead[];
-  theme: "success" | "danger" | "primary" | "warning";
+  theme: "success" | "danger";
   isOpen: boolean;
   onToggle: () => void;
   onAdd: () => void;
@@ -23,8 +22,6 @@ interface AccountSectionProps {
 const THEME_STYLES = {
   success: { text: "text-success", bg: "bg-success/10", border: "border-success/30", button: "text-success hover:bg-success hover:text-text-invert border-success/50" },
   danger: { text: "text-danger", bg: "bg-danger/10", border: "border-danger/30", button: "text-danger hover:bg-danger hover:text-text-invert border-danger/50" },
-  primary: { text: "text-primary", bg: "bg-primary/10", border: "border-primary/30", button: "text-primary hover:bg-primary hover:text-text-invert border-primary/50" },
-  warning: { text: "text-warning", bg: "bg-warning/10", border: "border-warning/30", button: "text-warning hover:bg-warning hover:text-text-invert border-warning/50" },
 };
 export const AccountSection: React.FC<AccountSectionProps> = ({ 
   title, heads, theme, isOpen, onToggle, onAdd,  
@@ -94,16 +91,8 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
                     </div>
                   </div>
 
-                  {/* RIGHT: Tags & Actions */}
+                  {/* RIGHT: Actions */}
                   <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-border/20">
-                    <div className="flex flex-wrap gap-1.5 sm:justify-end">
-                      {head.subType?.map((st, idx) => (
-                        <span key={idx} className="px-2 py-0.5 text-[8px] font-black uppercase tracking-tighter border border-border/60 rounded-md bg-card text-text-muted">
-                          {st}
-                        </span>
-                      ))}
-                    </div>
-                    
                     <button 
                       onClick={() => openAccountHeadForm({initialData: head})} 
                       className="p-2 text-text-muted hover:text-primary hover:bg-primary/10 rounded-xl transition-all"

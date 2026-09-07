@@ -11,7 +11,6 @@ export default async function FinancePage() {
     const accounts = rawAccounts.map((acc: any) => ({
         ...acc,
         _id: acc._id.toString(),
-        subType: Array.isArray(acc.subType) ? acc.subType : [acc.subType]
     }));
 
     return (

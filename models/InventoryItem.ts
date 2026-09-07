@@ -3,11 +3,8 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IInventoryItem extends Document {
   name: string;
   category: mongoose.Types.ObjectId; // ref InventoryCategory
-  type: 'CONSUMABLE' | 'ASSET';
   currentStock: number;
   minimumStockLevel: number;
-  location?: string;
-  condition?: 'NEW' | 'GOOD' | 'REPAIR';
   description?: string;
   isActive: boolean;
 }
@@ -15,11 +12,8 @@ export interface IInventoryItem extends Document {
 const InventoryItemSchema = new Schema({
   name: { type: String, required: true, unique: true, trim: true },
   category: { type: Schema.Types.ObjectId, ref: 'InventoryCategory', required: true },
-  type: { type: String, enum: ['CONSUMABLE', 'ASSET'], required: true, default: 'CONSUMABLE' },
   currentStock: { type: Number, default: 0, required: true },
   minimumStockLevel: { type: Number, default: 10 },
-  location: { type: String, trim: true, default: '' },
-  condition: { type: String, enum: ['NEW', 'GOOD', 'REPAIR'], default: 'NEW' },
   description: { type: String, trim: true },
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });

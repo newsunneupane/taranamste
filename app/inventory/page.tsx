@@ -11,16 +11,13 @@ export default async function InventoryPage() {
     await requirePageAccess("/inventory");
     await dbConnect();
 
-    const rawItems = await InventoryItem.find({}).populate("category", "name type").sort({ name: 1 }).lean();
+    const rawItems = await InventoryItem.find({}).populate("category", "name").sort({ name: 1 }).lean();
     const safeItems = JSON.parse(JSON.stringify(rawItems));
-    const items = safeItems.map((item: any) => ({
-        ...item,
-        type: item.type || "CONSUMABLE",
-    }));
+    const items = safeItems;
 
     const rawLogs = await InventoryLog.find({})
         .populate("item", "name")
-        .populate({ path: "item", populate: { path: "category", select: "name type" } })
+        .populate({ path: "item", populate: { path: "category", select: "name" } })
         .populate("createdBy", "name")
         .sort({ date: -1 })
         .lean();

@@ -1,10 +1,9 @@
 "use client";
-import React, { useActionState, useEffect, useState } from "react";
+import React, { useActionState, useEffect } from "react";
 import { FormField } from "@/components/molecules/FormField";
 import { SelectField } from "@/components/molecules/selects/SelectField";
 import { Button } from "@/components/atoms/Button";
 import { addAccountHead } from "@/app/actions/accounts";
-import AddSubType from "../../../organisms/Accounting/AccountsHead/AddSubType";
 
 interface AccountHeadFormProps {
     closeModal: () => void;
@@ -23,10 +22,6 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
         addAccountHead as any,
         { error: null, success: false }
     );
-
-    const [subTypes, setSubTypes] = useState<string[]>(initialData?.subType || []);
-
-    useEffect(() => { setSubTypes(initialData?.subType || []); }, [initialData?._id, initialData?.subType]);
 
     useEffect(() => {
         if (state?.success) {
@@ -47,11 +42,6 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
                         <span>{state.error}</span>
                     </div>
                 )}
-
-                {/* Hidden inputs for SubTypes to ensure they are submitted with the formAction */}
-                {subTypes.map((st, index) => (
-                    <input key={`st-${index}`} type="hidden" name="subType" value={st} />
-                ))}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0">
                     <FormField
@@ -81,8 +71,6 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
                         required
                         defaultValue={initialData?.type || defaultType || "INCOME"}
                         options={[
-                            { label: "Asset", value: "ASSET" },
-                            { label: "Liability", value: "LIABILITY" },
                             { label: "Income", value: "INCOME" },
                             { label: "Expense", value: "EXPENSE" }
                         ]}
@@ -98,11 +86,6 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
                             { label: "Restricted", value: "RESTRICTED" }
                         ]}
                     />
-                </div>
-
-                {/* 03. SUB-TYPES MANAGEMENT */}
-                <div className="shrink-0">
-                    <AddSubType subTypes={subTypes} setSubTypes={setSubTypes} />
                 </div>
 
                 {/* 04. ADDITIONAL INFO */}

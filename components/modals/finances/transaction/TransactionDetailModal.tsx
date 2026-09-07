@@ -25,7 +25,7 @@ export function TransactionDetailModal({ closeModal, transaction }: any) {
           <span className={`w-2 h-2 rounded-full ${isIncome ? "bg-success" : "bg-danger"}`} />
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-text flex items-center gap-2">
-              {t.accountHead?.name || "Unknown"} {t.subType ? <span className="text-[10px] text-text-muted">· {t.subType}</span> : null}
+              {t.accountHead?.name || "Unknown"}
               <span className={`px-2 py-0.5 rounded-full text-[8px] border ${isIncome ? "bg-success text-white border-success" : "bg-danger text-white border-danger"}`}>{t.type}</span>
               <span className={`px-2 py-0.5 rounded-full text-[8px] border ${t.status === "VERIFIED" ? "bg-success/10 text-success border-success/20" : t.status === "PENDING" ? "bg-warning/10 text-warning border-warning/20" : "bg-danger/10 text-danger border-danger/20"}`}>{t.status}</span>
             </p>
@@ -43,7 +43,7 @@ export function TransactionDetailModal({ closeModal, transaction }: any) {
         </div>
         <div className="p-4 bg-card">
           <Row label="Date (BS · AD)" value={formatNepaliDate(t.date)} />
-          <Row label="Head / Sub-Head" value={`${t.accountHead?.name || "—"}${t.subType ? ` / ${t.subType}` : ""} ${t.accountHead?.code ? `(${t.accountHead.code})` : ""}`} />
+          <Row label="Head" value={`${t.accountHead?.name || "—"}${t.accountHead?.code ? ` (${t.accountHead.code})` : ""}`} />
           <Row label="Money Account" value={t.paymentCategory?.name ? `${t.paymentCategory.name} (${t.paymentCategory.identifier || ""})` : "—"} />
           <Row label="Amount" value={`${isIncome ? "+" : "-"} NPR ${Number(t.amount).toLocaleString()} (${t.type})`} mono />
           <Row label="Vendor / Donor" value={t.donorOrVendorName} />

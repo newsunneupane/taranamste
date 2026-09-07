@@ -78,7 +78,6 @@ export async function parseBulkExpensePdfAction(_prev: any, formData: FormData):
   const rows = rawRows.map((r) => {
     const baseError = validateBulkRow(r);
     const nAccount = norm(r.account);
-    const nSub = norm(r.subType);
     let accountResolved: any = null;
 
     if (r.account) accountResolved = accountByNameLower.get(nAccount) || null;
@@ -94,15 +93,9 @@ export async function parseBulkExpensePdfAction(_prev: any, formData: FormData):
     // Strict: head must exist (case-insensitive)
     if (!accountResolved && r.account) {
       errors.push(`Unknown head "${r.account}" — create it in Finance → Chart of Accounts first (case-insensitive)`);
-    } else if (r.subType && accountResolved) {
-      const existsLower = new Set((accountResolved.subType || []).map((s: string) => norm(s)));
-      if (!existsLower.has(nSub)) {
-        errors.push(`Unknown sub-head "${r.subType}" for head "${r.account}" — add it to that head first`);
-      }
     }
 
     const willCreate = false;
-    const subTypeWillCreate = false;
 
     return {
       ...r,
@@ -114,9 +107,7 @@ export async function parseBulkExpensePdfAction(_prev: any, formData: FormData):
       accountResolved: accountResolved ? { _id: String(accountResolved._id), name: accountResolved.name } : null,
       categoryResolved: null,
       willCreate,
-      subTypeWillCreate,
       nAccount,
-      nSub,
       categoryWarn: null,
       errors,
       isValid: errors.length === 0,
@@ -153,15 +144,14 @@ export async function commitBulkExpensesAction(_prev: any, formData: FormData) {
 
   // ---------- Duplicate detection: within upload ----------
   const keyFor = (r: any) => {
-    // Normalized dedup key: date|head|sub|amount|vendor|ref|desc — all case-insensitive trim
+    // Normalized dedup key: date|head|amount|vendor|ref|desc — all case-insensitive trim (subType removed)
     const d = String(r.dateObj || r.date || "").trim();
     const h = norm(r.account);
-    const s = norm(r.subType);
     const amt = String(r.amountNum ?? String(r.amount ?? "").replace(/,/g, "").trim());
     const v = norm(r.vendor);
     const ref = norm(r.ref);
     const desc = norm(r.desc);
-    return `${d}|${h}|${s}|${amt}|${v}|${ref}|${desc}`;
+    return `${d}|${h}|${amt}|${v}|${ref}|${desc}`;
   };
   const seen = new Map<string, number[]>();
   validRows.forEach((r, idx) => {
@@ -178,7 +168,7 @@ export async function commitBulkExpensesAction(_prev: any, formData: FormData) {
           const rr = validRows[i];
           return `row ${rr.rowIndex + 1}${rr._sourceFile ? ` (${rr._sourceFile})` : ""}`;
         }).join(", ");
-        return `Duplicate ${arr.length}× — ${sample.account}${sample.subType ? "/" + sample.subType : ""} | ${sample.dateObj || sample.date} | NPR ${sample.amountNum ?? sample.amount} — at ${locs}`;
+        return `Duplicate ${arr.length}× — ${sample.account} | ${sample.dateObj || sample.date} | NPR ${sample.amountNum ?? sample.amount} — at ${locs}`;
       })
       .join("; ");
     return {
@@ -202,13 +192,6 @@ export async function commitBulkExpensesAction(_prev: any, formData: FormData) {
     for (const r of validRows) {
       if (!finalByLower.has(norm(r.account))) {
         throw new Error(`Unknown head "${r.account}" — create it in Finance → Chart of Accounts first`);
-      }
-      if (r.subType) {
-        const head = finalByLower.get(norm(r.account));
-        const existsLower = new Set((head.subType || []).map((s: string) => norm(s)));
-        if (!existsLower.has(norm(r.subType))) {
-          throw new Error(`Unknown sub-head "${r.subType}" for head "${r.account}"`);
-        }
       }
     }
 
@@ -237,16 +220,14 @@ export async function commitBulkExpensesAction(_prev: any, formData: FormData) {
         .lean();
       for (const tx of existingTx) {
         const d = new Date(tx.date).toISOString().slice(0, 10);
-        const headName = finalByLower.get(norm(String((tx as any).accountHead))) ? "" : "";
         // resolve head name via id -> name map
         const headObj: any = finalAccounts.find((a: any) => String(a._id) === String(tx.accountHead));
         const h = norm(headObj?.name || "");
-        const s = norm(tx.subType || "");
         const amt = String(tx.amount);
         const v = norm(tx.donorOrVendorName || "");
         const ref = norm(tx.referenceNumber || "");
         const desc = norm(tx.description || "");
-        existingKeys.add(`${d}|${h}|${s}|${amt}|${v}|${ref}|${desc}`);
+        existingKeys.add(`${d}|${h}|${amt}|${v}|${ref}|${desc}`);
       }
     }
 
@@ -254,7 +235,7 @@ export async function commitBulkExpensesAction(_prev: any, formData: FormData) {
     for (const r of validRows) {
       const k = keyFor(r);
       if (existingKeys.has(k)) {
-        dbDups.push(`row ${r.rowIndex + 1}${r._sourceFile ? ` (${r._sourceFile})` : ""}: ${r.account}${r.subType ? "/" + r.subType : ""} | ${r.dateObj} | NPR ${r.amountNum ?? r.amount}`);
+        dbDups.push(`row ${r.rowIndex + 1}${r._sourceFile ? ` (${r._sourceFile})` : ""}: ${r.account} | ${r.dateObj} | NPR ${r.amountNum ?? r.amount}`);
       }
     }
     if (dbDups.length) {
@@ -273,10 +254,9 @@ export async function commitBulkExpensesAction(_prev: any, formData: FormData) {
         amount: r.amountNum,
         type: "EXPENSE",
         accountHead: accId,
-        subType: r.subType ? String(r.subType).trim() : undefined,
         paymentCategory: null,
         date: new Date(r.dateObj),
-        description: r.desc && String(r.desc).trim() ? String(r.desc).trim() : `${String(r.account).trim()}${r.subType ? ` / ${String(r.subType).trim()}` : ""} expense`,
+        description: r.desc && String(r.desc).trim() ? String(r.desc).trim() : `${String(r.account).trim()} expense`,
         donorOrVendorName: r.vendor || undefined,
         referenceNumber: r.ref || undefined,
         status: status === "VERIFIED" ? "VERIFIED" : "PENDING",

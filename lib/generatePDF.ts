@@ -78,13 +78,12 @@ export const generateAccountsPDF = (accounts: any[]) => {
         acc.code,
         acc.name,
         acc.type,
-        Array.isArray(acc.subType) ? acc.subType.join(', ') : acc.subType,
         acc.description || '-'
     ]);
 
     autoTable(doc, {
         startY: 35,
-        head: [['Code', 'Account Name', 'Type', 'Sub-Categories', 'Description']],
+        head: [['Code', 'Account Name', 'Type', 'Description']],
         body: tableData,
         headStyles: { fillColor: [63, 63, 70] }, // Zinc-700
         styles: { fontSize: 8 },

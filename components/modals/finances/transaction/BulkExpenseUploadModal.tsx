@@ -59,7 +59,7 @@ export function BulkExpenseUploadModal({ closeModal, accounts, categories }: any
   const totalKB = files.reduce((s, f) => s + f.size, 0) / 1024;
 
   return (
-    <div className="w-full max-w-[960px] max-h-[82vh] flex flex-col gap-4">
+    <div className="w-full max-w-full sm:max-w-[95vw] md:max-w-[860px] lg:max-w-[960px] max-h-[78dvh] flex flex-col gap-4 overflow-x-hidden">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <Button onClick={handleDownloadExcel} className="bg-success text-white font-black text-[11px] uppercase tracking-widest h-10">
           ⬇ Download Excel — 100 rows (spreadsheet paste)

@@ -71,6 +71,21 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         return () => window.removeEventListener("keydown", handleEsc);
     }, []);
 
+    // Prevent background scroll when any modal open - fix mobile scroll bleeding
+    useEffect(() => {
+        if (modals.length > 0) {
+            document.body.style.overflow = "hidden";
+            document.documentElement.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
+        };
+    }, [modals.length]);
+
     return (
         <ModalContext.Provider value={{ openModal, closeModal }}>
             {children}
@@ -84,30 +99,30 @@ export function ModalProvider({ children }: { children: ReactNode }) {
                     <div 
                         key={modal.id}
                         style={{ zIndex: 10000 + index }}
-                        className={`fixed inset-0 flex items-center justify-center p-3 md:p-6 transition-all duration-300 ease-in-out ${
+                        className={`fixed inset-0 flex items-start md:items-center justify-center p-2 sm:p-3 md:p-6 overflow-y-auto overscroll-contain custom-scrollbar [-webkit-overflow-scrolling:touch] transition-all duration-300 ease-in-out ${
                             !modal.isClosing ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                         }`}
                     >
                         <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={closeModal} />
 
-                            <div className={`relative bg-card border max-w-[95dvw] w-fit border-border rounded-2xl shadow-xl overflow-hidden transition-all duration-300 ${
+                            <div className={`relative bg-card border w-full max-w-[95vw] sm:max-w-[95vw] md:w-auto md:max-w-[90vw] max-h-[92dvh] md:max-h-[88dvh] border-border rounded-2xl shadow-xl flex flex-col overflow-hidden my-2 md:my-0 transition-all duration-300 ${
                             !modal.isClosing ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
                         }`}>
-                            <div className="flex items-center justify-between p-4 border-b border-border bg-shaded/40">
-                                <div className="flex flex-col gap-0.5">
-                                    <span className="text-sm font-bold text-text tracking-tight">
+                            <div className="flex items-center justify-between p-3 sm:p-4 border-b border-border bg-shaded/40 shrink-0">
+                                <div className="flex flex-col gap-0.5 min-w-0 pr-3">
+                                    <span className="text-sm font-bold text-text tracking-tight truncate">
                                         {modal.title}
                                     </span>
-                                    <span className="text-xs font-medium text-text-muted">
+                                    <span className="text-xs font-medium text-text-muted truncate">
                                         {index === modals.length - 1 ? "Active session" : "Background task"}
                                     </span>
                                 </div>
-                                <button onClick={closeModal} className="w-8 h-8 rounded-xl bg-card border border-border flex items-center justify-center text-text-muted hover:text-text hover:border-border hover:shadow-sm transition-all active:scale-95">
+                                <button onClick={closeModal} className="w-8 h-8 shrink-0 rounded-xl bg-card border border-border flex items-center justify-center text-text-muted hover:text-text hover:border-border hover:shadow-sm transition-all active:scale-95">
                                     <X size={16} />
                                 </button>
                             </div>
 
-                            <div className="max-h-[82dvh] p-5 md:p-6 w-full overflow-auto custom-scrollbar bg-card">
+                            <div className="flex-1 min-h-0 max-h-[78dvh] md:max-h-[82dvh] p-3 sm:p-5 md:p-6 w-full overflow-auto overscroll-contain custom-scrollbar [-webkit-overflow-scrolling:touch] bg-card">
                                 <ActiveComponent {...modal.props} closeModal={closeModal} />
                             </div>
                         </div>

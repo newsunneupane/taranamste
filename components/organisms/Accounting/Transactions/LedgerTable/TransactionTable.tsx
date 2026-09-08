@@ -274,7 +274,7 @@ export default function TransactionTable({
 
             {/* FILTERS — Head dropdown + Search (SubHead removed) */}
             <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
-                <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 p-4 bg-shaded/20 border-b border-border/40">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 p-3 sm:p-4 bg-shaded/20 border-b border-border/40">
                     <div className="flex flex-col gap-1 col-span-2 lg:col-span-1">
                         <label className="text-[8px] font-black uppercase tracking-widest text-primary">Search</label>
                         <div className="relative">
@@ -320,7 +320,7 @@ export default function TransactionTable({
                     </div>
                 </div>
                 {timeframe === "CUSTOM" && (
-                    <div className="grid grid-cols-2 gap-3 px-4 pb-3 bg-shaded/20">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-3 sm:px-4 pb-3 bg-shaded/20">
                         <NepaliDateField
                             label="From (BS)"
                             value={customStart}
@@ -349,7 +349,7 @@ export default function TransactionTable({
 
             {/* LIST VIEW — report style */}
             {displayTotal > 0 && (
-                <div className="hidden md:block bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+                <div className="hidden md:block bg-card rounded-xl shadow-sm border border-border overflow-x-auto overscroll-contain custom-scrollbar">
                     {/* List header — count */}
                     <div className="px-4 py-3 bg-shaded/40 border-b border-border flex justify-between items-center">
                         <span className="text-[10px] font-black uppercase tracking-widest text-primary">{isMoneyMovement ? `Money Movements — ${displayTotal} transfers (Date | From → To | Amount)` : `Report List — ${displayTotal} records (Date | Head | Amount | Type)`}</span>

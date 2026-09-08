@@ -28,7 +28,7 @@ const PageHeader = ({ accounts, categories }: { accounts?: any[]; categories?: a
             </div>
 
             {/* ACTIONS — grid even on desktop, smaller */}
-            <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:min-w-[300px]">
+            <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:min-w-0 sm:min-w-[280px]">
                 <Button
                     onClick={() => openBulkExpenseUpload({ accounts, categories })}
                     size="sm"

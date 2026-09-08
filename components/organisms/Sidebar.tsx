@@ -40,6 +40,21 @@ export const Sidebar = () => {
     setIsMobileOpen(false);
   }, [pathname]);
 
+  // lock body scroll when drawer open (mobile)
+  useEffect(() => {
+    if (isMobileOpen) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, [isMobileOpen]);
+
 
 
   // BASE ITEMS: Available to Everyone (Samity, Staff, Admin)
@@ -84,10 +99,10 @@ export const Sidebar = () => {
 
   return (
     <>
-      <button onClick={() => setIsMobileOpen(true)} className="md:hidden fixed top-4 left-4 z-40 p-2 bg-card border border-border rounded-xl text-text shadow-glow"><Menu size={24} /></button>
-      {isMobileOpen && <div className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50" onClick={() => setIsMobileOpen(false)} />}
+      <button onClick={() => setIsMobileOpen(true)} className="md:hidden fixed top-[calc(0.75rem+env(safe-area-inset-top))] left-3 z-40 p-2.5 bg-card border border-border rounded-xl text-text shadow-glow"><Menu size={20} /></button>
+      {isMobileOpen && <div className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 overscroll-contain" onClick={() => setIsMobileOpen(false)} />}
 
-      <aside className={`flex flex-col w-64 shrink-0 bg-card border-r border-border transition-all duration-300 md:relative max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-[60] max-md:h-full max-md:shadow-2xl max-md:transition-transform ${isCollapsed ? "md:w-[72px]" : "md:w-64"} ${isMobileOpen ? "max-md:translate-x-0" : "max-md:-translate-x-full"}`}>
+      <aside className={`flex flex-col w-64 max-w-[80vw] shrink-0 bg-card border-r border-border transition-all duration-300 md:relative max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-[60] max-md:h-[100dvh] max-md:shadow-2xl max-md:transition-transform max-md:will-change-transform ${isCollapsed ? "md:w-[72px]" : "md:w-64"} ${isMobileOpen ? "max-md:translate-x-0" : "max-md:-translate-x-full"}`}>
 
         <button onClick={() => setIsCollapsed(!isCollapsed)} className="hidden md:flex absolute -right-3 top-7 bg-card border border-border text-text-muted rounded-full p-1.5 z-50 shadow-md hover:text-primary hover:border-primary/20 transition-colors">
           {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
@@ -109,7 +124,7 @@ export const Sidebar = () => {
           </span>
         </div>
 
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto overflow-x-hidden overscroll-contain custom-scrollbar [-webkit-overflow-scrolling:touch]">
           {baseNav.map(renderLink)}
 
           {adminNav.length > 0 && (

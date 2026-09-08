@@ -42,12 +42,12 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   // 3. Authenticated Dashboard Shell
   return (
-    <div className="flex h-screen w-full bg-bg text-text overflow-hidden">
+    <div className="flex h-[100dvh] h-[100svh] w-full max-w-[100vw] overflow-hidden bg-bg text-text">
 
       <Sidebar />
 
-      <main className="flex-1 overflow-y-auto bg-bg">
-        <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain [-webkit-overflow-scrolling:touch] bg-bg">
+        <div className="max-w-[1600px] mx-auto w-full px-3 py-4 sm:p-4 md:p-6 lg:p-8">
           {children}
         </div>
       </main>

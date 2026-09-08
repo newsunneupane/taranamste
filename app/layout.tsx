@@ -28,11 +28,18 @@ export const metadata: Metadata = {
   }
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${ubuntu.variable}`}>
+    <html lang="en" className={`${inter.variable} ${ubuntu.variable} overflow-x-hidden`}>
       <body className="
-        min-h-full flex flex-col 
+        min-h-screen min-h-[100dvh] flex flex-col overflow-x-hidden overscroll-y-contain
         /* Set Inter as the default base font */
         font-sans text-[13px]
         /* Theme Foundation */

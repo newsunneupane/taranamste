@@ -103,7 +103,7 @@ export default async function Home() {
       {isAdmin && (pendingUsersCount > 0 || pendingTransactionsCount > 0 || totalUnsettledCash > 0) && (
         <div className="flex flex-wrap gap-3">
             {pendingUsersCount > 0 && (
-                <Link href="/usersmanagement" className="flex-1 min-w-[240px] max-w-[360px] p-3.5 rounded-xl border bg-warning/5 border-warning/20 flex justify-between items-center group hover:bg-warning/10 transition-all">
+                <Link href="/usersmanagement" className="flex-1 min-w-full sm:min-w-[240px] max-w-full sm:max-w-[360px] p-3.5 rounded-xl border bg-warning/5 border-warning/20 flex justify-between items-center group hover:bg-warning/10 transition-all">
                     <div className="flex items-center gap-3">
                         <ShieldAlert className="text-warning" size={18} />
                         <div className="flex flex-col">
@@ -116,7 +116,7 @@ export default async function Home() {
             )}
 
             {pendingTransactionsCount > 0 && (
-                <Link href="/approvals" className="flex-1 min-w-[240px] max-w-[360px] p-3.5 rounded-xl border bg-danger/5 border-danger/20 flex justify-between items-center group hover:bg-danger/10 transition-all">
+                <Link href="/approvals" className="flex-1 min-w-full sm:min-w-[240px] max-w-full sm:max-w-[360px] p-3.5 rounded-xl border bg-danger/5 border-danger/20 flex justify-between items-center group hover:bg-danger/10 transition-all">
                     <div className="flex items-center gap-3">
                         <Clock className="text-danger" size={18} />
                         <div className="flex flex-col">
@@ -129,7 +129,7 @@ export default async function Home() {
             )}
 
             {totalUnsettledCash > 0 && (
-                <Link href="/settlements" className="flex-1 min-w-[240px] max-w-[360px] p-3.5 rounded-xl border bg-primary/5 border-primary/20 flex justify-between items-center group hover:bg-primary/10 transition-all">
+                <Link href="/settlements" className="flex-1 min-w-full sm:min-w-[240px] max-w-full sm:max-w-[360px] p-3.5 rounded-xl border bg-primary/5 border-primary/20 flex justify-between items-center group hover:bg-primary/10 transition-all">
                     <div className="flex items-center gap-3">
                         <Wallet className="text-primary" size={18} />
                         <div className="flex flex-col">

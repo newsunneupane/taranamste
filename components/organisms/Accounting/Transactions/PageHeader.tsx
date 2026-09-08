@@ -4,7 +4,7 @@ import { Button } from "@/components/atoms/Button";
 import { useUIModals } from "@/hooks/useUIModal";
 
 const PageHeader = ({ accounts, categories }: { accounts?: any[]; categories?: any[] }) => {
-    const { openTransactionForm, openBulkExpenseUpload } = useUIModals();
+    const { openTransactionForm } = useUIModals();
     
     return (
         // ✨ Compact header - distinct hierarchy
@@ -27,20 +27,12 @@ const PageHeader = ({ accounts, categories }: { accounts?: any[]; categories?: a
                 </div>
             </div>
 
-            {/* ACTIONS — grid even on desktop, smaller */}
-            <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:min-w-0 sm:min-w-[280px]">
-                <Button
-                    onClick={() => openBulkExpenseUpload({ accounts, categories })}
-                    size="sm"
-                    variant="secondary"
-                    className="font-black text-[10px] tracking-widest h-8 px-3"
-                >
-                    Bulk Upload
-                </Button>
+            {/* ACTIONS */}
+            <div className="flex w-full sm:w-auto justify-end">
                 <Button
                     onClick={() => openTransactionForm()}
                     size="sm"
-                    className="font-black text-[10px] tracking-widest h-8 px-3"
+                    className="font-black text-[10px] tracking-widest h-8 px-6 w-full sm:w-auto"
                 >
                     + NEW
                 </Button>

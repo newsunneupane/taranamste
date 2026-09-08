@@ -115,8 +115,6 @@ export function useUIModals() {
                 !!initialData ? "Edit Account Head" : "New Account Head",
                 { initialData, defaultType, onSaved } // ✨ Pass onSaved to the form
             ),
-        openBulkChildUpload: () =>
-            openModal("BULK_CHILD_UPLOAD", "Bulk Upload — Children (Excel)", {}),
         openTransactionDetail: (transaction: any) =>
             openModal("TRANSACTION_DETAIL", "Transaction Detail", { transaction }),
         // --- INVENTORY ---

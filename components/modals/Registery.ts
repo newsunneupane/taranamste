@@ -20,6 +20,5 @@ export const MODAL_COMPONENTS: Record<string, React.ComponentType<any>> = {
     INVENTORY_ITEM_FORM: dynamic(() => import("./finances/inventory/InventoryItemForm").then(mod => mod.InventoryItemForm)),
     
     CONSUMABLE_CAT_FORM: dynamic(() => import("./finances/inventory/AddConsumableCategoryModal").then(mod => mod.ConsumableForm)),
-    BULK_CHILD_UPLOAD: dynamic(() => import("./child/BulkChildUploadModal").then(mod => mod.BulkChildUploadModal)),
     TRANSACTION_DETAIL: dynamic(() => import("./finances/transaction/TransactionDetailModal").then(mod => mod.TransactionDetailModal)),
 };  

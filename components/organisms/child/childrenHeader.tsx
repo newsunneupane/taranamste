@@ -2,10 +2,9 @@
 import React from "react";
 import { Button } from "@/components/atoms/Button";
 import { useUIModals } from "@/hooks/useUIModal";
-import { FileSpreadsheet } from "lucide-react";
 
 export function ChildrenHeader() {
-    const { openChildModal, openBulkChildUpload } = useUIModals()
+    const { openChildModal } = useUIModals()
     
     return (
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-card p-5 md:p-6 rounded-2xl shadow-card border border-border">
@@ -25,16 +24,8 @@ export function ChildrenHeader() {
 
             <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
                 <Button
-                    onClick={() => openBulkChildUpload()}
-                    variant="secondary"
-                    className="flex-1 sm:flex-none gap-2"
-                >
-                    <FileSpreadsheet size={16} />
-                    Bulk Upload
-                </Button>
-                <Button
                     onClick={() => openChildModal()}
-                    className="flex-1 sm:flex-none"
+                    className="flex-1 sm:flex-none w-full sm:w-auto"
                 >
                     + Admit Child
                 </Button>

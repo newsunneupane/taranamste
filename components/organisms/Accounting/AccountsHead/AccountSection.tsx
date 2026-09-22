@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ChevronDown, Edit2, FolderOpen } from "lucide-react"; 
+import { ChevronDown, Edit2, FolderOpen, Landmark } from "lucide-react"; 
 import { useUIModals } from "@/hooks/useUIModal";
 
 interface AccountHead {
@@ -82,11 +82,19 @@ export const AccountSection: React.FC<AccountSectionProps> = ({
                        {head.code?.slice(0, 3) || '??'}
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-bold text-text group-hover:text-primary transition-colors truncate">
-                        {head.name}
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-xs font-bold text-text group-hover:text-primary transition-colors truncate">
+                          {head.name}
+                        </span>
+                        {head.isBankAccount && (
+                          <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                            <Landmark size={10} /> BANK
+                          </span>
+                        )}
+                      </div>
                       <span className="text-[9px] font-mono text-text-muted uppercase tracking-wider">
                         REF: {head.code || "UNCATEGORIZED"}
+                        {head.isBankAccount && head.bankDetails?.accountNumber ? ` • ${head.bankDetails.bankName ? head.bankDetails.bankName + ' • ' : ''}${head.bankDetails.accountNumber}${head.bankDetails.branch ? ' • ' + head.bankDetails.branch : ''}` : ""}
                       </span>
                     </div>
                   </div>

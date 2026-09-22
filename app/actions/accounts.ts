@@ -19,21 +19,33 @@ export async function addAccountHead(prevState: any, formData: FormData) {
         // ✨ Extract the Bank Checkbox (FormData checkboxes return 'on' if checked, null if not)
         const isBankAccount = formData.get("isBankAccount") === "on";
 
+        // ✨ Validation: accountNumber required when Is Bank Account is ticked
+        if (isBankAccount) {
+            const accNum = (formData.get("accountNumber") as string)?.trim();
+            if (!accNum) {
+                return { success: false, error: "Account Number is required when Is Bank Account is checked." };
+            }
+        }
+
         // ✨ Build the payload, injecting bank details only if the checkbox was ticked
         const accountData: any = {
-            name: formData.get("name"),
+            name: (formData.get("name") as string)?.trim(),
             type: formData.get("type"),
             fundCategory: formData.get("fundCategory") || "UNRESTRICTED",
-            code: formData.get("code"),
-            description: formData.get("description"),
+            code: (formData.get("code") as string)?.trim().toUpperCase(),
+            description: (formData.get("description") as string)?.trim(),
             isBankAccount: isBankAccount,
         };
 
+        if (!accountData.name || !accountData.code || !accountData.type) {
+            return { success: false, error: "Name, GL Code and Root Type are required." };
+        }
+
         if (isBankAccount) {
             accountData.bankDetails = {
-                accountNumber: formData.get("accountNumber"),
-                bankName: formData.get("bankName"),
-                branch: formData.get("branch")
+                accountNumber: (formData.get("accountNumber") as string)?.trim(),
+                bankName: (formData.get("bankName") as string)?.trim(),
+                branch: (formData.get("branch") as string)?.trim()
             };
         } else {
             // Clear them out if the user unchecked the box on an edit

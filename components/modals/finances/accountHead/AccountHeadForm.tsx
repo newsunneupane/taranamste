@@ -1,8 +1,9 @@
 "use client";
-import React, { useActionState, useEffect } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import { FormField } from "@/components/molecules/FormField";
 import { SelectField } from "@/components/molecules/selects/SelectField";
 import { Button } from "@/components/atoms/Button";
+import { Landmark } from "lucide-react";
 import { addAccountHead } from "@/app/actions/accounts";
 
 interface AccountHeadFormProps {
@@ -18,10 +19,15 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
     defaultType,
     onSaved
 }) => {
+    const [isBank, setIsBank] = useState<boolean>(!!initialData?.isBankAccount);
     const [state, formAction, isPending] = useActionState(
         addAccountHead as any,
         { error: null, success: false }
     );
+
+    useEffect(() => {
+        setIsBank(!!initialData?.isBankAccount);
+    }, [initialData?._id, initialData?.isBankAccount]);
 
     useEffect(() => {
         if (state?.success) {
@@ -88,7 +94,60 @@ export const AccountHeadForm: React.FC<AccountHeadFormProps> = ({
                     />
                 </div>
 
-                {/* 04. ADDITIONAL INFO */}
+                {/* 04. BANK TOGGLE — keep INCOME|EXPENSE + isBankAccount flag */}
+                <div className="flex items-center gap-3 p-3 bg-shaded/50 border border-border rounded-xl shrink-0">
+                    <label className="flex items-center gap-3 cursor-pointer group flex-1">
+                        <input
+                            type="checkbox"
+                            name="isBankAccount"
+                            checked={isBank}
+                            onChange={(e) => setIsBank(e.target.checked)}
+                            className="w-5 h-5 rounded-md border-border text-primary focus:ring-primary/20"
+                        />
+                        <span className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-text-muted group-hover:text-text">
+                            <Landmark size={14} className="text-primary" />
+                            Is Bank Account
+                        </span>
+                    </label>
+                    <span className="text-[10px] text-text-muted">Tick to store bank details with this head</span>
+                </div>
+
+                {isBank && (
+                    <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl animate-in slide-in-from-top-2 duration-300 shrink-0">
+                        <div className="flex items-center gap-2 mb-3 border-b border-primary/10 pb-2">
+                            <Landmark size={14} className="text-primary" />
+                            <h4 className="text-[10px] font-black text-primary uppercase tracking-widest">Bank Details</h4>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <FormField
+                                id="accountNumber"
+                                label="Account Number *"
+                                name="accountNumber"
+                                required={isBank}
+                                placeholder="e.g. 0123456789012345"
+                                className="font-mono"
+                                defaultValue={initialData?.bankDetails?.accountNumber || ""}
+                            />
+                            <FormField
+                                id="bankName"
+                                label="Bank Name"
+                                name="bankName"
+                                placeholder="e.g. Nabil Bank"
+                                defaultValue={initialData?.bankDetails?.bankName || ""}
+                            />
+                            <FormField
+                                id="branch"
+                                label="Branch"
+                                name="branch"
+                                placeholder="e.g. Birtamode"
+                                defaultValue={initialData?.bankDetails?.branch || ""}
+                                className="md:col-span-2"
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {/* 05. ADDITIONAL INFO */}
                 <FormField
                     id="description"
                     label="Description"
